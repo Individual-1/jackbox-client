@@ -155,18 +155,17 @@ class _DrawState extends State<Draw> {
     ));
 
     canvasContainer = new Container(
-      child: Center(
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
+        child: Center(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
             drawInstructions,
             Expanded(
-              child: AspectRatio(
-                aspectRatio: 0.8,
-                child: canvas,
-              )
-            )
+                child: AspectRatio(
+              aspectRatio: 0.8,
+              child: canvas,
+            ))
             /*
             AspectRatio(
               aspectRatio: 0.8,
@@ -335,18 +334,19 @@ Widget _copyTextDialog(String text) {
       child: AspectRatio(
         aspectRatio: 0.8,
         child: Column(children: [
-          SingleChildScrollView(
-              child: SelectableText(
+          FlatButton(
+              child: Text("Copy to clipboard"),
+              color: Colors.grey[100],
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: text));
+              }),
+          Flexible(
+              child: SingleChildScrollView(
+                  child: SelectableText(
             text,
             showCursor: true,
             textAlign: TextAlign.center,
-          )),
-          FlatButton(
-              child: Text("Copy to clipboard"),
-              color: Colors.greenAccent,
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: text));
-              })
+          ))),
         ]),
       ));
 }
