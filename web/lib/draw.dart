@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'dart:math';
 import 'dart:convert';
@@ -8,21 +7,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'dart:developer' as dev;
-
 class Draw extends StatefulWidget {
   @override
   _DrawState createState() => _DrawState();
-}
-
-class DrawOffset extends Offset {
-  DrawOffset(dx, dy) : super(dx, dy);
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'x': dx,
-        'y': dy,
-      };
 }
 
 class PictureLine {
@@ -166,12 +153,6 @@ class _DrawState extends State<Draw> {
               aspectRatio: 0.8,
               child: canvas,
             ))
-            /*
-            AspectRatio(
-              aspectRatio: 0.8,
-              child: canvas,
-            ),
-            */
           ]),
     ));
 
@@ -422,7 +403,6 @@ class LineNotifier extends ChangeNotifier {
     double avgScale = (scaleX + scaleY) / 2;
 
     for (PictureLine line in lineList) {
-      // TODO: work on thickness scaling algorithm
       if (line.thickness > 1.0) {
         line.thickness = max(line.thickness * avgScale, 1.0);
       }
