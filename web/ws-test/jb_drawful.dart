@@ -11,6 +11,17 @@ class DrawfulHandler extends GameHandler {
 
 DrawfulHandler(SendPort port, RoomInfo roomInfo) : super(port, roomInfo);
 
+  void handleIntraMessage(IntraMsg msg) {
+    switch (msg.type) {
+      IntraMsgType.SESSION:
+        break;
+      IntraMsgType.JACKBOX:
+        break;
+      InraMsgType.UI:
+      break;
+    }
+  }
+
 /*
 // SendImage takes in a serialized json array and sends it to the jackbox server
   void SendImage(String picLineJson) {

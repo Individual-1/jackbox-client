@@ -10,13 +10,13 @@ import 'package:stream_channel/isolate_channel.dart';
 
 typedef GameHandler GameHandlerDef(SendPort port, RoomInfo roomInfo);
 
-class GameHandler {
+abstract class GameHandler {
   IsolateChannel<IntraMsg> gameChannel;
   StreamSubscription<dynamic> gameChannelSub;
-  RoomInfo roomInfo = null;
+  SessionData meta;
 
-  GameHandler(SendPort port, RoomInfo roomInfo) {
-    this.roomInfo = roomInfo;
+  GameHandler(SendPort port, SessionData meta) {
+    this.meta = meta;
 
     this.gameChannel = new IsolateChannel.connectSend(port);
 
@@ -29,6 +29,8 @@ class GameHandler {
   void sendIntraMessage(IntraMsgType type, dynamic msg) {
     gameChannel.sink.add(IntraMsg(type: type, msg: msg));
   }
+
+  void handleIntraMessage(IntraMsg msg);
 
   void resetState() {
     if (this.gameChannelSub != null) {
