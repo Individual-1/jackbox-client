@@ -4,31 +4,34 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'jb_data.dart';
+import 'int_data.dart';
 import 'sio_msg_type.dart' as mt;
 
 import 'package:stream_channel/isolate_channel.dart';
 
-typedef GameHandler GameHandlerDef(SendPort port, RoomInfo roomInfo);
+typedef GameHandler GameHandlerDef(SendPort port, SessionData meta);
 
-class GameHandler {
+abstract class GameHandler {
   IsolateChannel<IntraMsg> gameChannel;
   StreamSubscription<dynamic> gameChannelSub;
-  RoomInfo roomInfo = null;
+  SessionData meta;
 
-  GameHandler(SendPort port, RoomInfo roomInfo) {
-    this.roomInfo = roomInfo;
+  GameHandler(SendPort port, SessionData meta) {
+    this.meta = meta;
 
     this.gameChannel = new IsolateChannel.connectSend(port);
 
     this.gameChannelSub =
-        this.gameChannel.stream.listen(handleWSMessage, onDone: () {
+        this.gameChannel.stream.listen(handleIntraMessage, onDone: () {
       resetState();
     });
   }
 
-  void sendIntraMessage(IntraMsgType type, dynamic msg) {
-    gameChannel.sink.add(IntraMsg(type: type, msg: msg));
+  void sendIntraMessage(IntraMsg msg) {
+    gameChannel.sink.add(msg);
   }
+
+  void handleIntraMessage(IntraMsg msg);
 
   void resetState() {
     if (this.gameChannelSub != null) {
@@ -41,19 +44,7 @@ class GameHandler {
       this.gameChannel = null;
     }
 
-    this.roomInfo = null;
+    this.meta.clear();
+    this.meta = null;
   }
-}
-
-enum IntraMsgType {
-  SESSION,  // Messages between the Session manager and the game handler
-  JACKBOX,  // Messages to or from the Jackbox server
-  UI,       // Messages to Flutter front-end
-}
-
-class IntraMsg {
-  IntraMsgType type;
-  dynamic msg;
-
-  IntraMsg({this.type, this.msg});
 }

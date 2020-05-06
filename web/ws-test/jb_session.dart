@@ -13,6 +13,7 @@ import 'package:stream_channel/stream_channel.dart';
 import 'package:path/path.dart' as p;
 
 import 'jb_data.dart';
+import 'int_data.dart';
 import 'sio_msg_type.dart' as mt;
 
 import 'jb_game_handler.dart';
@@ -26,12 +27,6 @@ Future<void> main() async {
   } catch (e) {
     print(e);
     return;
-  }
-
-  if (js.BroadcastAvailable()) {
-    js.sc.stream.listen((msg) {
-      print(msg);
-    });
   }
 
   sleep(Duration(seconds: 5));
@@ -54,33 +49,35 @@ class JackboxSession {
   static final String _wsInfoRegex =
       r"([a-z0-9]{28}):60:60:websocket,flashsocket";
 
-  String userID;
-  String userName = "";
-  RoomInfo roomInfo = null;
+  SessionData meta;
 
   IOWebSocketChannel ws = null;
-  StreamController<dynamic> sc;
   StreamSubscription<dynamic> wsSub = null;
   GameHandler gameHandler = null;
   IsolateChannel<IntraMsg> gameChannel = null;
   StreamSubscription<dynamic> gameChannelSub = null;
 
   JackboxSession() {
-    var uuidg = Uuid();
+    this.meta = SessionData();
 
-    this.userID = uuidg.v4();
-    this.sc = StreamController<dynamic>();
+    this.meta.userID = genUserID();
+  }
+
+  String genUserID() {
+    Uuid uuidg = Uuid();
+
+    return uuidg.v4();
   }
 
   Future<void> JoinRoom(String roomID, String name) async {
     try {
-      this.roomInfo = await getRoomInfo(roomID);
+      this.meta.roomInfo = await getRoomInfo(roomID);
     } catch (e) {
       // Failed to retrieve room information
       throw e;
     }
 
-    this.userName = name;
+    this.meta.userName = name;
 
     // Map containing arguments to join a jackbox room
     Map<String, dynamic> msg = {
@@ -89,14 +86,14 @@ class JackboxSession {
         {
           'type': 'Action',
           'action': 'JoinRoom',
-          'appId': this.roomInfo.appID,
-          'roomId': this.roomInfo.roomID,
-          'userId': this.userID,
-          'joinType': this.roomInfo.joinAs,
-          'name': this.userName,
+          'appId': this.meta.roomInfo.appID,
+          'roomId': this.meta.roomInfo.roomID,
+          'userId': this.meta.userID,
+          'joinType': this.meta.roomInfo.joinAs,
+          'name': this.meta.userName,
           'options': {
-            'roomcode': this.roomInfo.roomID,
-            'name': this.userName,
+            'roomcode': this.meta.roomInfo.roomID,
+            'name': this.meta.userName,
           }
         }
       ]
@@ -116,7 +113,7 @@ class JackboxSession {
 
   Future<RoomInfo> getRoomInfo(String roomID) async {
     var uri = new Uri.https(
-        _roomBase, p.join(_roomPath, roomID), {"userId": this.userID});
+        _roomBase, p.join(_roomPath, roomID), {"userId": this.meta.userID});
 
     var resp = await http.get(uri);
 
@@ -140,7 +137,7 @@ class JackboxSession {
     }
 
     ReceivePort port = new ReceivePort();
-    this.gameHandler = handlerMap[appID](port.sendPort, this.roomInfo);
+    this.gameHandler = handlerMap[appID](port.sendPort, this.meta);
     this.gameChannel = new IsolateChannel.connectReceive(port);
 
     this.gameChannelSub =
@@ -206,12 +203,11 @@ class JackboxSession {
       return;
     }
 
-    print('sending: ' + msg);
     this.ws.sink.add(mt.PrepareMessageOfType(mt.MSG, msg));
   }
 
-  void sendIntraMessage(IntraMsgType type, dynamic msg) {
-    gameChannel.sink.add(IntraMsg(type: type, msg: msg));
+  void sendIntraMessage(IntraMsg msg) {
+    gameChannel.sink.add(msg);
   }
 
   void handlePing() {
@@ -233,6 +229,7 @@ class JackboxSession {
       case mt.PONG:
         break;
       case mt.MSG:
+        sendIntraMessage(IntraJackboxMsg(msg: msg));
         //this.sc.add(mt.GetMSGBody(msg));
         break;
     }
@@ -242,12 +239,12 @@ class JackboxSession {
   void handleIntraMessage(IntraMsg msg) {
     switch (msg.type) {
       case IntraMsgType.SESSION:
-      break;
+        break;
       case IntraMsgType.JACKBOX:
-      sendWSMessage(msg.msg);
-      break;
+        sendWSMessage((msg as IntraJackboxMsg).msg);
+        break;
       case IntraMsgType.UI:
-      break;
+        break;
     }
   }
 
@@ -277,11 +274,7 @@ class JackboxSession {
       this.gameHandler = null;
     }
 
-    this.roomInfo = null;
-    this.userName = "";
-  }
-
-  bool BroadcastAvailable() {
-    return this.wsSub != null;
+    this.meta.clear();
+    this.meta.userID = genUserID();
   }
 }

@@ -8,8 +8,18 @@ import 'jb_data.dart';
 import 'jb_state_drawful.dart' as state;
 
 class DrawfulHandler extends GameHandler {
+  DrawfulHandler(SendPort port, SessionData meta) : super(port, meta);
 
-DrawfulHandler(SendPort port, RoomInfo roomInfo) : super(port, roomInfo);
+  void handleIntraMessage(IntraMsg msg) {
+    switch (msg.type) {
+      case IntraMsgType.SESSION:
+        break;
+      case IntraMsgType.JACKBOX:
+        break;
+      case IntraMsgType.UI:
+        break;
+    }
+  }
 
 /*
 // SendImage takes in a serialized json array and sends it to the jackbox server

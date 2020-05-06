@@ -4,6 +4,26 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'jb_data.g.dart';
 
+class SessionData {
+  String userID = "";
+  String userName = "";
+  RoomInfo roomInfo = null;
+
+  SessionData() {
+    this.userID = "";
+    this.userName = "";
+    this.roomInfo = null;
+  }
+
+  SessionData.withData({this.userID, this.userName, this.roomInfo});
+
+  void clear() {
+    this.userID = "";
+    this.userName = "";
+    this.roomInfo = null;
+  }
+}
+
 @JsonSerializable()
 class RoomInfo {
   @JsonKey(name: 'roomid', nullable: false)
