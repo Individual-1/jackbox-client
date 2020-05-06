@@ -5,7 +5,6 @@ import 'dart:isolate';
 
 import 'jb_data.dart';
 import 'int_data.dart';
-import 'sio_msg_type.dart' as mt;
 
 import 'package:stream_channel/isolate_channel.dart';
 

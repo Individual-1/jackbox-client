@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'jb_game_handler.dart';
 import 'jb_data.dart';
+import 'int_data.dart';
 import 'jb_state_drawful.dart' as state;
 
 class DrawfulHandler extends GameHandler {
@@ -18,17 +19,6 @@ class DrawfulHandler extends GameHandler {
         break;
       case IntraMsgType.UI:
         break;
-    }
-  }
-
-  void handleIntraMessage(IntraMsg msg) {
-    switch (msg.type) {
-      IntraMsgType.SESSION:
-        break;
-      IntraMsgType.JACKBOX:
-        break;
-      InraMsgType.UI:
-      break;
     }
   }
 

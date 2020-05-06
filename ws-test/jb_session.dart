@@ -129,7 +129,8 @@ class JackboxSession {
 
   void setGameHandler(String appID) {
     Map<String, GameHandlerDef> handlerMap = {
-      'test': (p, r) => DrawfulHandler(p, r),
+      // Drawful 2
+      '8511cbe0-dfff-4ea9-94e0-424daad072c3': (p, r) => DrawfulHandler(p, r),
     };
 
     if (!handlerMap.containsKey(appID)) {
@@ -229,10 +230,29 @@ class JackboxSession {
       case mt.PONG:
         break;
       case mt.MSG:
-        sendIntraMessage(IntraJackboxMsg(msg: msg));
+        sendIntraMessage(IntraJackboxMsg(msg: mt.GetMSGBody(msg)));
         //this.sc.add(mt.GetMSGBody(msg));
         break;
     }
+  }
+
+  // handleLobbyMessage updates our state for lobby related messages
+  /*
+  5:::{"name":"msg","args":
+  [{"type":"Event","event":"RoomBlobChanged","roomId":"CWHA",
+  "blob":{"isLocal":true,"lobbyState":"WaitingForMore","state":"Lobby","formattedActiveContentId":null,"activeContentId":null,"platformId":"FLASH","allPlayersHavePortraits":false,"analytics":
+  [{"appversion":"0.0.0","screen":"drawful2-lobby","appid":"drawful2-flash","appname":"Drawful2"}]}}]}
+  */
+  bool handleLobbyMessage(dynamic msg) {
+    Map<String, dynamic> msgMap = jsonDecode(msg);
+
+    if (!msgMap.containsKey("name") || msgMap["name"] != "msg" 
+      || !msgMap.containsKey("args") || !msgMap["args"] is List) {
+      // This message isn't formed how we expect, just throw it away and say we succeeded
+      return true;
+    }
+
+    
   }
 
   // handleIntraMessage handles incoming messages from the GameHandler
