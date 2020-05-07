@@ -1,89 +1,164 @@
 library jackbox;
 
-//import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+class RoomInfo {
+  String roomID;
 
-part 'jackbox.freezed.dart';
-part 'jackbox.g.dart';
+  String server;
 
-@freezed
-abstract class RoomInfo with _$RoomInfo {
-  @JsonSerializable()
-  const factory RoomInfo(
-    @JsonKey(name: 'roomid') String roomID,
-    @JsonKey(name: 'server') String server,
-    @JsonKey(name: 'apptag') String appTag,
-    @JsonKey(name: 'appid') String appID,
-    @JsonKey(name: 'numAudience') int numAudience,
-    @JsonKey(name: 'joinAs') String joinAs,
-    @JsonKey(name: 'requiresPassword') bool requiresPassword,
-  ) = _RoomInfo;
+  String appTag;
 
-  factory RoomInfo.fromJson(Map<String, dynamic> json) =>
-      _$RoomInfoFromJson(json);
+  String appID;
+
+  int numAudience;
+
+  String joinAs;
+
+  bool requiresPassword;
+
+  RoomInfo({this.roomID, this.server, this.appTag, this.appID, 
+    this.numAudience, this.joinAs, this.requiresPassword});
+
+  factory RoomInfo.fromJson(Map<String, dynamic> json) {
+    return RoomInfo(
+      roomID: json['roomid'],
+      server: json['server'],
+      appTag: json['apptag'],
+      appID: json['appid'],
+      numAudience: json['numAudience'],
+      joinAs: json['joinAs'],
+      requiresPassword: json['requiresPassword'],
+    );
+  }
 }
 
-@freezed
-abstract class Outer with _$Outer {
-  @JsonSerializable()
-  const factory Outer(
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'args') List<ArgMsg> args,
-  ) = _Outer;
+class Outer {
+  String name;
+  List<ArgMsg> args;
 
-  factory Outer.fromJson(Map<String, dynamic> json) => _$OuterFromJson(json);
+  Outer({this.name, this.args});
+
+  factory Outer.fromJson(Map<String, dynamic> json) {
+    List<ArgMsg> args = new List();
+
+    if (json.containsKey('args') && json['args'] is List) {
+      for (dynamic arg in json['args']) {
+        if (!(arg is Map<String, dynamic>)) {
+          continue;
+        }
+
+        Map<String, dynamic> argBody = arg as Map<String, dynamic>;
+
+        if (argBody.containsKey('type')) {
+          switch (argBody['type'].toString().toLowerCase()) {
+            case 'result':
+            args.add(ArgResult.fromJson(arg));
+            break;
+            case 'event':
+            args.add(ArgEvent.fromJson(arg));
+            break;
+            default:
+            break;
+          }
+        }
+      }
+    }
+
+    return Outer(
+      name: json['name'],
+      args: args,
+    );
+  }
 }
 
-@freezed
-abstract class ArgMsg with _$ArgMsg {
-  @JsonSerializable()
-  const factory ArgMsg.result(
-    @JsonKey(name: 'type') String type,
-    @JsonKey(name: 'action') String action,
-    @JsonKey(name: 'success') bool success,
-    @JsonKey(name: 'initial') bool initial,
-    @JsonKey(name: 'roomId') String roomID,
-    @JsonKey(name: 'joinType') String joinType,
-    @JsonKey(name: 'userId') String userID,
-    @JsonKey(name: 'options') ArgResultOptions options,
-  ) = ArgResult;
-
-  @JsonSerializable()
-  const factory ArgMsg.event(
-    @JsonKey(name: 'type') String type,
-    @JsonKey(name: 'roomId') String roomID,
-    @JsonKey(name: 'event') String event,
-    @JsonKey(name: 'blob') ArgEventBlob blob,
-  ) = ArgEvent;
-
-  factory ArgMsg.fromJson(Map<String, dynamic> json) => _$ArgMsgFromJson(json);
+abstract class ArgMsg {
+  String type;
+  String roomID;
 }
 
-@freezed
-abstract class ArgResultOptions with _$ArgResultOptions {
-  @JsonSerializable()
-  const factory ArgResultOptions(
-    @JsonKey(name: 'email') String email,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'phone') String phone,
-    @JsonKey(name: 'roomcode') String roomCode,
-  ) = _ArgResultOptions;
+class ArgResult extends ArgMsg {
+  String type;
+  String roomID;
+  String action;
+  bool success;
+  bool initial;
+  String joinType;
+  String userID;
+  ArgResultOptions options;
 
-  factory ArgResultOptions.fromJson(Map<String, dynamic> json) =>
-      _$ArgResultOptionsFromJson(json);
+  ArgResult({this.type, this.roomID, this.action, this.success, this.initial,
+    this.joinType, this.userID, this.options});
+
+  factory ArgResult.fromJson(Map<String, dynamic> json) {
+    return ArgResult(
+      type: json['type'],
+      roomID: json['roomId'],
+      action: json['action'],
+      success: json['success'],
+      initial: json['initial'],
+      joinType: json['joinType'],
+      userID: json['userId'],
+      options: null, //TODO: figure out if we care about this
+    );
+  }
 }
 
-@freezed
-abstract class ArgEventBlob with _$ArgEventBlob {
-  @JsonSerializable()
-  const factory ArgEventBlob(
-    @JsonKey(name: 'email') String email,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'phone') String phone,
-    @JsonKey(name: 'roomcode') String roomCode,
-  ) = _ArgEventBlob;
+class ArgEvent extends ArgMsg {
+  String type;
+  String roomID;
+  String event;
+  ArgEventBlob blob;
 
-  factory ArgEventBlob.fromJson(Map<String, dynamic> json) =>
-      _$ArgEventBlobFromJson(json);
+  ArgEvent({this.type, this.roomID, this.event, this.blob});
+
+  factory ArgEvent.fromJson(Map<String, dynamic> json) {
+    ArgEventBlob blob;
+
+    if (json.containsKey('blob') && json['blob'] is Map<String, dynamic>) {
+      Map<String, dynamic> blobBody = json['blob'] as Map<String, dynamic>;
+
+      if (blobBody.containsKey('')) {
+
+      }
+  }
+
+    return ArgEvent(
+      type: json['type'],
+      roomID: json['roomId'],
+      event: json['event'],
+      blob: blob, // TODO: Find out different blob types
+    );
+  }
+}
+
+abstract class ArgResultOptions {
+}
+
+class ArgResultOptionsJoinRoom extends ArgResultOptions {
+  String email;
+  String name;
+  String phone;
+  String roomCode;
+
+  ArgResultOptionsJoinRoom({this.email, this.name, this.phone, this.roomCode});
+
+  factory ArgResultOptionsJoinRoom.fromJson(Map<String, dynamic> json) {
+    return ArgResultOptionsJoinRoom(
+      email: json['email'],
+      name: json['name'],
+      phone: json['phone'],
+      roomCode: json['roomCode'],
+    );
+  }
+}
+
+abstract class ArgEventBlob {
+}
+
+class ArgEventBlobRoom extends ArgEventBlob {
+
+  ArgEventBlobRoom();
+
+  factory ArgEventBlobRoom.fromJson(Map<String, dynamic> json) {
+    return ArgEventBlobRoom();
+  }
 }
