@@ -1,4 +1,4 @@
-name: web
+name: jackbox_client
 description: Dart jackbox client for interacting with the go backend
 
 # The following line prevents the package from being accidentally published to
@@ -27,8 +27,7 @@ dependencies:
   http: '>=0.12.0'
   web_socket_channel: '>=1.1.0'
   stream_channel: ^2.0.0
-  built_collection: ^4.3.2
-  built_value: ^7.1.0
+  freezed_annotation:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,8 +38,9 @@ dev_dependencies:
     sdk: flutter
   flutter_colorpicker: any
   build_runner: ^1.0.0
-  built_value_generator: ^7.1.0
   uuid: '>=2.0.0'
+  freezed:
+  json_serializable:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

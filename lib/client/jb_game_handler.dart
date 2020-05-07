@@ -3,15 +3,15 @@ library jb_game_handler;
 import 'dart:async';
 import 'dart:isolate';
 
-import 'jb_data.dart';
-import 'int_data.dart';
+import 'package:jackbox_client/model/internal.dart';
+import 'package:jackbox_client/model/jackbox.dart';
 
 import 'package:stream_channel/isolate_channel.dart';
 
 typedef GameHandler GameHandlerDef(SendPort port, SessionData meta);
 
 abstract class GameHandler {
-  IsolateChannel<IntraMsg> gameChannel;
+  IsolateChannel<IntMsg> gameChannel;
   StreamSubscription<dynamic> gameChannelSub;
   SessionData meta;
 
@@ -21,16 +21,16 @@ abstract class GameHandler {
     this.gameChannel = new IsolateChannel.connectSend(port);
 
     this.gameChannelSub =
-        this.gameChannel.stream.listen(handleIntraMessage, onDone: () {
+        this.gameChannel.stream.listen(_handleIntMessage, onDone: () {
       resetState();
     });
   }
 
-  void sendIntraMessage(IntraMsg msg) {
+  void _sendIntMessage(IntMsg msg) {
     gameChannel.sink.add(msg);
   }
 
-  void handleIntraMessage(IntraMsg msg);
+  void _handleIntMessage(IntMsg msg);
 
   void resetState() {
     if (this.gameChannelSub != null) {

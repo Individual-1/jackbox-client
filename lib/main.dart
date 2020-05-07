@@ -1,4 +1,4 @@
-import 'package:web/draw.dart';
+import 'package:jackbox_client/ui/draw.dart';
 
 import 'package:flutter/material.dart';
 

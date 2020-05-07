@@ -1,4 +1,4 @@
-library sio_msg_type;
+library socketio;
 
 const int UNKNOWN = -1;
 const int OPEN = 1;

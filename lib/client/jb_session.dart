@@ -9,21 +9,20 @@ import 'package:stream_channel/isolate_channel.dart';
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
-import 'package:stream_channel/stream_channel.dart';
 import 'package:path/path.dart' as p;
 
-import 'jb_data.dart';
-import 'int_data.dart';
-import 'sio_msg_type.dart' as mt;
+import 'package:jackbox_client/model/internal.dart';
+import 'package:jackbox_client/model/jackbox.dart';
+import 'package:jackbox_client/model/socketio.dart' as mt;
 
-import 'jb_game_handler.dart';
-import 'jb_drawful.dart';
+import 'package:jackbox_client/client/jb_game_handler.dart';
+import 'package:jackbox_client/client/jb_drawful.dart';
 
 Future<void> main() async {
   JackboxSession js = new JackboxSession();
 
   try {
-    await js.JoinRoom("TCDH", "name2");
+    await js.joinRoom("TCDH", "name2");
   } catch (e) {
     print(e);
     return;
@@ -51,27 +50,27 @@ class JackboxSession {
 
   SessionData meta;
 
-  IOWebSocketChannel ws = null;
-  StreamSubscription<dynamic> wsSub = null;
-  GameHandler gameHandler = null;
-  IsolateChannel<IntraMsg> gameChannel = null;
-  StreamSubscription<dynamic> gameChannelSub = null;
+  IOWebSocketChannel ws;
+  StreamSubscription<dynamic> wsSub;
+  GameHandler gameHandler;
+  IsolateChannel<IntMsg> gameChannel;
+  StreamSubscription<dynamic> gameChannelSub;
 
   JackboxSession() {
     this.meta = SessionData();
 
-    this.meta.userID = genUserID();
+    this.meta.userID = _genUserID();
   }
 
-  String genUserID() {
+  String _genUserID() {
     Uuid uuidg = Uuid();
 
     return uuidg.v4();
   }
 
-  Future<void> JoinRoom(String roomID, String name) async {
+  Future<void> joinRoom(String roomID, String name) async {
     try {
-      this.meta.roomInfo = await getRoomInfo(roomID);
+      this.meta.roomInfo = await _getRoomInfo(roomID);
     } catch (e) {
       // Failed to retrieve room information
       throw e;
@@ -102,16 +101,16 @@ class JackboxSession {
     String smsg = jsonEncode(msg);
 
     try {
-      await connectWS();
+      await _connectWS();
     } catch (e) {
       // Failed to initialize websocket
       throw e;
     }
 
-    sendWSMessage(mt.PrepareMessageOfType(mt.MSG, smsg));
+    _sendWSMessage(mt.PrepareMessageOfType(mt.MSG, smsg));
   }
 
-  Future<RoomInfo> getRoomInfo(String roomID) async {
+  Future<RoomInfo> _getRoomInfo(String roomID) async {
     var uri = new Uri.https(
         _roomBase, p.join(_roomPath, roomID), {"userId": this.meta.userID});
 
@@ -127,7 +126,7 @@ class JackboxSession {
     return Future.value(rmInfo);
   }
 
-  void setGameHandler(String appID) {
+  void _setGameHandler(String appID) {
     Map<String, GameHandlerDef> handlerMap = {
       // Drawful 2
       '8511cbe0-dfff-4ea9-94e0-424daad072c3': (p, r) => DrawfulHandler(p, r),
@@ -142,13 +141,13 @@ class JackboxSession {
     this.gameChannel = new IsolateChannel.connectReceive(port);
 
     this.gameChannelSub =
-        this.gameChannel.stream.listen(handleWSMessage, onDone: () {
+        this.gameChannel.stream.listen(_handleWSMessage, onDone: () {
       resetState();
     });
   }
 
-  Future<void> connectWS() async {
-    disconnectWS();
+  Future<void> _connectWS() async {
+    _disconnectWS();
 
     if (this.gameHandler == null) {
       throw Exception(
@@ -186,12 +185,12 @@ class JackboxSession {
     }
 
     // Set up message handler
-    this.wsSub = this.ws.stream.listen(handleWSMessage, onDone: () {
+    this.wsSub = this.ws.stream.listen(_handleWSMessage, onDone: () {
       resetState();
     });
   }
 
-  void disconnectWS() {
+  void _disconnectWS() {
     if (this.ws != null) {
       this.ws.sink.close(status.goingAway);
       this.ws = null;
@@ -199,7 +198,7 @@ class JackboxSession {
   }
 
   // Send the socket.io data type, Jackbox doesn't use any of the extra fields so the prefix is just 5:::
-  void sendWSMessage(String msg) {
+  void _sendWSMessage(String msg) {
     if (this.ws == null) {
       return;
     }
@@ -207,11 +206,11 @@ class JackboxSession {
     this.ws.sink.add(mt.PrepareMessageOfType(mt.MSG, msg));
   }
 
-  void sendIntraMessage(IntraMsg msg) {
+  void _sendIntMessage(IntMsg msg) {
     gameChannel.sink.add(msg);
   }
 
-  void handlePing() {
+  void _handlePing() {
     if (this.ws == null) {
       return;
     }
@@ -220,17 +219,17 @@ class JackboxSession {
   }
 
   // handleWSMessage handles different kinds of Socket.io messages and forward relevant ones
-  void handleWSMessage(dynamic msg) {
+  void _handleWSMessage(dynamic msg) {
     switch (mt.GetMessageType(msg)) {
       case mt.OPEN:
         break;
       case mt.PING:
-        handlePing();
+        _handlePing();
         break;
       case mt.PONG:
         break;
       case mt.MSG:
-        sendIntraMessage(IntraJackboxMsg(msg: mt.GetMSGBody(msg)));
+        _sendIntMessage(IntJackboxMsg(msg: mt.GetMSGBody(msg)));
         //this.sc.add(mt.GetMSGBody(msg));
         break;
     }
@@ -243,7 +242,7 @@ class JackboxSession {
   "blob":{"isLocal":true,"lobbyState":"WaitingForMore","state":"Lobby","formattedActiveContentId":null,"activeContentId":null,"platformId":"FLASH","allPlayersHavePortraits":false,"analytics":
   [{"appversion":"0.0.0","screen":"drawful2-lobby","appid":"drawful2-flash","appname":"Drawful2"}]}}]}
   */
-  bool handleLobbyMessage(dynamic msg) {
+  bool _handleLobbyMessage(dynamic msg) {
     Map<String, dynamic> msgMap = jsonDecode(msg);
 
     if (!msgMap.containsKey("name") || msgMap["name"] != "msg" 
@@ -255,15 +254,15 @@ class JackboxSession {
     
   }
 
-  // handleIntraMessage handles incoming messages from the GameHandler
-  void handleIntraMessage(IntraMsg msg) {
+  // handleIntMessage handles incoming messages from the GameHandler
+  void _handleIntMessage(IntMsg msg) {
     switch (msg.type) {
-      case IntraMsgType.SESSION:
+      case IntMsgType.SESSION:
         break;
-      case IntraMsgType.JACKBOX:
-        sendWSMessage((msg as IntraJackboxMsg).msg);
+      case IntMsgType.JACKBOX:
+        _sendWSMessage((msg as IntJackboxMsg).msg);
         break;
-      case IntraMsgType.UI:
+      case IntMsgType.UI:
         break;
     }
   }
@@ -274,10 +273,7 @@ class JackboxSession {
       this.wsSub = null;
     }
 
-    if (this.ws != null) {
-      this.ws.sink.close();
-      this.ws = null;
-    }
+    _disconnectWS();
 
     if (this.gameChannelSub != null) {
       this.gameChannelSub.cancel();
@@ -295,6 +291,6 @@ class JackboxSession {
     }
 
     this.meta.clear();
-    this.meta.userID = genUserID();
+    this.meta.userID = _genUserID();
   }
 }

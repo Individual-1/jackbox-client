@@ -79,23 +79,16 @@ packages:
     source: hosted
     version: "5.1.0"
   built_collection:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: built_collection
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.2"
   built_value:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: built_value
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.1.0"
-  built_value_generator:
-    dependency: "direct dev"
-    description:
-      name: built_value_generator
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.1.0"
@@ -200,6 +193,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed:
+    dependency: "direct dev"
+    description:
+      name: freezed
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.8"
+  freezed_annotation:
+    dependency: "direct main"
+    description:
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.1"
   glob:
     dependency: transitive
     description:
@@ -263,6 +270,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  json_serializable:
+    dependency: "direct dev"
+    description:
+      name: json_serializable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.0"
   logging:
     dependency: transitive
     description:
@@ -304,7 +318,7 @@ packages:
       name: node_io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+2"
+    version: "1.1.0"
   package_config:
     dependency: transitive
     description:

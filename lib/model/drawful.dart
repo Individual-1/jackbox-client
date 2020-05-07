@@ -1,4 +1,4 @@
-library jb_state_drawful;
+library drawful;
 
 enum GameState {
   MISC_LOBBY,

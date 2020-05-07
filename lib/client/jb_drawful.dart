@@ -3,21 +3,23 @@ library jb_drawful;
 import 'dart:async';
 import 'dart:isolate';
 
-import 'jb_game_handler.dart';
-import 'jb_data.dart';
-import 'int_data.dart';
-import 'jb_state_drawful.dart' as state;
+
+import 'package:jackbox_client/model/internal.dart';
+import 'package:jackbox_client/model/jackbox.dart';
+import 'package:jackbox_client/model/drawful.dart' as state;
+
+import 'package:jackbox_client/client/jb_game_handler.dart';
 
 class DrawfulHandler extends GameHandler {
   DrawfulHandler(SendPort port, SessionData meta) : super(port, meta);
 
-  void handleIntraMessage(IntraMsg msg) {
+  void _handleIntMessage(IntMsg msg) {
     switch (msg.type) {
-      case IntraMsgType.SESSION:
+      case IntMsgType.SESSION:
         break;
-      case IntraMsgType.JACKBOX:
+      case IntMsgType.JACKBOX:
         break;
-      case IntraMsgType.UI:
+      case IntMsgType.UI:
         break;
     }
   }
