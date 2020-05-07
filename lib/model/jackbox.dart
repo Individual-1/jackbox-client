@@ -1,89 +1,109 @@
 library jackbox;
 
-//import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_json_mapper/dart_json_mapper.dart'
+    show JsonMapper, jsonSerializable, JsonProperty, Json;
 
-part 'jackbox.freezed.dart';
-part 'jackbox.g.dart';
+import 'jackbox.reflectable.dart' show initializeReflectable;
 
-@freezed
-abstract class RoomInfo with _$RoomInfo {
-  @JsonSerializable()
-  const factory RoomInfo(
-    @JsonKey(name: 'roomid') String roomID,
-    @JsonKey(name: 'server') String server,
-    @JsonKey(name: 'apptag') String appTag,
-    @JsonKey(name: 'appid') String appID,
-    @JsonKey(name: 'numAudience') int numAudience,
-    @JsonKey(name: 'joinAs') String joinAs,
-    @JsonKey(name: 'requiresPassword') bool requiresPassword,
-  ) = _RoomInfo;
+@jsonSerializable
+class RoomInfo {
+  @JsonProperty(name: 'roomid')
+  String roomID;
 
-  factory RoomInfo.fromJson(Map<String, dynamic> json) =>
-      _$RoomInfoFromJson(json);
+  @JsonProperty(name: 'server')
+  String server;
+
+  @JsonProperty(name: 'apptag')
+  String appTag;
+
+  @JsonProperty(name: 'appid')
+  String appID;
+
+  @JsonProperty(name: 'numAudience')
+  int numAudience;
+
+  @JsonProperty(name: 'joinAs')
+  String joinAs;
+
+  @JsonProperty(name: 'requiresPassword')
+  bool requiresPassword;
 }
 
-@freezed
-abstract class Outer with _$Outer {
-  @JsonSerializable()
-  const factory Outer(
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'args') List<ArgMsg> args,
-  ) = _Outer;
+@jsonSerializable
+class Outer {
+  @JsonProperty(name: 'name')
+  String name;
 
-  factory Outer.fromJson(Map<String, dynamic> json) => _$OuterFromJson(json);
+  @JsonProperty(name: 'args')
+  List<ArgMsg> args;
 }
 
-@freezed
-abstract class ArgMsg with _$ArgMsg {
-  @JsonSerializable()
-  const factory ArgMsg.result(
-    @JsonKey(name: 'type') String type,
-    @JsonKey(name: 'action') String action,
-    @JsonKey(name: 'success') bool success,
-    @JsonKey(name: 'initial') bool initial,
-    @JsonKey(name: 'roomId') String roomID,
-    @JsonKey(name: 'joinType') String joinType,
-    @JsonKey(name: 'userId') String userID,
-    @JsonKey(name: 'options') ArgResultOptions options,
-  ) = ArgResult;
+@jsonSerializable
+@Json(typeNameProperty: 'typeName')
+abstract class ArgMsg {
+  @JsonProperty(name: 'type')
+  String type;
 
-  @JsonSerializable()
-  const factory ArgMsg.event(
-    @JsonKey(name: 'type') String type,
-    @JsonKey(name: 'roomId') String roomID,
-    @JsonKey(name: 'event') String event,
-    @JsonKey(name: 'blob') ArgEventBlob blob,
-  ) = ArgEvent;
-
-  factory ArgMsg.fromJson(Map<String, dynamic> json) => _$ArgMsgFromJson(json);
+  @JsonProperty(name: 'roomId')
+  String roomID;
 }
 
-@freezed
-abstract class ArgResultOptions with _$ArgResultOptions {
-  @JsonSerializable()
-  const factory ArgResultOptions(
-    @JsonKey(name: 'email') String email,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'phone') String phone,
-    @JsonKey(name: 'roomcode') String roomCode,
-  ) = _ArgResultOptions;
+@jsonSerializable
+class ArgResult extends ArgMsg {
+  @JsonProperty(name: 'action')
+  String action;
 
-  factory ArgResultOptions.fromJson(Map<String, dynamic> json) =>
-      _$ArgResultOptionsFromJson(json);
+  @JsonProperty(name: 'success')
+  bool success;
+
+  @JsonProperty(name: 'initial')
+  bool initial;
+
+  @JsonProperty(name: 'joinType')
+  String joinType;
+
+  @JsonProperty(name: 'userId')
+  String userID;
+
+  @JsonProperty(name: 'options')
+  ArgResultOptions options;
 }
 
-@freezed
-abstract class ArgEventBlob with _$ArgEventBlob {
-  @JsonSerializable()
-  const factory ArgEventBlob(
-    @JsonKey(name: 'email') String email,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'phone') String phone,
-    @JsonKey(name: 'roomcode') String roomCode,
-  ) = _ArgEventBlob;
+@jsonSerializable
+class ArgEvent extends ArgMsg {
+  @JsonProperty(name: 'event')
+  String event;
 
-  factory ArgEventBlob.fromJson(Map<String, dynamic> json) =>
-      _$ArgEventBlobFromJson(json);
+  @JsonProperty(name: 'blob')
+  ArgEventBlob blob;
+}
+
+@jsonSerializable
+abstract class ArgResultOptions {
+  @JsonProperty(name: 'email')
+  String email;
+
+  @JsonProperty(name: 'name')
+  String name;
+
+  @JsonProperty(name: 'phone')
+  String phone;
+
+  @JsonProperty(name: 'roomcode')
+  String roomCode;
+}
+
+@jsonSerializable
+abstract class ArgEventBlob {
+  @JsonProperty(name: 'email')
+  String email;
+
+  @JsonProperty(name: 'name')
+  String name;
+
+  @JsonProperty(name: 'phone')
+  String phone;
+
+  @JsonProperty(name: 'roomcode')
+  String roomCode;
 }
