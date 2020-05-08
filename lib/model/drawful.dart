@@ -1,5 +1,7 @@
 library drawful;
 
+import 'package:jackbox_client/model/jackbox.dart';
+
 enum GameState {
   MISC_LOBBY,
   GAME_LOGO,
@@ -20,3 +22,12 @@ const Map<String, GameState> StateMap = {
   'Gameplay_LyingDone': GameState.GAME_LIEDONE,
   'Gameplay_ChooseLie': GameState.GAME_CHOOSELIE,
 };
+
+// Drawful specific session states to send
+abstract class DrawfulState extends JackboxState {}
+
+class DrawfulDrawingState extends DrawfulState {}
+class DrawfulDrawingDone extends DrawfulState { Map<String, dynamic> lines;  DrawfulDrawingDone({this.lines}); }
+class DrawfulDoneState extends DrawfulState {}
+class DrawfulEnterLieState extends DrawfulState {}
+class DrawfulChooseLieState extends DrawfulState {}

@@ -15,10 +15,11 @@ class IntMsg {
 }
 
 class IntSessionMsg extends IntMsg {
+  IntSessionAction action;
+  dynamic blob;
 
-
-  IntSessionMsg() {
-    this.type = IntMsgType.SESSION;
+  IntSessionMsg({this.action, this.blob}) {
+    type = IntMsgType.SESSION;
   }
 }
 
@@ -28,15 +29,20 @@ class IntJackboxMsg extends IntMsg {
   dynamic msg;
 
   IntJackboxMsg({this.msg}) {
-    this.type = IntMsgType.JACKBOX;
+    type = IntMsgType.JACKBOX;
   }
 }
 
 class IntUIMsg extends IntMsg {
+  JackboxState state;
 
-  IntUIMsg() {
-    this.type = IntMsgType.UI;
+  IntUIMsg({this.state}) {
+    type = IntMsgType.UI;
   }
+}
+
+enum IntSessionAction {
+  PLACEHOLDER,
 }
 
 class SessionData {
@@ -45,16 +51,16 @@ class SessionData {
   RoomInfo roomInfo = null;
 
   SessionData() {
-    this.userID = "";
-    this.userName = "";
-    this.roomInfo = null;
+    userID = "";
+    userName = "";
+    roomInfo = null;
   }
 
   SessionData.withData({this.userID, this.userName, this.roomInfo});
 
   void clear() {
-    this.userID = "";
-    this.userName = "";
-    this.roomInfo = null;
+    userID = "";
+    userName = "";
+    roomInfo = null;
   }
 }

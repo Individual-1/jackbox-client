@@ -11,39 +11,64 @@ import 'package:stream_channel/isolate_channel.dart';
 typedef GameHandler GameHandlerDef(SendPort port, SessionData meta);
 
 abstract class GameHandler {
-  IsolateChannel<IntMsg> gameChannel;
-  StreamSubscription<dynamic> gameChannelSub;
+  IsolateChannel<IntMsg> _gameChannel;
+  StreamSubscription<dynamic> _gameChannelSub;
   SessionData meta;
 
   GameHandler(SendPort port, SessionData meta) {
     this.meta = meta;
 
-    this.gameChannel = new IsolateChannel.connectSend(port);
+    _gameChannel = new IsolateChannel.connectSend(port);
 
-    this.gameChannelSub =
-        this.gameChannel.stream.listen(_handleIntMessage, onDone: () {
+    _gameChannelSub = _gameChannel.stream.listen(_handleIntMessage, onDone: () {
       resetState();
     });
   }
 
-  void _sendIntMessage(IntMsg msg) {
-    gameChannel.sink.add(msg);
+  void sendIntMessage(IntMsg msg) {
+    _gameChannel.sink.add(msg);
   }
 
-  void _handleIntMessage(IntMsg msg);
+  void _handleIntMessage(IntMsg msg) {
+    switch (msg.type) {
+      case IntMsgType.SESSION:
+        if (msg is IntSessionMsg) {
+          _handleSessMessage(msg);
+        }
+        break;
+      case IntMsgType.JACKBOX:
+        if (msg is IntJackboxMsg) {
+          _handleJbMessage(msg);
+        }
+        break;
+      case IntMsgType.UI:
+        if (msg is IntUIMsg) {
+          _handleUIMessage(msg);
+        }
+        break;
+    }
+  }
+
+  void _handleSessMessage(IntSessionMsg msg);
+
+  void _handleJbMessage(IntJackboxMsg msg);
+
+  void _handleUIMessage(IntUIMsg msg);
+
+  bool canHandleStateType(JackboxState state);
 
   void resetState() {
-    if (this.gameChannelSub != null) {
-      this.gameChannelSub.cancel();
-      this.gameChannelSub = null;
+    if (_gameChannelSub != null) {
+      _gameChannelSub.cancel();
+      _gameChannelSub = null;
     }
 
-    if (this.gameChannel != null) {
-      this.gameChannel.sink.close();
-      this.gameChannel = null;
+    if (_gameChannel != null) {
+      _gameChannel.sink.close();
+      _gameChannel = null;
     }
 
-    this.meta.clear();
-    this.meta = null;
+    meta.clear();
+    meta = null;
   }
 }

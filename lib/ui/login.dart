@@ -6,53 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:provider/provider.dart';
 
-import 'package:jackbox_client/bloc/jackbox_bloc.dart';
-
-class Draw extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _DrawState createState() => _DrawState();
+  _LoginState createState() => _LoginState();
 }
 
-class PictureLine {
-  Paint paint;
-  List<Offset> points;
-  double thickness;
-  bool open;
-
-  PictureLine({this.thickness, this.points, this.paint}) {
-    open = true;
-  }
-
-  Map<String, dynamic> toJson() {
-    int base = paint.color.value & 0xFFFFFF;
-    List<Map> pointsJson = new List<Map>();
-
-    for (Offset point in this.points) {
-      pointsJson.add({
-        'x': point.dx.round(),
-        'y': point.dy.round(),
-      });
-    }
-
-    return {
-      'thickness': thickness.round(),
-      'color': "#" + base.toRadixString(16).padLeft(6, '0'),
-      'points': pointsJson,
-    };
-  }
-}
-
-enum SelectedMode { StrokeWidth, Color }
-
-class _DrawState extends State<Draw> {
+class _LoginState extends State<Login> {
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
   double strokeWidth = 3.0;
   bool showBottomList = false;
   StrokeCap strokeCap = StrokeCap.round;
-  SelectedMode selectedMode = SelectedMode.StrokeWidth;
   List<Color> colors = [
     Colors.red,
     Colors.green,
@@ -119,8 +84,6 @@ class _DrawState extends State<Draw> {
 
   @override
   Widget build(BuildContext context) {
-    final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-
     gd = new GestureDetector(
       onPanStart: panStart,
       onPanUpdate: panUpdate,
@@ -335,149 +298,4 @@ Widget _copyTextDialog(String text) {
           ))),
         ]),
       ));
-}
-
-class LineNotifier extends ChangeNotifier {
-  List<PictureLine> lines;
-  Size canvasSize;
-
-  LineNotifier() {
-    this.lines = new List();
-    this.canvasSize = Size.zero;
-  }
-
-  void startStroke(Offset pos, double strokeWidth, Paint paint) {
-    lines.add(PictureLine(
-      thickness: strokeWidth,
-      points: new List<Offset>.filled(1, pos, growable: true),
-      paint: paint,
-    ));
-
-    notifyListeners();
-  }
-
-  void appendStroke(Offset pos, double strokeWidth, Paint paint) {
-    if (lines.length > 0 && lines.last.open) {
-      lines.last.points.add(pos);
-    } else {
-      lines.add(PictureLine(
-        thickness: strokeWidth,
-        points: new List<Offset>.filled(1, pos, growable: true),
-        paint: paint,
-      ));
-    }
-
-    notifyListeners();
-  }
-
-  void endStroke() {
-    if (lines.length > 0) {
-      lines.last.open = false;
-    }
-    notifyListeners();
-  }
-
-  void removeLast() {
-    if (lines.length > 0) {
-      lines.removeLast();
-      notifyListeners();
-    }
-  }
-
-  bool checkInBounds(Offset localPos) {
-    if (localPos.dx < 0 ||
-        localPos.dy < 0 ||
-        localPos.dx > this.canvasSize.width ||
-        localPos.dy > this.canvasSize.height) {
-      return false;
-    }
-
-    return true;
-  }
-
-  void resizeLines(Size target) {
-    if (this.canvasSize != target) {
-      _resizeLines(this.canvasSize, target, this.lines);
-      this.canvasSize = target;
-    }
-  }
-
-  void _resizeLines(Size initial, Size target, List<PictureLine> lineList) {
-    double scaleX = target.width / initial.width;
-    double scaleY = target.height / initial.height;
-    double avgScale = (scaleX + scaleY) / 2;
-
-    for (PictureLine line in lineList) {
-      if (line.thickness > 1.0) {
-        line.thickness = max(line.thickness * avgScale, 1.0);
-      }
-
-      for (int i = 0; i < line.points.length; i++) {
-        line.points[i] = line.points[i].scale(scaleX, scaleY);
-      }
-    }
-  }
-
-  String exportLines(Size scaleTo) {
-    List<PictureLine> lineCopy = new List();
-
-    for (PictureLine line in this.lines) {
-      lineCopy.add(PictureLine());
-      lineCopy.last.thickness = line.thickness;
-      lineCopy.last.paint = Paint()
-        ..strokeCap = line.paint.strokeCap
-        ..isAntiAlias = line.paint.isAntiAlias
-        ..color = line.paint.color
-        ..strokeWidth = line.paint.strokeWidth
-        ..style = line.paint.style;
-
-      lineCopy.last.points = new List();
-      for (Offset off in line.points) {
-        lineCopy.last.points.add(Offset(off.dx, off.dy));
-      }
-    }
-
-    if (this.canvasSize != scaleTo) {
-      _resizeLines(this.canvasSize, scaleTo, lineCopy);
-    }
-
-    return jsonEncode(lineCopy);
-  }
-}
-
-class DrawingPainter extends CustomPainter {
-  LineNotifier ln;
-
-  DrawingPainter(LineNotifier ln) : super(repaint: ln) {
-    this.ln = ln;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (this.ln.canvasSize == Size.zero) {
-      this.ln.canvasSize = size;
-    }
-
-    if (this.ln.canvasSize != size) {
-      this.ln.resizeLines(size);
-    }
-
-    var rect = Offset.zero & size;
-    canvas.clipRect(rect);
-
-    Paint canvasFill = new Paint();
-    canvasFill.color = Colors.white;
-    canvasFill.style = PaintingStyle.fill;
-    canvas.drawRect(rect, canvasFill);
-
-    for (var line in ln.lines) {
-      Path linePath = new Path();
-
-      linePath.addPolygon(line.points, false);
-      canvas.drawPath(linePath, line.paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(DrawingPainter oldDelegate) => true;
 }

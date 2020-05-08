@@ -1,6 +1,7 @@
 library jb_drawful;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:isolate';
 
 
@@ -13,27 +14,33 @@ import 'package:jackbox_client/client/jb_game_handler.dart';
 class DrawfulHandler extends GameHandler {
   DrawfulHandler(SendPort port, SessionData meta) : super(port, meta);
 
-  void _handleIntMessage(IntMsg msg) {
-    switch (msg.type) {
-      case IntMsgType.SESSION:
-        break;
-      case IntMsgType.JACKBOX:
-        break;
-      case IntMsgType.UI:
-        break;
+  @override
+  void _handleUIMessage(IntUIMsg msg) {
+    if (msg.state is state.DrawfulState) {
+      switch (msg.state.runtimeType) {
+        case state.DrawfulDrawingDone:
+          sendImage((msg.state as state.DrawfulDrawingDone).lines);
+          break;
+        default:
+          // We don't care about these cases because we don't have to do anything
+          break;
+      }
     }
   }
 
-/*
-// SendImage takes in a serialized json array and sends it to the jackbox server
-  void SendImage(String picLineJson) {
+  @override
+  void _handleJbMessage(IntJackboxMsg msg) {
+    Outer parsed;
 
-    if (this.roomInfo == null || this.ws == null) {
-      throw http.ClientException('No connect found, cannot send image to non-existant room');
+    parsed = Outer.fromJson(msg.msg);
+  }
+
+// sendImage takes in a serialized json array and sends it to the jackbox server
+  void sendImage(Map<String, dynamic> lines) {
+
+    if (meta.roomInfo == null) {
+      return;
     }
-
-    // This is dumb but we need to de-serialize the input and put it into our array then re-serialize it
-    dynamic picLines = jsonDecode(picLineJson);
 
     // Map containing arguments to join a jackbox room
     Map<String, dynamic> msg = {
@@ -42,12 +49,12 @@ class DrawfulHandler extends GameHandler {
         {
           'type': 'Action',
           'action': 'SendMessageToRoomOwner',
-          'appId': this.roomInfo.appID,
-          'roomId': this.roomInfo.roomID,
-          'userId': this.userID,
+          'appId': meta.roomInfo.appID,
+          'roomId': meta.roomInfo.roomID,
+          'userId': meta.userID,
           'message': {
             'setPlayerPicture': true,
-            'pictureLines': picLines,
+            'pictureLines': lines,
           }
         }
       ]
@@ -55,7 +62,15 @@ class DrawfulHandler extends GameHandler {
 
     String smsg = jsonEncode(msg);
 
-    sendMessage(smsg);
+    sendIntMessage(IntJackboxMsg(msg: smsg));
   }
-  */
+
+  bool canHandleStateType(JackboxState state) {
+    if (state is state.DrawfulState) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

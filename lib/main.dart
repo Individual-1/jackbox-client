@@ -1,17 +1,28 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 import 'package:jackbox_client/ui/draw.dart';
 
-import 'package:flutter/material.dart';
-
 void main() {
-  runApp(DrawApp());
+  runApp(JBApp());
 }
 
-class DrawApp extends StatelessWidget {
+class JBApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return Provider(
+    create: (context) => JackboxBloc(),
+    dispose: (context, value) => value.dispose(),
+    child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Draw(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Login(),
+        '/draw': (context) => Draw(),
+      }
+
+    )
     );
   }
 

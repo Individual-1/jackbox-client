@@ -1,5 +1,17 @@
 library jackbox;
 
+abstract class JackboxState {}
+
+abstract class SessionState extends JackboxState {}
+
+// SessionLoginState is somewhat overloaded
+// 1. When neither or only one of the fields is filled, the empty one is invalid
+// 2. When both are filled and we recieve it then we attempt a login and invalidate any unusable fields
+// 3. If we attempt a login and it is successful, we change state entirely
+class SessionLoginState extends SessionState {String roomCode; String name; SessionLoginState({this.roomCode, this.name}); }
+
+class SessionLobbyState extends SessionState {bool canStartLobby; SessionLobbyState({this.canStartLobby}); }
+
 class RoomInfo {
   String roomID;
 
@@ -15,8 +27,14 @@ class RoomInfo {
 
   bool requiresPassword;
 
-  RoomInfo({this.roomID, this.server, this.appTag, this.appID, 
-    this.numAudience, this.joinAs, this.requiresPassword});
+  RoomInfo(
+      {this.roomID,
+      this.server,
+      this.appTag,
+      this.appID,
+      this.numAudience,
+      this.joinAs,
+      this.requiresPassword});
 
   factory RoomInfo.fromJson(Map<String, dynamic> json) {
     return RoomInfo(
@@ -42,22 +60,20 @@ class Outer {
 
     if (json.containsKey('args') && json['args'] is List) {
       for (dynamic arg in json['args']) {
-        if (!(arg is Map<String, dynamic>)) {
-          continue;
-        }
+        if (arg is Map<String, dynamic>) {
+          Map<String, dynamic> argBody = arg;
 
-        Map<String, dynamic> argBody = arg as Map<String, dynamic>;
-
-        if (argBody.containsKey('type')) {
-          switch (argBody['type'].toString().toLowerCase()) {
-            case 'result':
-            args.add(ArgResult.fromJson(arg));
-            break;
-            case 'event':
-            args.add(ArgEvent.fromJson(arg));
-            break;
-            default:
-            break;
+          if (argBody.containsKey('type')) {
+            switch (argBody['type'].toString().toLowerCase()) {
+              case 'result':
+                args.add(ArgResult.fromJson(arg));
+                break;
+              case 'event':
+                args.add(ArgEvent.fromJson(arg));
+                break;
+              default:
+                break;
+            }
           }
         }
       }
@@ -85,8 +101,15 @@ class ArgResult extends ArgMsg {
   String userID;
   ArgResultOptions options;
 
-  ArgResult({this.type, this.roomID, this.action, this.success, this.initial,
-    this.joinType, this.userID, this.options});
+  ArgResult(
+      {this.type,
+      this.roomID,
+      this.action,
+      this.success,
+      this.initial,
+      this.joinType,
+      this.userID,
+      this.options});
 
   factory ArgResult.fromJson(Map<String, dynamic> json) {
     return ArgResult(
@@ -114,12 +137,10 @@ class ArgEvent extends ArgMsg {
     ArgEventBlob blob;
 
     if (json.containsKey('blob') && json['blob'] is Map<String, dynamic>) {
-      Map<String, dynamic> blobBody = json['blob'] as Map<String, dynamic>;
+      Map<String, dynamic> blobBody = json['blob'];
 
-      if (blobBody.containsKey('')) {
-
-      }
-  }
+      if (blobBody.containsKey('')) {}
+    }
 
     return ArgEvent(
       type: json['type'],
@@ -130,8 +151,7 @@ class ArgEvent extends ArgMsg {
   }
 }
 
-abstract class ArgResultOptions {
-}
+abstract class ArgResultOptions {}
 
 class ArgResultOptionsJoinRoom extends ArgResultOptions {
   String email;
@@ -149,13 +169,15 @@ class ArgResultOptionsJoinRoom extends ArgResultOptions {
       roomCode: json['roomCode'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return Map<String, dynamic>();
+  }
 }
 
-abstract class ArgEventBlob {
-}
+abstract class ArgEventBlob {}
 
 class ArgEventBlobRoom extends ArgEventBlob {
-
   ArgEventBlobRoom();
 
   factory ArgEventBlobRoom.fromJson(Map<String, dynamic> json) {

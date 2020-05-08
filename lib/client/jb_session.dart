@@ -18,20 +18,6 @@ import 'package:jackbox_client/model/socketio.dart' as mt;
 import 'package:jackbox_client/client/jb_game_handler.dart';
 import 'package:jackbox_client/client/jb_drawful.dart';
 
-Future<void> main() async {
-  JackboxSession js = new JackboxSession();
-
-  try {
-    await js.joinRoom("TCDH", "name2");
-  } catch (e) {
-    print(e);
-    return;
-  }
-
-  sleep(Duration(seconds: 5));
-  String plJson = await new File('test.json').readAsString();
-}
-
 /*
   Jackbox uses a version of socket.io from 2014 (0.9.17) so rather than try to
   interop with it using a modern library, I just pull out the bits I need by
@@ -50,16 +36,25 @@ class JackboxSession {
 
   SessionData meta;
 
-  IOWebSocketChannel ws;
-  StreamSubscription<dynamic> wsSub;
-  GameHandler gameHandler;
-  IsolateChannel<IntMsg> gameChannel;
-  StreamSubscription<dynamic> gameChannelSub;
+  IOWebSocketChannel _ws;
+  StreamSubscription<dynamic> _wsSub;
 
-  JackboxSession() {
-    this.meta = SessionData();
+  IsolateChannel<JackboxState> _blocChannel;
+  StreamSubscription<JackboxState> _blocChannelSub;
 
-    this.meta.userID = _genUserID();
+  GameHandler _gameHandler;
+  IsolateChannel<IntMsg> _gameChannel;
+  StreamSubscription<IntMsg> _gameChannelSub;
+
+  JackboxSession(SendPort port) {
+    _blocChannel = new IsolateChannel.connectSend(port);
+    _blocChannelSub = _blocChannel.stream.listen(_handleUIMessage, onDone: () {
+      resetState();
+    });
+
+    meta = SessionData();
+
+    meta.userID = _genUserID();
   }
 
   String _genUserID() {
@@ -70,13 +65,13 @@ class JackboxSession {
 
   Future<void> joinRoom(String roomID, String name) async {
     try {
-      this.meta.roomInfo = await _getRoomInfo(roomID);
+      meta.roomInfo = await _getRoomInfo(roomID);
     } catch (e) {
       // Failed to retrieve room information
       throw e;
     }
 
-    this.meta.userName = name;
+    meta.userName = name;
 
     // Map containing arguments to join a jackbox room
     Map<String, dynamic> msg = {
@@ -85,14 +80,14 @@ class JackboxSession {
         {
           'type': 'Action',
           'action': 'JoinRoom',
-          'appId': this.meta.roomInfo.appID,
-          'roomId': this.meta.roomInfo.roomID,
-          'userId': this.meta.userID,
-          'joinType': this.meta.roomInfo.joinAs,
-          'name': this.meta.userName,
+          'appId': meta.roomInfo.appID,
+          'roomId': meta.roomInfo.roomID,
+          'userId': meta.userID,
+          'joinType': meta.roomInfo.joinAs,
+          'name': meta.userName,
           'options': {
-            'roomcode': this.meta.roomInfo.roomID,
-            'name': this.meta.userName,
+            'roomcode': meta.roomInfo.roomID,
+            'name': meta.userName,
           }
         }
       ]
@@ -112,7 +107,7 @@ class JackboxSession {
 
   Future<RoomInfo> _getRoomInfo(String roomID) async {
     var uri = new Uri.https(
-        _roomBase, p.join(_roomPath, roomID), {"userId": this.meta.userID});
+        _roomBase, p.join(_roomPath, roomID), {"userId": meta.userID});
 
     var resp = await http.get(uri);
 
@@ -137,11 +132,10 @@ class JackboxSession {
     }
 
     ReceivePort port = new ReceivePort();
-    this.gameHandler = handlerMap[appID](port.sendPort, this.meta);
-    this.gameChannel = new IsolateChannel.connectReceive(port);
+    _gameHandler = handlerMap[appID](port.sendPort, meta);
+    _gameChannel = new IsolateChannel.connectReceive(port);
 
-    this.gameChannelSub =
-        this.gameChannel.stream.listen(_handleWSMessage, onDone: () {
+    _gameChannelSub = _gameChannel.stream.listen(_handleIntMessage, onDone: () {
       resetState();
     });
   }
@@ -149,7 +143,7 @@ class JackboxSession {
   Future<void> _connectWS() async {
     _disconnectWS();
 
-    if (this.gameHandler == null) {
+    if (_gameHandler == null) {
       throw Exception(
           "No game handler found, game may not be implemented, refusing to connect");
     }
@@ -179,43 +173,43 @@ class JackboxSession {
         path: p.join(_wsSocketPath, sessionName));
 
     try {
-      this.ws = IOWebSocketChannel.connect(wssURI);
+      _ws = IOWebSocketChannel.connect(wssURI);
     } catch (e) {
       throw e;
     }
 
     // Set up message handler
-    this.wsSub = this.ws.stream.listen(_handleWSMessage, onDone: () {
+    _wsSub = _ws.stream.listen(_handleWSMessage, onDone: () {
       resetState();
     });
   }
 
   void _disconnectWS() {
-    if (this.ws != null) {
-      this.ws.sink.close(status.goingAway);
-      this.ws = null;
+    if (_ws != null) {
+      _ws.sink.close(status.goingAway);
+      _ws = null;
     }
   }
 
   // Send the socket.io data type, Jackbox doesn't use any of the extra fields so the prefix is just 5:::
   void _sendWSMessage(String msg) {
-    if (this.ws == null) {
+    if (_ws == null) {
       return;
     }
 
-    this.ws.sink.add(mt.PrepareMessageOfType(mt.MSG, msg));
+    _ws.sink.add(mt.PrepareMessageOfType(mt.MSG, msg));
   }
 
   void _sendIntMessage(IntMsg msg) {
-    gameChannel.sink.add(msg);
+    _gameChannel.sink.add(msg);
   }
 
   void _handlePing() {
-    if (this.ws == null) {
+    if (_ws == null) {
       return;
     }
 
-    this.ws.sink.add(mt.PrepareMessageOfType(mt.PONG, ''));
+    _ws.sink.add(mt.PrepareMessageOfType(mt.PONG, ''));
   }
 
   // handleWSMessage handles different kinds of Socket.io messages and forward relevant ones
@@ -229,10 +223,17 @@ class JackboxSession {
       case mt.PONG:
         break;
       case mt.MSG:
-        _sendIntMessage(IntJackboxMsg(msg: mt.GetMSGBody(msg)));
-        //this.sc.add(mt.GetMSGBody(msg));
+        _handleWSJbMessage(mt.GetMSGBody(msg));
+        //sc.add(mt.GetMSGBody(msg));
         break;
     }
+  }
+
+  void _handleWSJbMessage(dynamic msg) {
+    // Here we need to handle messages relating to the lobby or joining a room
+
+    // TODO: Actually handle messages
+    _sendIntMessage(IntJackboxMsg(msg: msg));
   }
 
   // handleLobbyMessage updates our state for lobby related messages
@@ -245,52 +246,95 @@ class JackboxSession {
   bool _handleLobbyMessage(dynamic msg) {
     Map<String, dynamic> msgMap = jsonDecode(msg);
 
-    if (!msgMap.containsKey("name") || msgMap["name"] != "msg" 
-      || !msgMap.containsKey("args") || !msgMap["args"] is List) {
+    if (!msgMap.containsKey("name") ||
+        msgMap["name"] != "msg" ||
+        !msgMap.containsKey("args") ||
+        !msgMap["args"] is List) {
       // This message isn't formed how we expect, just throw it away and say we succeeded
       return true;
     }
-
-    
   }
 
-  // handleIntMessage handles incoming messages from the GameHandler
+  // handleIntMessage and its offshoots handle incoming messages from the GameHandler only
   void _handleIntMessage(IntMsg msg) {
     switch (msg.type) {
       case IntMsgType.SESSION:
+        if (msg is IntSessionMsg) {
+          _handleIntSessMessage(msg);
+        }
         break;
       case IntMsgType.JACKBOX:
-        _sendWSMessage((msg as IntJackboxMsg).msg);
+        if (msg is IntJackboxMsg) {
+          _handleIntJbMessage(msg);
+        }
         break;
       case IntMsgType.UI:
+        if (msg is IntUIMsg) {
+          _handleIntUIMessage(msg);
+        }
         break;
+    }
+  }
+
+  void _handleIntSessMessage(IntSessionMsg msg) {}
+
+  void _handleIntJbMessage(IntJackboxMsg msg) {
+    _sendWSMessage(msg.msg);
+  }
+
+  void _handleIntUIMessage(IntUIMsg msg) {}
+
+  void _sendUIMessage(JackboxState state) {
+    _blocChannel.sink.add(state);
+  }
+
+  // handleUIMessage handles IntUIMsg types from the UI frontend and BLoC modules
+  void _handleUIMessage(JackboxState state) {
+    if (state is SessionState) {
+      _handleSessionUIMessage(state);
+    } else if (_gameHandler.canHandleStateType(state)) {
+      _sendIntMessage(IntUIMsg(state: state));
+    }
+
+    // Ignore everything we can't handle
+  }
+
+  void _handleSessionUIMessage(SessionState state) {
+    if (state is SessionLoginState) {
+      // Malformed LoginState, just send it back as is
+      if (state.roomCode == "" || state.name == "") {
+        _sendUIMessage(state);
+        return;
+      }
+
+      joinRoom(state.roomCode, state.name);
     }
   }
 
   void resetState() {
-    if (this.wsSub != null) {
-      this.wsSub.cancel();
-      this.wsSub = null;
+    if (_wsSub != null) {
+      _wsSub.cancel();
+      _wsSub = null;
     }
 
     _disconnectWS();
 
-    if (this.gameChannelSub != null) {
-      this.gameChannelSub.cancel();
-      this.gameChannelSub = null;
+    if (_gameChannelSub != null) {
+      _gameChannelSub.cancel();
+      _gameChannelSub = null;
     }
 
-    if (this.gameChannel != null) {
-      this.gameChannel.sink.close();
-      this.gameChannel = null;
+    if (_gameChannel != null) {
+      _gameChannel.sink.close();
+      _gameChannel = null;
     }
 
-    if (this.gameHandler != null) {
-      this.gameHandler.resetState();
-      this.gameHandler = null;
+    if (_gameHandler != null) {
+      _gameHandler.resetState();
+      _gameHandler = null;
     }
 
-    this.meta.clear();
-    this.meta.userID = _genUserID();
+    meta.clear();
+    meta.userID = _genUserID();
   }
 }
