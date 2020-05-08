@@ -7,7 +7,7 @@ import 'dart:isolate';
 
 import 'package:jackbox_client/model/internal.dart';
 import 'package:jackbox_client/model/jackbox.dart';
-import 'package:jackbox_client/model/drawful.dart' as state;
+import 'package:jackbox_client/model/drawful.dart' as ds;
 
 import 'package:jackbox_client/client/jb_game_handler.dart';
 
@@ -16,10 +16,10 @@ class DrawfulHandler extends GameHandler {
 
   @override
   void _handleUIMessage(IntUIMsg msg) {
-    if (msg.state is state.DrawfulState) {
+    if (msg.state is ds.DrawfulState) {
       switch (msg.state.runtimeType) {
-        case state.DrawfulDrawingDone:
-          sendImage((msg.state as state.DrawfulDrawingDone).lines);
+        case ds.DrawfulDrawingDone:
+          sendImage((msg.state as ds.DrawfulDrawingDone).lines);
           break;
         default:
           // We don't care about these cases because we don't have to do anything
@@ -66,7 +66,7 @@ class DrawfulHandler extends GameHandler {
   }
 
   bool canHandleStateType(JackboxState state) {
-    if (state is state.DrawfulState) {
+    if (state is ds.DrawfulState) {
       return true;
     } else {
       return false;

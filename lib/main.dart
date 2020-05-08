@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 import 'package:jackbox_client/ui/draw.dart';
+import 'package:jackbox_client/ui/login.dart';
 
 void main() {
   runApp(JBApp());

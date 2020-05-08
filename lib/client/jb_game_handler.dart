@@ -58,15 +58,8 @@ abstract class GameHandler {
   bool canHandleStateType(JackboxState state);
 
   void resetState() {
-    if (_gameChannelSub != null) {
-      _gameChannelSub.cancel();
-      _gameChannelSub = null;
-    }
-
-    if (_gameChannel != null) {
-      _gameChannel.sink.close();
-      _gameChannel = null;
-    }
+    _gameChannelSub?.cancel();
+    _gameChannel?.sink?.close();
 
     meta.clear();
     meta = null;

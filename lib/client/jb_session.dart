@@ -312,27 +312,13 @@ class JackboxSession {
   }
 
   void resetState() {
-    if (_wsSub != null) {
-      _wsSub.cancel();
-      _wsSub = null;
-    }
+    _wsSub?.cancel();
 
     _disconnectWS();
 
-    if (_gameChannelSub != null) {
-      _gameChannelSub.cancel();
-      _gameChannelSub = null;
-    }
-
-    if (_gameChannel != null) {
-      _gameChannel.sink.close();
-      _gameChannel = null;
-    }
-
-    if (_gameHandler != null) {
-      _gameHandler.resetState();
-      _gameHandler = null;
-    }
+    _gameChannelSub?.cancel();
+    _gameChannel?.sink?.close();
+    _gameHandler?.resetState();
 
     meta.clear();
     meta.userID = _genUserID();

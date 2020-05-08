@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'dart:math';
 import 'dart:convert';
@@ -73,6 +74,27 @@ class _DrawState extends State<Draw> {
   GlobalKey instrKey;
   Widget itemBar;
 
+  StreamSubscription _streamSub;
+  Stream _prevStream;
+
+  void _listen(Stream<BlocRouteTransition> stream) {
+    _streamSub = stream.listen((event) { 
+      Navigator.pushNamed(context, event.route, arguments: event.params);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
+    if (bloc.jackboxRoute != _prevStream) {
+      _streamSub?.cancel();
+      _prevStream = bloc.jackboxRoute;
+      _listen(bloc.jackboxRoute);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +102,8 @@ class _DrawState extends State<Draw> {
     drawPaint = new DrawingPainter(ln);
     instrKey = new GlobalKey();
   }
+
+
 
   void panStart(DragStartDetails details) {
     if (ln.checkInBounds(details.localPosition)) {
@@ -120,6 +144,7 @@ class _DrawState extends State<Draw> {
   @override
   Widget build(BuildContext context) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
+    Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
 
     gd = new GestureDetector(
       onPanStart: panStart,
