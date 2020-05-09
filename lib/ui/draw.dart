@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
+// Draw implements DrawfulDrawingState
 class Draw extends StatefulWidget {
   @override
   _DrawState createState() => _DrawState();

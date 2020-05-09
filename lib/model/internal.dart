@@ -16,9 +16,9 @@ class IntMsg {
 
 class IntSessionMsg extends IntMsg {
   IntSessionAction action;
-  dynamic blob;
+  dynamic data;
 
-  IntSessionMsg({this.action, this.blob}) {
+  IntSessionMsg({this.action, this.data}) {
     type = IntMsgType.SESSION;
   }
 }
@@ -33,16 +33,8 @@ class IntJackboxMsg extends IntMsg {
   }
 }
 
-class IntUIMsg extends IntMsg {
-  JackboxState state;
-
-  IntUIMsg({this.state}) {
-    type = IntMsgType.UI;
-  }
-}
-
 enum IntSessionAction {
-  PLACEHOLDER,
+  UPDATESTATE, // data = {'process': shouldProcess, 'state': newState}
 }
 
 class SessionData {

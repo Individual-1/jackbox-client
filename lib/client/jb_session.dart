@@ -18,6 +18,19 @@ import 'package:jackbox_client/model/socketio.dart' as mt;
 import 'package:jackbox_client/client/jb_game_handler.dart';
 import 'package:jackbox_client/client/jb_drawful.dart';
 
+void main() {
+  ReceivePort port = new ReceivePort();
+  IsolateChannel channel = new IsolateChannel.connectReceive(port);
+
+  StreamSubscription sub = channel.stream.listen((event) {
+    print(event);
+  });
+
+  JackboxSession jb = new JackboxSession(port.sendPort);
+
+  channel.sink.add(SessionLoginState(name: 'test', roomCode: 'KHAS'));
+}
+
 /*
   Jackbox uses a version of socket.io from 2014 (0.9.17) so rather than try to
   interop with it using a modern library, I just pull out the bits I need by
@@ -36,6 +49,8 @@ class JackboxSession {
 
   SessionData meta;
 
+  JackboxState currentState;
+
   IOWebSocketChannel _ws;
   StreamSubscription<dynamic> _wsSub;
 
@@ -46,15 +61,23 @@ class JackboxSession {
   IsolateChannel<IntMsg> _gameChannel;
   StreamSubscription<IntMsg> _gameChannelSub;
 
+  static Map<String, GameHandlerDef> _handlerMap = {
+    // Drawful 2
+    '8511cbe0-dfff-4ea9-94e0-424daad072c3': (p, r, s) =>
+        DrawfulHandler(p, r, s),
+  };
+
   JackboxSession(SendPort port) {
+    currentState = SessionLoginState(name: '', roomCode: '');
+    meta = SessionData();
+    meta.userID = _genUserID();
+
     _blocChannel = new IsolateChannel.connectSend(port);
     _blocChannelSub = _blocChannel.stream.listen(_handleUIMessage, onDone: () {
       resetState();
     });
 
-    meta = SessionData();
-
-    meta.userID = _genUserID();
+    _sendUIMessage(currentState);
   }
 
   String _genUserID() {
@@ -71,27 +94,27 @@ class JackboxSession {
       throw e;
     }
 
+    _setGameHandler(meta.roomInfo.appID);
+
     meta.userName = name;
 
-    // Map containing arguments to join a jackbox room
-    Map<String, dynamic> msg = {
-      'name': 'msg',
-      'args': [
-        {
-          'type': 'Action',
-          'action': 'JoinRoom',
-          'appId': meta.roomInfo.appID,
-          'roomId': meta.roomInfo.roomID,
-          'userId': meta.userID,
-          'joinType': meta.roomInfo.joinAs,
-          'name': meta.userName,
-          'options': {
+    Outer msg = Outer(
+      name: 'msg',
+      args: [
+        ArgActionJoinRoom(
+          action: 'JoinRoom',
+          appID: meta.roomInfo.appID,
+          roomID: meta.roomInfo.roomID,
+          userID: meta.userID,
+          joinType: meta.roomInfo.joinAs,
+          name: meta.userName,
+          options: {
             'roomcode': meta.roomInfo.roomID,
             'name': meta.userName,
           }
-        }
+        )
       ]
-    };
+      );
 
     String smsg = jsonEncode(msg);
 
@@ -102,7 +125,7 @@ class JackboxSession {
       throw e;
     }
 
-    _sendWSMessage(mt.PrepareMessageOfType(mt.MSG, smsg));
+    _sendWSMessage(smsg);
   }
 
   Future<RoomInfo> _getRoomInfo(String roomID) async {
@@ -122,17 +145,12 @@ class JackboxSession {
   }
 
   void _setGameHandler(String appID) {
-    Map<String, GameHandlerDef> handlerMap = {
-      // Drawful 2
-      '8511cbe0-dfff-4ea9-94e0-424daad072c3': (p, r) => DrawfulHandler(p, r),
-    };
-
-    if (!handlerMap.containsKey(appID)) {
+    if (!_handlerMap.containsKey(appID)) {
       return;
     }
 
     ReceivePort port = new ReceivePort();
-    _gameHandler = handlerMap[appID](port.sendPort, meta);
+    _gameHandler = _handlerMap[appID](port.sendPort, meta, currentState);
     _gameChannel = new IsolateChannel.connectReceive(port);
 
     _gameChannelSub = _gameChannel.stream.listen(_handleIntMessage, onDone: () {
@@ -232,27 +250,29 @@ class JackboxSession {
   void _handleWSJbMessage(dynamic msg) {
     // Here we need to handle messages relating to the lobby or joining a room
 
-    // TODO: Actually handle messages
-    _sendIntMessage(IntJackboxMsg(msg: msg));
-  }
+    if (currentState is SessionLoginState) {
+      // Check if this is a successful join room message
+      Map<String, dynamic> jmsg = jsonDecode(msg);
 
-  // handleLobbyMessage updates our state for lobby related messages
-  /*
-  5:::{"name":"msg","args":
-  [{"type":"Event","event":"RoomBlobChanged","roomId":"CWHA",
-  "blob":{"isLocal":true,"lobbyState":"WaitingForMore","state":"Lobby","formattedActiveContentId":null,"activeContentId":null,"platformId":"FLASH","allPlayersHavePortraits":false,"analytics":
-  [{"appversion":"0.0.0","screen":"drawful2-lobby","appid":"drawful2-flash","appname":"Drawful2"}]}}]}
-  */
-  bool _handleLobbyMessage(dynamic msg) {
-    Map<String, dynamic> msgMap = jsonDecode(msg);
+      Outer msgp = Outer.fromJson(jmsg);
 
-    if (!msgMap.containsKey("name") ||
-        msgMap["name"] != "msg" ||
-        !msgMap.containsKey("args") ||
-        !msgMap["args"] is List) {
-      // This message isn't formed how we expect, just throw it away and say we succeeded
-      return true;
+      for (ArgMsg argm in msgp.args) {
+        if (argm is ArgResult) {
+          if (argm.action == "JoinRoom" && argm.success) {
+            // Successfully joined room
+            currentState = SessionLobbyState(allowedToStart: false, enoughPlayers: false);
+
+            _sendIntMessage(IntSessionMsg(action: IntSessionAction.UPDATESTATE, 
+              data: {'process': false, 'state': currentState}));
+            _sendUIMessage(currentState);
+          }
+        }
+      }
+    } else {
+      _sendIntMessage(IntJackboxMsg(msg: msg));
     }
+
+    return;
   }
 
   // handleIntMessage and its offshoots handle incoming messages from the GameHandler only
@@ -268,11 +288,8 @@ class JackboxSession {
           _handleIntJbMessage(msg);
         }
         break;
-      case IntMsgType.UI:
-        if (msg is IntUIMsg) {
-          _handleIntUIMessage(msg);
-        }
-        break;
+      default:
+      break;
     }
   }
 
@@ -282,24 +299,28 @@ class JackboxSession {
     _sendWSMessage(msg.msg);
   }
 
-  void _handleIntUIMessage(IntUIMsg msg) {}
-
   void _sendUIMessage(JackboxState state) {
     _blocChannel.sink.add(state);
   }
 
   // handleUIMessage handles IntUIMsg types from the UI frontend and BLoC modules
   void _handleUIMessage(JackboxState state) {
-    if (state is SessionState) {
-      _handleSessionUIMessage(state);
+    bool process = false;
+    currentState = state;
+
+    if (state is SessionLoginState) {
+      _handleSessionLoginMessage(state);
     } else if (_gameHandler.canHandleStateType(state)) {
-      _sendIntMessage(IntUIMsg(state: state));
+      process = true;
     }
+
+    _sendIntMessage(IntSessionMsg(action: IntSessionAction.UPDATESTATE, 
+      data: {'process': process, 'state': state}));
 
     // Ignore everything we can't handle
   }
 
-  void _handleSessionUIMessage(SessionState state) {
+  void _handleSessionLoginMessage(SessionState state) {
     if (state is SessionLoginState) {
       // Malformed LoginState, just send it back as is
       if (state.roomCode == "" || state.name == "") {

@@ -8,19 +8,24 @@ import 'package:jackbox_client/model/jackbox.dart';
 
 import 'package:stream_channel/isolate_channel.dart';
 
-typedef GameHandler GameHandlerDef(SendPort port, SessionData meta);
+typedef GameHandler GameHandlerDef(
+    SendPort port, SessionData meta, JackboxState initial);
 
 abstract class GameHandler {
   IsolateChannel<IntMsg> _gameChannel;
   StreamSubscription<dynamic> _gameChannelSub;
   SessionData meta;
 
-  GameHandler(SendPort port, SessionData meta) {
+  JackboxState currentState;
+
+  GameHandler(SendPort port, SessionData meta, JackboxState initial) {
     this.meta = meta;
+
+    this.currentState = initial;
 
     _gameChannel = new IsolateChannel.connectSend(port);
 
-    _gameChannelSub = _gameChannel.stream.listen(_handleIntMessage, onDone: () {
+    _gameChannelSub = _gameChannel.stream.listen(handleIntMessage, onDone: () {
       resetState();
     });
   }
@@ -29,31 +34,26 @@ abstract class GameHandler {
     _gameChannel.sink.add(msg);
   }
 
-  void _handleIntMessage(IntMsg msg) {
+  void handleIntMessage(IntMsg msg) {
     switch (msg.type) {
       case IntMsgType.SESSION:
         if (msg is IntSessionMsg) {
-          _handleSessMessage(msg);
+          handleSessMessage(msg);
         }
         break;
       case IntMsgType.JACKBOX:
         if (msg is IntJackboxMsg) {
-          _handleJbMessage(msg);
+          handleJbMessage(msg);
         }
         break;
-      case IntMsgType.UI:
-        if (msg is IntUIMsg) {
-          _handleUIMessage(msg);
-        }
+      default:
         break;
     }
   }
 
-  void _handleSessMessage(IntSessionMsg msg);
+  void handleSessMessage(IntSessionMsg msg);
 
-  void _handleJbMessage(IntJackboxMsg msg);
-
-  void _handleUIMessage(IntUIMsg msg);
+  void handleJbMessage(IntJackboxMsg msg);
 
   bool canHandleStateType(JackboxState state);
 

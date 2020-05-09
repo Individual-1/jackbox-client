@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
-
 import 'package:jackbox_client/model/internal.dart';
 import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/model/drawful.dart' as ds;
@@ -12,37 +11,68 @@ import 'package:jackbox_client/model/drawful.dart' as ds;
 import 'package:jackbox_client/client/jb_game_handler.dart';
 
 class DrawfulHandler extends GameHandler {
-  DrawfulHandler(SendPort port, SessionData meta) : super(port, meta);
+  DrawfulHandler(SendPort port, SessionData meta, JackboxState initial) : super(port, meta, initial);
 
   @override
-  void _handleUIMessage(IntUIMsg msg) {
-    if (msg.state is ds.DrawfulState) {
-      switch (msg.state.runtimeType) {
-        case ds.DrawfulDrawingDone:
-          sendImage((msg.state as ds.DrawfulDrawingDone).lines);
-          break;
-        default:
-          // We don't care about these cases because we don't have to do anything
-          break;
-      }
+  void handleSessMessage(IntSessionMsg msg) {
+    switch(msg.action) {
+      case IntSessionAction.UPDATESTATE:
+        if (msg.data is Map<String, dynamic>) {
+          if (msg.data['process']) {
+
+          } else {
+            currentState = msg.data['state'];
+          }
+        }
+      break;
+      default:
+      break;
     }
   }
 
   @override
-  void _handleJbMessage(IntJackboxMsg msg) {
-    Outer parsed;
+  void handleJbMessage(IntJackboxMsg msg) {
+    if (currentState is SessionLobbyState) {
+      SessionLobbyState lobbyState = currentState;
+      // If we're in lobby state then we need to handle lobby updates
+      Map<String, dynamic> jmsg = jsonDecode(msg.msg);
 
-    parsed = Outer.fromJson(msg.msg);
+      Outer msgp = Outer.fromJson(jmsg);
+
+      for (ArgMsg argm in msgp.args) {
+        if (argm is ArgEvent) {
+          if (argm.event == "RoomBlobChanged") {
+            ArgEventBlob blob = ds.getSpecificBlobType(argm);
+
+            
+          } else if (argm.event == "CustomerBlobChanged") {
+            ArgEventBlob blob = ds.getSpecificBlobType(argm);
+
+            if (blob is ds.AEBCLobby) {
+              if (blob.isAllowedToStartGame != lobbyState.allowedToStart) {
+                lobbyState.allowedToStart = blob.isAllowedToStartGame;
+                currentState = lobbyState;
+
+                sendIntMessage(IntSessionMsg(action: IntSessionAction.UPDATESTATE, 
+                  data: {'process': false, 'state': currentState}));
+              }
+            }
+          }
+        }
+      }
+    } else if (currentState is ds.DrawfulDrawingState) {
+
+    }
+
   }
 
 // sendImage takes in a serialized json array and sends it to the jackbox server
   void sendImage(Map<String, dynamic> lines) {
-
     if (meta.roomInfo == null) {
       return;
     }
 
-    // Map containing arguments to join a jackbox room
+    // Map containing arguments to send an image
     Map<String, dynamic> msg = {
       'name': 'msg',
       'args': [
@@ -72,5 +102,4 @@ class DrawfulHandler extends GameHandler {
       return false;
     }
   }
-
 }

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
+// Login implements SessionLobbyState
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();

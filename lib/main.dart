@@ -16,13 +16,13 @@ class JBApp extends StatelessWidget {
     create: (context) => JackboxBloc(),
     dispose: (context, value) => value.dispose(),
     child: MaterialApp(
-      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => Login(),
+        '/': (context) => NullInit(),
+        '/login': (context) => Login(),
+        '/lobby': (context) => Lobby(),
         '/draw': (context) => Draw(),
       }
-
     )
     );
   }
