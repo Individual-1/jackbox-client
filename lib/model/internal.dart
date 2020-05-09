@@ -38,20 +38,20 @@ enum IntSessionAction {
 }
 
 class SessionData {
-  String userID = "";
+  String userId = "";
   String userName = "";
   RoomInfo roomInfo = null;
 
   SessionData() {
-    userID = "";
+    userId = "";
     userName = "";
     roomInfo = null;
   }
 
-  SessionData.withData({this.userID, this.userName, this.roomInfo});
+  SessionData.withData({this.userId, this.userName, this.roomInfo});
 
   void clear() {
-    userID = "";
+    userId = "";
     userName = "";
     roomInfo = null;
   }

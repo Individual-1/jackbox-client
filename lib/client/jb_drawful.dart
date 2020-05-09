@@ -42,11 +42,11 @@ class DrawfulHandler extends GameHandler {
       for (ArgMsg argm in msgp.args) {
         if (argm is ArgEvent) {
           if (argm.event == "RoomBlobChanged") {
-            ArgEventBlob blob = ds.getSpecificBlobType(argm);
+            ds.ArgEventBlob blob = ds.getSpecificBlobType(argm);
 
             
           } else if (argm.event == "CustomerBlobChanged") {
-            ArgEventBlob blob = ds.getSpecificBlobType(argm);
+            ds.ArgEventBlob blob = ds.getSpecificBlobType(argm);
 
             if (blob is ds.AEBCLobby) {
               if (blob.isAllowedToStartGame != lobbyState.allowedToStart) {
@@ -79,9 +79,9 @@ class DrawfulHandler extends GameHandler {
         {
           'type': 'Action',
           'action': 'SendMessageToRoomOwner',
-          'appId': meta.roomInfo.appID,
-          'roomId': meta.roomInfo.roomID,
-          'userId': meta.userID,
+          'appId': meta.roomInfo.appId,
+          'roomId': meta.roomInfo.roomId,
+          'userId': meta.userId,
           'message': {
             'setPlayerPicture': true,
             'pictureLines': lines,

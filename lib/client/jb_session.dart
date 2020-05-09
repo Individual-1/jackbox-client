@@ -70,7 +70,7 @@ class JackboxSession {
   JackboxSession(SendPort port) {
     currentState = SessionLoginState(name: '', roomCode: '');
     meta = SessionData();
-    meta.userID = _genUserID();
+    meta.userId = _genUserId();
 
     _blocChannel = new IsolateChannel.connectSend(port);
     _blocChannelSub = _blocChannel.stream.listen(_handleUIMessage, onDone: () {
@@ -80,21 +80,21 @@ class JackboxSession {
     _sendUIMessage(currentState);
   }
 
-  String _genUserID() {
+  String _genUserId() {
     Uuid uuidg = Uuid();
 
     return uuidg.v4();
   }
 
-  Future<void> joinRoom(String roomID, String name) async {
+  Future<void> joinRoom(String roomId, String name) async {
     try {
-      meta.roomInfo = await _getRoomInfo(roomID);
+      meta.roomInfo = await _getRoomInfo(roomId);
     } catch (e) {
       // Failed to retrieve room information
       throw e;
     }
 
-    _setGameHandler(meta.roomInfo.appID);
+    _setGameHandler(meta.roomInfo.appId);
 
     meta.userName = name;
 
@@ -103,13 +103,13 @@ class JackboxSession {
       args: [
         ArgActionJoinRoom(
           action: 'JoinRoom',
-          appID: meta.roomInfo.appID,
-          roomID: meta.roomInfo.roomID,
-          userID: meta.userID,
+          appId: meta.roomInfo.appId,
+          roomId: meta.roomInfo.roomId,
+          userId: meta.userId,
           joinType: meta.roomInfo.joinAs,
           name: meta.userName,
           options: {
-            'roomcode': meta.roomInfo.roomID,
+            'roomcode': meta.roomInfo.roomId,
             'name': meta.userName,
           }
         )
@@ -128,14 +128,14 @@ class JackboxSession {
     _sendWSMessage(smsg);
   }
 
-  Future<RoomInfo> _getRoomInfo(String roomID) async {
+  Future<RoomInfo> _getRoomInfo(String roomId) async {
     var uri = new Uri.https(
-        _roomBase, p.join(_roomPath, roomID), {"userId": meta.userID});
+        _roomBase, p.join(_roomPath, roomId), {"userId": meta.userId});
 
     var resp = await http.get(uri);
 
     if (resp.statusCode == 404) {
-      return throw ("Failed to retrieve room information for code: " + roomID);
+      return throw ("Failed to retrieve room information for code: " + roomId);
     }
 
     Map rmMap = jsonDecode(resp.body);
@@ -144,13 +144,13 @@ class JackboxSession {
     return Future.value(rmInfo);
   }
 
-  void _setGameHandler(String appID) {
-    if (!_handlerMap.containsKey(appID)) {
+  void _setGameHandler(String appId) {
+    if (!_handlerMap.containsKey(appId)) {
       return;
     }
 
     ReceivePort port = new ReceivePort();
-    _gameHandler = _handlerMap[appID](port.sendPort, meta, currentState);
+    _gameHandler = _handlerMap[appId](port.sendPort, meta, currentState);
     _gameChannel = new IsolateChannel.connectReceive(port);
 
     _gameChannelSub = _gameChannel.stream.listen(_handleIntMessage, onDone: () {
@@ -342,6 +342,6 @@ class JackboxSession {
     _gameHandler?.resetState();
 
     meta.clear();
-    meta.userID = _genUserID();
+    meta.userId = _genUserId();
   }
 }

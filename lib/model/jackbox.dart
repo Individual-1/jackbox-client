@@ -1,5 +1,11 @@
 library jackbox;
 
+import 'dart:collection';
+
+import 'package:json_annotation/json_annotation.dart';
+
+part 'jackbox.g.dart';
+
 abstract class JackboxState {}
 
 abstract class SessionState extends JackboxState {}
@@ -24,41 +30,36 @@ const Map<String, Type> StateMap = {
   'Lobby': SessionLobbyState,
 };
 
+@JsonSerializable()
 class RoomInfo {
-  String roomID;
-
+  @JsonKey(name: 'roomid', required: true)
+  String roomId;
+  @JsonKey(name: 'server', required: true)
   String server;
-
+  @JsonKey(name: 'apptag', required: true)
   String appTag;
-
-  String appID;
-
+  @JsonKey(name: 'appid', required: true)
+  String appId;
+  @JsonKey(name: 'numAudience', required: true)
   int numAudience;
-
+  @JsonKey(name: 'joinAs', required: true)
   String joinAs;
-
+  @JsonKey(name: 'requiresPassword', required: true)
   bool requiresPassword;
 
   RoomInfo(
-      {this.roomID,
+      {this.roomId,
       this.server,
       this.appTag,
-      this.appID,
+      this.appId,
       this.numAudience,
       this.joinAs,
       this.requiresPassword});
 
-  factory RoomInfo.fromJson(Map<String, dynamic> json) {
-    return RoomInfo(
-      roomID: json['roomid'],
-      server: json['server'],
-      appTag: json['apptag'],
-      appID: json['appid'],
-      numAudience: json['numAudience'],
-      joinAs: json['joinAs'],
-      requiresPassword: json['requiresPassword'],
-    );
-  }
+  factory RoomInfo.fromJson(Map<String, dynamic> json) =>
+      _$RoomInfoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RoomInfoToJson(this);
 }
 
 class Outer {
@@ -118,7 +119,7 @@ class Outer {
 
 abstract class ArgMsg {
   String type;
-  String roomID;
+  String roomId;
 
   String toString() {
     return toJson().toString();
@@ -127,256 +128,88 @@ abstract class ArgMsg {
   Map<String, dynamic> toJson();
 }
 
+@JsonSerializable()
 class ArgResult extends ArgMsg {
   final String type = "Result";
-  String roomID;
+  String roomId;
   String action;
   bool success;
   bool initial;
   String joinType;
-  String userID;
-  ArgResultOptions options;
+  String userId;
+  @JsonKey(name: 'options', nullable: true, defaultValue: null)
+  Map<String, dynamic> options;
 
   ArgResult(
-      {this.roomID,
+      {this.roomId,
       this.action,
       this.success,
       this.initial,
       this.joinType,
-      this.userID,
+      this.userId,
       this.options});
 
-  factory ArgResult.fromJson(Map<String, dynamic> json) {
-    return ArgResult(
-      roomID: json['roomId'],
-      action: json['action'],
-      success: json['success'],
-      initial: json['initial'],
-      joinType: json['joinType'],
-      userID: json['userId'],
-      options: null, //TODO: figure out if we care about this
-    );
-  }
+  factory ArgResult.fromJson(Map<String, dynamic> json) => _$ArgResultFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'roomId': roomID,
-      'action': action,
-      'success': success,
-      'initial': initial,
-      'joinType': joinType,
-      'userId': userID,
-      'options': options?.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => _$ArgResultToJson(this);
 }
 
+@JsonSerializable()
 class ArgEvent extends ArgMsg {
   final String type = "Event";
-  String roomID;
+  String roomId;
   String event;
-  ArgEventBlob blob;
+  Map<String, dynamic> blob;
 
-  ArgEvent({this.roomID, this.event, this.blob});
+  ArgEvent({this.roomId, this.event, this.blob});
 
-  factory ArgEvent.fromJson(Map<String, dynamic> json) {
-    ArgEventBlob blob;
-    Map<String, dynamic> blobBody;
-
-    if (json.containsKey('blob') && json['blob'] is Map<String, dynamic>) {
-      blobBody = json['blob'];
-
-      if (blobBody.containsKey('')) {}
-    }
-
-    return ArgEvent(
-      roomID: json['roomId'],
-      event: json['event'],
-      blob: ArgEventBlobMap.fromJson(blobBody), // TODO: Find out different blob types
-    );
-  }
+  factory ArgEvent.fromJson(Map<String, dynamic> json) => _$ArgEventFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'roomId': roomID,
-      'event': event,
-      'blob': blob?.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => _$ArgEventToJson(this);
 }
 
+@JsonSerializable()
 class ArgAction extends ArgMsg {
   final String type = "Action";
   String action;
-  String roomID;
-  String appID;
-  String userID;
-  ArgActionMsg message;
+  String roomId;
+  String appId;
+  String userId;
+  Map<String, dynamic> message;
 
-  ArgAction({this.action, this.roomID, this.appID, this.userID, this.message});
+  ArgAction({this.action, this.roomId, this.appId, this.userId, this.message});
 
-  factory ArgAction.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> msgMap;
-
-    if (json.containsKey('message') &&
-        json['message'] is Map<String, dynamic>) {
-      msgMap = json['message'];
-    }
-
-    return ArgAction(
-      action: json['action'],
-      roomID: json['roomId'],
-      appID: json['appId'],
-      userID: json['userId'],
-      message: ArgActionMsgMap.fromJson(msgMap), // TODO: Find out different blob types
-    );
-  }
+  factory ArgAction.fromJson(Map<String, dynamic> json) => _$ArgActionFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'action': action,
-      'roomId': roomID,
-      'appId': appID,
-      'userId': userID,
-      'message': message?.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => _$ArgActionToJson(this);
 }
 
 // The JoinRoom action doesn't follow the format of any of the other Action messages
+@JsonSerializable()
 class ArgActionJoinRoom extends ArgMsg {
   final String type = "Action";
   String action;
-  String roomID;
-  String appID;
-  String userID;
+  String roomId;
+  String appId;
+  String userId;
   String joinType;
   String name;
   Map<String, dynamic> options;
 
-  ArgActionJoinRoom({this.action, this.roomID, this.appID, this.userID, this.joinType, this.name, this.options});
+  ArgActionJoinRoom(
+      {this.action,
+      this.roomId,
+      this.appId,
+      this.userId,
+      this.joinType,
+      this.name,
+      this.options});
 
-  factory ArgActionJoinRoom.fromJson(Map<String, dynamic> json) {
-    return ArgActionJoinRoom(
-      action: json['action'],
-      roomID: json['roomId'],
-      appID: json['appId'],
-      userID: json['userId'],
-      joinType: json['joinType'],
-      name: json['name'],
-      options: json['options'],
-    );
-  }
+  factory ArgActionJoinRoom.fromJson(Map<String, dynamic> json) => _$ArgActionJoinRoomFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'action': action,
-      'roomId': roomID,
-      'appId': appID,
-      'userId': userID,
-      'joinType': joinType,
-      'name': name,
-      'options': options,
-    };
-  }
-}
-
-abstract class ArgResultOptions {
-  Map<String, dynamic> toJson();
-
-  String toString() {
-    return toJson().toString();
-  }
-}
-
-class ArgResultOptionsJoinRoom extends ArgResultOptions {
-  String email;
-  String name;
-  String phone;
-  String roomCode;
-
-  ArgResultOptionsJoinRoom({this.email, this.name, this.phone, this.roomCode});
-
-  factory ArgResultOptionsJoinRoom.fromJson(Map<String, dynamic> json) {
-    return ArgResultOptionsJoinRoom(
-      email: json['email'],
-      name: json['name'],
-      phone: json['phone'],
-      roomCode: json['roomCode'],
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      'email': email,
-      'name': name,
-      'phone': phone,
-      'roomCode': roomCode,
-    };
-  }
-}
-
-abstract class ArgEventBlob {
-  Map<String, dynamic> toJson();
-
-  String toString() {
-    return toJson().toString();
-  }
-}
-
-class ArgEventBlobMap extends ArgEventBlob {
-  Map<String, dynamic> map;
-
-  ArgEventBlobMap() {
-    map = new Map<String, dynamic>();
-  }
-
-  factory ArgEventBlobMap.fromJson(Map<String, dynamic> json) {
-    ArgEventBlobMap blob = ArgEventBlobMap();
-    blob.map.addAll(json);
-
-    return blob;
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return map;
-  }
-}
-
-abstract class ArgActionMsg {
-  Map<String, dynamic> toJson();
-
-  String toString() {
-    return toJson().toString();
-  }
-}
-
-class ArgActionMsgMap extends ArgActionMsg {
-  Map<String, dynamic> map;
-
-  ArgActionMsgMap() {
-    map = new Map<String, dynamic>();
-  }
-
-  factory ArgActionMsgMap.fromJson(Map<String, dynamic> json) {
-    ArgActionMsgMap msg = ArgActionMsgMap();
-    msg.map.addAll(json);
-
-    return msg;
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return map;
-  }
+  Map<String, dynamic> toJson() => _$ArgActionJoinRoomToJson(this);
 }
