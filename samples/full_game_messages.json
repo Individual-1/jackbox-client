@@ -1,0 +1,1003 @@
+{
+  "_priority": null,
+  "_resourceType": "websocket",
+  "pageref": "page_1",
+  "_webSocketMessages": [
+    {
+      "type": "receive",
+      "time": 1589046282.101719,
+      "opcode": 1,
+      "data": "1::"
+    },
+    {
+      "type": "send",
+      "time": 1589046282.102651,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"options\":{\"roomcode\":\"NSTE\",\"name\":\"PRIMARY\"},\"type\":\"Action\",\"action\":\"JoinRoom\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"joinType\":\"player\",\"name\":\"PRIMARY\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\"}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046282.1776438,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Result\",\"action\":\"JoinRoom\",\"success\":true,\"initial\":false,\"roomId\":\"NSTE\",\"joinType\":\"player\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"options\":{\"roomcode\":\"\",\"name\":\"PRIMARY\",\"email\":\"\",\"phone\":\"\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046282.1925428,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046282.1930938,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046282.2880468,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"lastUGCResult\":null,\"state\":\"Lobby\",\"canReport\":true,\"playerName\":\"primary\",\"hasPicture\":false,\"canDoUGC\":true,\"isAllowedToStartGame\":true,\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"canCensor\":false,\"playerIndex\":0,\"history\":[],\"canViewAuthor\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046282.3792968,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"WaitingForMore\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"analytics\":[{\"appname\":\"Drawful2\",\"appid\":\"drawful2-flash\",\"screen\":\"drawful2-lobby\",\"appversion\":\"0.0.0\"}],\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046306.9757059,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"lastUGCResult\":null,\"state\":\"Lobby\",\"canReport\":true,\"playerName\":\"primary\",\"hasPicture\":false,\"canDoUGC\":true,\"isAllowedToStartGame\":true,\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"canCensor\":false,\"playerIndex\":0,\"history\":[],\"canViewAuthor\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046306.9787118,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"WaitingForMore\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046308.081024,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"lastUGCResult\":null,\"state\":\"Lobby\",\"canReport\":true,\"playerName\":\"primary\",\"hasPicture\":false,\"canDoUGC\":true,\"isAllowedToStartGame\":true,\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"canCensor\":false,\"playerIndex\":0,\"history\":[],\"canViewAuthor\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046308.083159,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"CanStart\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046309.949492,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"CanStart\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046312.098733,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046312.0989418,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046312.8110478,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"CanStart\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":false}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046315.3691318,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"setPlayerPicture\":true,\"pictureLines\":[{\"thickness\":6,\"color\":\"#FB405A\",\"points\":[{\"x\":32.24751991800743,\"y\":75.25725352103603},{\"x\":32,\"y\":76},{\"x\":33,\"y\":77},{\"x\":33,\"y\":79},{\"x\":33,\"y\":80},{\"x\":34,\"y\":82},{\"x\":34,\"y\":83},{\"x\":34,\"y\":85},{\"x\":34,\"y\":86},{\"x\":35,\"y\":86},{\"x\":35,\"y\":87},{\"x\":35,\"y\":88},{\"x\":35,\"y\":89},{\"x\":35,\"y\":90},{\"x\":35,\"y\":91},{\"x\":35,\"y\":92},{\"x\":35,\"y\":93},{\"x\":35,\"y\":95},{\"x\":35,\"y\":96},{\"x\":35,\"y\":98},{\"x\":35,\"y\":99},{\"x\":35,\"y\":101},{\"x\":35,\"y\":102},{\"x\":35,\"y\":104},{\"x\":35,\"y\":105},{\"x\":35,\"y\":106},{\"x\":35,\"y\":108},{\"x\":35,\"y\":110},{\"x\":35,\"y\":111},{\"x\":35,\"y\":112},{\"x\":35,\"y\":114},{\"x\":35,\"y\":115},{\"x\":35,\"y\":117},{\"x\":35,\"y\":118},{\"x\":35,\"y\":120},{\"x\":35,\"y\":121},{\"x\":35,\"y\":123},{\"x\":35,\"y\":124},{\"x\":35,\"y\":125},{\"x\":35,\"y\":127},{\"x\":35,\"y\":128},{\"x\":35,\"y\":129},{\"x\":35,\"y\":130},{\"x\":35,\"y\":131},{\"x\":35,\"y\":133},{\"x\":35,\"y\":136},{\"x\":35,\"y\":137},{\"x\":35,\"y\":140},{\"x\":35,\"y\":142},{\"x\":35,\"y\":143},{\"x\":35,\"y\":144},{\"x\":35,\"y\":146},{\"x\":35,\"y\":147},{\"x\":35,\"y\":149},{\"x\":35,\"y\":152},{\"x\":35,\"y\":155},{\"x\":35,\"y\":156},{\"x\":35,\"y\":158},{\"x\":35,\"y\":159},{\"x\":35,\"y\":161},{\"x\":36,\"y\":162},{\"x\":36,\"y\":163},{\"x\":36,\"y\":164},{\"x\":36,\"y\":165},{\"x\":37,\"y\":166},{\"x\":37,\"y\":167},{\"x\":37,\"y\":168},{\"x\":37,\"y\":169},{\"x\":37,\"y\":171},{\"x\":38,\"y\":171},{\"x\":38,\"y\":172},{\"x\":38,\"y\":174},{\"x\":38,\"y\":175},{\"x\":38,\"y\":177},{\"x\":38,\"y\":178},{\"x\":38,\"y\":177},{\"x\":38,\"y\":176},{\"x\":38,\"y\":175},{\"x\":38,\"y\":174},{\"x\":38,\"y\":173},{\"x\":38,\"y\":172},{\"x\":38,\"y\":171},{\"x\":36,\"y\":169},{\"x\":36,\"y\":168},{\"x\":36,\"y\":166},{\"x\":36,\"y\":165},{\"x\":36,\"y\":163},{\"x\":35,\"y\":163},{\"x\":35,\"y\":161},{\"x\":35,\"y\":160},{\"x\":35,\"y\":159},{\"x\":35,\"y\":158},{\"x\":35,\"y\":157},{\"x\":35,\"y\":155},{\"x\":33,\"y\":155},{\"x\":33,\"y\":153},{\"x\":33,\"y\":152},{\"x\":33,\"y\":151},{\"x\":33,\"y\":150},{\"x\":33,\"y\":148},{\"x\":32,\"y\":148},{\"x\":32,\"y\":146},{\"x\":32,\"y\":145},{\"x\":32,\"y\":144},{\"x\":32,\"y\":143},{\"x\":32,\"y\":141},{\"x\":32,\"y\":140},{\"x\":32,\"y\":139},{\"x\":30,\"y\":137},{\"x\":30,\"y\":136},{\"x\":30,\"y\":135},{\"x\":30,\"y\":134},{\"x\":29,\"y\":133},{\"x\":29,\"y\":131},{\"x\":29,\"y\":129},{\"x\":29,\"y\":127},{\"x\":29,\"y\":125},{\"x\":29,\"y\":123},{\"x\":29,\"y\":121},{\"x\":29,\"y\":119},{\"x\":29,\"y\":118},{\"x\":29,\"y\":117},{\"x\":29,\"y\":116},{\"x\":29,\"y\":114},{\"x\":29,\"y\":113},{\"x\":29,\"y\":112},{\"x\":27,\"y\":110},{\"x\":27,\"y\":108},{\"x\":27,\"y\":107},{\"x\":27,\"y\":106},{\"x\":27,\"y\":104},{\"x\":27,\"y\":103},{\"x\":27,\"y\":102},{\"x\":27,\"y\":101},{\"x\":27,\"y\":99},{\"x\":27,\"y\":97},{\"x\":27,\"y\":96},{\"x\":27,\"y\":95},{\"x\":27,\"y\":94},{\"x\":27,\"y\":92},{\"x\":27,\"y\":91},{\"x\":27,\"y\":90},{\"x\":27,\"y\":88},{\"x\":27,\"y\":87},{\"x\":27,\"y\":86},{\"x\":27,\"y\":83},{\"x\":27,\"y\":81},{\"x\":27,\"y\":80},{\"x\":28,\"y\":79},{\"x\":28,\"y\":78},{\"x\":28,\"y\":77},{\"x\":28,\"y\":76},{\"x\":28,\"y\":75},{\"x\":28,\"y\":74},{\"x\":28,\"y\":73},{\"x\":28,\"y\":72},{\"x\":28,\"y\":71},{\"x\":28,\"y\":70},{\"x\":28,\"y\":69},{\"x\":28,\"y\":68},{\"x\":28,\"y\":67},{\"x\":28,\"y\":66},{\"x\":29,\"y\":65},{\"x\":29,\"y\":64},{\"x\":29,\"y\":63},{\"x\":29,\"y\":61},{\"x\":29,\"y\":60},{\"x\":29,\"y\":59},{\"x\":29,\"y\":58},{\"x\":29,\"y\":57},{\"x\":29,\"y\":56},{\"x\":29,\"y\":55},{\"x\":29,\"y\":54},{\"x\":29,\"y\":53},{\"x\":29,\"y\":52},{\"x\":29,\"y\":51},{\"x\":29,\"y\":50},{\"x\":29,\"y\":49},{\"x\":30,\"y\":49},{\"x\":30,\"y\":48},{\"x\":31,\"y\":48},{\"x\":32,\"y\":48},{\"x\":33,\"y\":48},{\"x\":34,\"y\":48},{\"x\":35,\"y\":48},{\"x\":36,\"y\":48},{\"x\":37,\"y\":48},{\"x\":38,\"y\":48},{\"x\":40,\"y\":48},{\"x\":41,\"y\":48},{\"x\":43,\"y\":48},{\"x\":44,\"y\":48},{\"x\":46,\"y\":48},{\"x\":47,\"y\":48},{\"x\":48,\"y\":48},{\"x\":49,\"y\":48},{\"x\":50,\"y\":48},{\"x\":51,\"y\":48},{\"x\":52,\"y\":48},{\"x\":53,\"y\":48},{\"x\":54,\"y\":48},{\"x\":56,\"y\":48},{\"x\":57,\"y\":48},{\"x\":57,\"y\":49},{\"x\":59,\"y\":49},{\"x\":60,\"y\":49},{\"x\":62,\"y\":49},{\"x\":63,\"y\":49},{\"x\":63,\"y\":50},{\"x\":65,\"y\":50},{\"x\":66,\"y\":50},{\"x\":67,\"y\":50},{\"x\":67,\"y\":51},{\"x\":68,\"y\":51},{\"x\":69,\"y\":51},{\"x\":70,\"y\":51},{\"x\":71,\"y\":51},{\"x\":72,\"y\":51},{\"x\":73,\"y\":51},{\"x\":73,\"y\":52},{\"x\":75,\"y\":52},{\"x\":76,\"y\":53},{\"x\":78,\"y\":54},{\"x\":79,\"y\":54},{\"x\":81,\"y\":55},{\"x\":82,\"y\":55},{\"x\":82,\"y\":57},{\"x\":84,\"y\":57},{\"x\":85,\"y\":58},{\"x\":86,\"y\":60},{\"x\":86,\"y\":61},{\"x\":87,\"y\":61},{\"x\":87,\"y\":63},{\"x\":88,\"y\":64},{\"x\":89,\"y\":64},{\"x\":89,\"y\":66},{\"x\":89,\"y\":67},{\"x\":89,\"y\":68},{\"x\":90,\"y\":69},{\"x\":90,\"y\":70},{\"x\":90,\"y\":71},{\"x\":90,\"y\":72},{\"x\":91,\"y\":73},{\"x\":91,\"y\":74},{\"x\":91,\"y\":76},{\"x\":91,\"y\":77},{\"x\":91,\"y\":79},{\"x\":91,\"y\":80},{\"x\":91,\"y\":82},{\"x\":91,\"y\":83},{\"x\":91,\"y\":85},{\"x\":91,\"y\":86},{\"x\":91,\"y\":87},{\"x\":91,\"y\":88},{\"x\":91,\"y\":89},{\"x\":91,\"y\":90},{\"x\":90,\"y\":91},{\"x\":90,\"y\":92},{\"x\":90,\"y\":93},{\"x\":90,\"y\":95},{\"x\":89,\"y\":95},{\"x\":89,\"y\":96},{\"x\":89,\"y\":98},{\"x\":89,\"y\":99},{\"x\":87,\"y\":99},{\"x\":86,\"y\":99},{\"x\":86,\"y\":101},{\"x\":86,\"y\":102},{\"x\":84,\"y\":102},{\"x\":83,\"y\":102},{\"x\":82,\"y\":102},{\"x\":81,\"y\":104},{\"x\":80,\"y\":104},{\"x\":79,\"y\":104},{\"x\":79,\"y\":105},{\"x\":78,\"y\":105},{\"x\":77,\"y\":105},{\"x\":76,\"y\":105},{\"x\":75,\"y\":105},{\"x\":74,\"y\":105},{\"x\":73,\"y\":105},{\"x\":73,\"y\":106},{\"x\":71,\"y\":106},{\"x\":70,\"y\":106},{\"x\":70,\"y\":107},{\"x\":68,\"y\":107},{\"x\":67,\"y\":107},{\"x\":67,\"y\":108},{\"x\":65,\"y\":108},{\"x\":64,\"y\":108},{\"x\":63,\"y\":108},{\"x\":62,\"y\":108},{\"x\":61,\"y\":109},{\"x\":60,\"y\":109},{\"x\":60,\"y\":110},{\"x\":59,\"y\":110},{\"x\":58,\"y\":110},{\"x\":58,\"y\":111},{\"x\":57,\"y\":111},{\"x\":56,\"y\":111},{\"x\":55,\"y\":111},{\"x\":54,\"y\":112},{\"x\":52,\"y\":112},{\"x\":52,\"y\":114},{\"x\":51,\"y\":114},{\"x\":49,\"y\":114},{\"x\":48,\"y\":114}]}]}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046315.5269058,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"CanStart\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046315.5998979,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"lastUGCResult\":null,\"state\":\"Lobby\",\"canReport\":true,\"playerName\":\"primary\",\"hasPicture\":true,\"canDoUGC\":true,\"isAllowedToStartGame\":true,\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"canCensor\":false,\"playerIndex\":0,\"history\":[],\"canViewAuthor\":false}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046326.268669,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"startGame\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046326.67179,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"lobbyState\":\"Countdown\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046329.5383089,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\",\"analytics\":[{\"appname\":\"Drawful2\",\"appid\":\"drawful2-flash\",\"screen\":\"drawful2-gameplay\",\"appversion\":\"0.0.0\"},{\"action\":\"startplayers\",\"label\":\"players-3\",\"category\":\"game\",\"appname\":\"Drawful2\",\"appid\":\"drawful2-flash\",\"appversion\":\"0.0.0\"},{\"action\":\"start\",\"label\":\"full\",\"category\":\"game\",\"appname\":\"Drawful2\",\"appid\":\"drawful2-flash\",\"appversion\":\"0.0.0\"}]}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046329.612094,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046342.0986738,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046342.100324,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046346.3194568,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_DrawingTime\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046346.392891,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"prompt\":\"underpants channel\",\"state\":\"Gameplay_DrawingTime\",\"playerName\":\"primary\",\"hasPicture\":true,\"receivedDrawing\":false}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046360.069857,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"drawingLines\":[{\"thickness\":6,\"color\":\"#FB405A\",\"points\":[{\"x\":42.010263939426366,\"y\":115.13013447800726},{\"x\":42,\"y\":115},{\"x\":43,\"y\":115},{\"x\":44,\"y\":115},{\"x\":45,\"y\":115},{\"x\":46,\"y\":115},{\"x\":47,\"y\":115},{\"x\":48,\"y\":115},{\"x\":49,\"y\":115},{\"x\":50,\"y\":115},{\"x\":51,\"y\":115},{\"x\":52,\"y\":115},{\"x\":53,\"y\":115},{\"x\":54,\"y\":115},{\"x\":55,\"y\":115},{\"x\":55,\"y\":117},{\"x\":56,\"y\":117},{\"x\":57,\"y\":117},{\"x\":58,\"y\":117},{\"x\":59,\"y\":117},{\"x\":60,\"y\":117},{\"x\":61,\"y\":117},{\"x\":62,\"y\":117},{\"x\":63,\"y\":117},{\"x\":64,\"y\":117},{\"x\":65,\"y\":117},{\"x\":66,\"y\":117},{\"x\":67,\"y\":118},{\"x\":68,\"y\":118},{\"x\":69,\"y\":118},{\"x\":70,\"y\":118},{\"x\":71,\"y\":118},{\"x\":72,\"y\":118},{\"x\":73,\"y\":118},{\"x\":74,\"y\":118},{\"x\":75,\"y\":118},{\"x\":77,\"y\":118},{\"x\":78,\"y\":118},{\"x\":79,\"y\":118},{\"x\":80,\"y\":118},{\"x\":82,\"y\":118},{\"x\":83,\"y\":118},{\"x\":84,\"y\":118},{\"x\":86,\"y\":118},{\"x\":87,\"y\":118},{\"x\":88,\"y\":118},{\"x\":89,\"y\":118},{\"x\":90,\"y\":119},{\"x\":91,\"y\":119},{\"x\":92,\"y\":119},{\"x\":93,\"y\":119},{\"x\":94,\"y\":119},{\"x\":95,\"y\":119},{\"x\":96,\"y\":119},{\"x\":97,\"y\":119},{\"x\":98,\"y\":119},{\"x\":99,\"y\":119},{\"x\":100,\"y\":119},{\"x\":101,\"y\":119},{\"x\":102,\"y\":119},{\"x\":103,\"y\":119},{\"x\":104,\"y\":119},{\"x\":105,\"y\":119},{\"x\":106,\"y\":119},{\"x\":107,\"y\":119},{\"x\":108,\"y\":119},{\"x\":109,\"y\":119},{\"x\":110,\"y\":119},{\"x\":111,\"y\":119},{\"x\":112,\"y\":119},{\"x\":113,\"y\":119},{\"x\":114,\"y\":119},{\"x\":115,\"y\":119},{\"x\":116,\"y\":119},{\"x\":117,\"y\":119},{\"x\":118,\"y\":119},{\"x\":119,\"y\":119},{\"x\":120,\"y\":119},{\"x\":121,\"y\":119},{\"x\":122,\"y\":119},{\"x\":123,\"y\":119},{\"x\":124,\"y\":119},{\"x\":125,\"y\":119},{\"x\":126,\"y\":119},{\"x\":127,\"y\":119},{\"x\":128,\"y\":119},{\"x\":129,\"y\":119},{\"x\":131,\"y\":119},{\"x\":132,\"y\":119},{\"x\":133,\"y\":119},{\"x\":134,\"y\":119},{\"x\":135,\"y\":119},{\"x\":136,\"y\":119},{\"x\":137,\"y\":119},{\"x\":138,\"y\":119},{\"x\":139,\"y\":119},{\"x\":140,\"y\":119},{\"x\":141,\"y\":119},{\"x\":142,\"y\":119},{\"x\":143,\"y\":119},{\"x\":144,\"y\":119},{\"x\":145,\"y\":119},{\"x\":146,\"y\":119},{\"x\":147,\"y\":119},{\"x\":148,\"y\":119},{\"x\":149,\"y\":119},{\"x\":150,\"y\":119},{\"x\":151,\"y\":119},{\"x\":152,\"y\":119},{\"x\":153,\"y\":119},{\"x\":154,\"y\":119},{\"x\":155,\"y\":119},{\"x\":156,\"y\":119},{\"x\":157,\"y\":119},{\"x\":158,\"y\":119},{\"x\":159,\"y\":119},{\"x\":160,\"y\":119},{\"x\":161,\"y\":119},{\"x\":162,\"y\":119},{\"x\":163,\"y\":119},{\"x\":164,\"y\":119},{\"x\":165,\"y\":119},{\"x\":166,\"y\":119},{\"x\":167,\"y\":119},{\"x\":168,\"y\":119},{\"x\":169,\"y\":119},{\"x\":170,\"y\":119},{\"x\":171,\"y\":119},{\"x\":172,\"y\":119},{\"x\":173,\"y\":119},{\"x\":174,\"y\":119},{\"x\":175,\"y\":119},{\"x\":176,\"y\":119},{\"x\":177,\"y\":119},{\"x\":178,\"y\":119},{\"x\":179,\"y\":119},{\"x\":180,\"y\":119},{\"x\":181,\"y\":119},{\"x\":182,\"y\":119},{\"x\":183,\"y\":119},{\"x\":184,\"y\":119},{\"x\":185,\"y\":119},{\"x\":186,\"y\":119},{\"x\":187,\"y\":119},{\"x\":188,\"y\":119},{\"x\":189,\"y\":119},{\"x\":189,\"y\":120},{\"x\":189,\"y\":121},{\"x\":189,\"y\":122},{\"x\":189,\"y\":124},{\"x\":189,\"y\":125},{\"x\":189,\"y\":127},{\"x\":189,\"y\":128},{\"x\":189,\"y\":129},{\"x\":189,\"y\":130},{\"x\":189,\"y\":131},{\"x\":189,\"y\":132},{\"x\":188,\"y\":134},{\"x\":188,\"y\":135},{\"x\":186,\"y\":135},{\"x\":186,\"y\":137},{\"x\":186,\"y\":138},{\"x\":185,\"y\":138},{\"x\":185,\"y\":140},{\"x\":185,\"y\":141},{\"x\":183,\"y\":142},{\"x\":183,\"y\":143},{\"x\":183,\"y\":144},{\"x\":182,\"y\":145},{\"x\":181,\"y\":145},{\"x\":180,\"y\":148},{\"x\":179,\"y\":148},{\"x\":179,\"y\":150},{\"x\":178,\"y\":151},{\"x\":176,\"y\":152},{\"x\":176,\"y\":153},{\"x\":175,\"y\":154},{\"x\":175,\"y\":155},{\"x\":173,\"y\":155},{\"x\":173,\"y\":157},{\"x\":172,\"y\":157},{\"x\":171,\"y\":158},{\"x\":170,\"y\":158},{\"x\":170,\"y\":160},{\"x\":170,\"y\":161},{\"x\":169,\"y\":161},{\"x\":168,\"y\":161},{\"x\":166,\"y\":163},{\"x\":166,\"y\":164},{\"x\":166,\"y\":165},{\"x\":165,\"y\":165},{\"x\":163,\"y\":166},{\"x\":163,\"y\":167},{\"x\":162,\"y\":168},{\"x\":160,\"y\":170},{\"x\":160,\"y\":171},{\"x\":159,\"y\":171},{\"x\":158,\"y\":171},{\"x\":157,\"y\":171},{\"x\":157,\"y\":173},{\"x\":156,\"y\":174},{\"x\":155,\"y\":175},{\"x\":153,\"y\":175},{\"x\":153,\"y\":176},{\"x\":152,\"y\":177},{\"x\":150,\"y\":178},{\"x\":149,\"y\":180},{\"x\":148,\"y\":180},{\"x\":147,\"y\":181},{\"x\":146,\"y\":181},{\"x\":145,\"y\":183},{\"x\":143,\"y\":184},{\"x\":142,\"y\":186},{\"x\":140,\"y\":187},{\"x\":140,\"y\":188},{\"x\":139,\"y\":188},{\"x\":138,\"y\":188},{\"x\":138,\"y\":189},{\"x\":137,\"y\":189},{\"x\":137,\"y\":190},{\"x\":136,\"y\":191},{\"x\":135,\"y\":191},{\"x\":134,\"y\":193},{\"x\":134,\"y\":194},{\"x\":133,\"y\":194},{\"x\":132,\"y\":194},{\"x\":130,\"y\":194},{\"x\":129,\"y\":196},{\"x\":129,\"y\":197},{\"x\":127,\"y\":198},{\"x\":126,\"y\":198},{\"x\":125,\"y\":199},{\"x\":124,\"y\":199},{\"x\":124,\"y\":200},{\"x\":123,\"y\":201},{\"x\":122,\"y\":201},{\"x\":120,\"y\":201},{\"x\":120,\"y\":203},{\"x\":119,\"y\":203},{\"x\":117,\"y\":203},{\"x\":116,\"y\":203},{\"x\":115,\"y\":203},{\"x\":114,\"y\":203},{\"x\":113,\"y\":203},{\"x\":112,\"y\":203},{\"x\":111,\"y\":203},{\"x\":110,\"y\":203},{\"x\":109,\"y\":203},{\"x\":107,\"y\":203},{\"x\":106,\"y\":203},{\"x\":104,\"y\":203},{\"x\":103,\"y\":203},{\"x\":103,\"y\":202},{\"x\":102,\"y\":202},{\"x\":101,\"y\":202},{\"x\":100,\"y\":202},{\"x\":100,\"y\":201},{\"x\":99,\"y\":201},{\"x\":97,\"y\":201},{\"x\":96,\"y\":201},{\"x\":94,\"y\":201},{\"x\":94,\"y\":199},{\"x\":93,\"y\":199},{\"x\":92,\"y\":198},{\"x\":91,\"y\":198},{\"x\":90,\"y\":198},{\"x\":89,\"y\":198},{\"x\":88,\"y\":196},{\"x\":87,\"y\":195},{\"x\":86,\"y\":195},{\"x\":86,\"y\":194},{\"x\":84,\"y\":194},{\"x\":83,\"y\":193},{\"x\":83,\"y\":192},{\"x\":81,\"y\":192},{\"x\":81,\"y\":191},{\"x\":80,\"y\":191},{\"x\":80,\"y\":189},{\"x\":79,\"y\":189},{\"x\":78,\"y\":189},{\"x\":78,\"y\":188},{\"x\":77,\"y\":188},{\"x\":76,\"y\":188},{\"x\":76,\"y\":186},{\"x\":74,\"y\":186},{\"x\":74,\"y\":185},{\"x\":74,\"y\":184},{\"x\":73,\"y\":184},{\"x\":71,\"y\":184},{\"x\":71,\"y\":183},{\"x\":70,\"y\":183},{\"x\":70,\"y\":182},{\"x\":69,\"y\":182},{\"x\":68,\"y\":181},{\"x\":67,\"y\":180},{\"x\":66,\"y\":179},{\"x\":65,\"y\":179},{\"x\":65,\"y\":178},{\"x\":64,\"y\":178},{\"x\":63,\"y\":176},{\"x\":61,\"y\":175},{\"x\":60,\"y\":175},{\"x\":60,\"y\":173},{\"x\":58,\"y\":173},{\"x\":58,\"y\":172},{\"x\":58,\"y\":171},{\"x\":57,\"y\":171},{\"x\":56,\"y\":170},{\"x\":55,\"y\":169},{\"x\":55,\"y\":168},{\"x\":54,\"y\":168},{\"x\":53,\"y\":166},{\"x\":51,\"y\":166},{\"x\":51,\"y\":165},{\"x\":51,\"y\":163},{\"x\":51,\"y\":162},{\"x\":51,\"y\":161},{\"x\":50,\"y\":161},{\"x\":50,\"y\":160},{\"x\":48,\"y\":160},{\"x\":48,\"y\":159},{\"x\":48,\"y\":158},{\"x\":48,\"y\":157},{\"x\":47,\"y\":156},{\"x\":47,\"y\":155},{\"x\":46,\"y\":155},{\"x\":46,\"y\":153},{\"x\":45,\"y\":152},{\"x\":45,\"y\":150},{\"x\":45,\"y\":149},{\"x\":44,\"y\":149},{\"x\":44,\"y\":148},{\"x\":44,\"y\":147},{\"x\":43,\"y\":147},{\"x\":43,\"y\":146},{\"x\":43,\"y\":145},{\"x\":43,\"y\":143},{\"x\":42,\"y\":143},{\"x\":42,\"y\":142},{\"x\":42,\"y\":140},{\"x\":42,\"y\":139},{\"x\":42,\"y\":138},{\"x\":42,\"y\":137},{\"x\":42,\"y\":136},{\"x\":42,\"y\":135},{\"x\":42,\"y\":134},{\"x\":42,\"y\":133},{\"x\":42,\"y\":132},{\"x\":41,\"y\":132},{\"x\":41,\"y\":130},{\"x\":41,\"y\":129},{\"x\":41,\"y\":127},{\"x\":41,\"y\":126},{\"x\":41,\"y\":125},{\"x\":41,\"y\":124},{\"x\":40,\"y\":124},{\"x\":40,\"y\":123},{\"x\":40,\"y\":122},{\"x\":40,\"y\":120},{\"x\":40,\"y\":119},{\"x\":40,\"y\":117},{\"x\":40,\"y\":116},{\"x\":40,\"y\":115}]}]}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046360.2260678,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"prompt\":\"underpants channel\",\"state\":\"Gameplay_DrawingTime\",\"playerName\":\"primary\",\"hasPicture\":true,\"receivedDrawing\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046367.423172,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_DrawingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046367.428885,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_DrawingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046370.905283,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046370.978421,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046372.0980198,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046372.0981538,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046372.9720588,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046373.047091,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046379.011922,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_EnterLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046379.0851479,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"showError\":false,\"canSkipRound\":false,\"isAuthor\":false,\"playerName\":\"primary\",\"playerIndex\":0,\"state\":\"Gameplay_EnterLie\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046384.222693,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"lieEntered\":\"test\",\"usedSuggestion\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046384.3702078,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LieReceived\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046387.312399,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_LyingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046387.319337,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LyingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046392.912226,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":false,\"choices\":[{\"isCensored\":false,\"text\":\"test\"},{\"isCensored\":false,\"text\":\"hydrogen\"},{\"isCensored\":false,\"text\":\"test2\"},{\"isCensored\":false,\"text\":\"adult summer camp\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046392.9862528,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"test\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046395.660352,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"choice\":\"hydrogen\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046395.811611,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"test\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"hydrogen\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046397.8470879,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":true,\"choices\":[{\"isCensored\":false,\"text\":\"test\"},{\"isCensored\":false,\"text\":\"hydrogen\"},{\"isCensored\":false,\"text\":\"test2\"},{\"isCensored\":false,\"text\":\"adult summer camp\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046397.854826,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"test\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"hydrogen\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046401.003732,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"like\":\"adult summer camp\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046401.1502998,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"test\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[\"adult summer camp\"],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"hydrogen\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046402.0976849,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046402.0978148,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "send",
+      "time": 1589046402.523835,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"like\":\"test2\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046402.677132,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"test\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[\"adult summer camp\",\"test2\"],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"hydrogen\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046414.147394,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046414.220557,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046425.405321,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046425.4778628,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046431.6521668,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_EnterLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046431.725793,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"showError\":false,\"canSkipRound\":false,\"isAuthor\":true,\"playerName\":\"primary\",\"playerIndex\":0,\"state\":\"Gameplay_EnterLie\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046432.097801,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046432.0979528,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046437.108845,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_LyingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046437.1139338,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LyingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046441.067005,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":false,\"choices\":[{\"isCensored\":false,\"text\":\"jerk store\"},{\"isCensored\":false,\"text\":\"asdf\"},{\"isCensored\":false,\"text\":\"fdsa\"},{\"isCensored\":false,\"text\":\"underpants channel\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046441.140724,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":null},\"playerIndex\":0,\"isAuthor\":true,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046442.7198129,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"like\":\"jerk store\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046442.867895,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":null},\"playerIndex\":0,\"isAuthor\":true,\"likes\":[\"jerk store\"],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046445.0482159,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":true,\"choices\":[{\"isCensored\":false,\"text\":\"jerk store\"},{\"isCensored\":false,\"text\":\"asdf\"},{\"isCensored\":false,\"text\":\"fdsa\"},{\"isCensored\":false,\"text\":\"underpants channel\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046445.0542789,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":null},\"playerIndex\":0,\"isAuthor\":true,\"likes\":[\"jerk store\"],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046462.097389,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046462.098774,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046466.2158859,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046466.288924,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046477.473774,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046477.5473208,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046482.4031498,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_EnterLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046482.4767368,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"showError\":false,\"canSkipRound\":false,\"isAuthor\":false,\"playerName\":\"primary\",\"playerIndex\":0,\"state\":\"Gameplay_EnterLie\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046489.3059578,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"lieEntered\":\"asdf\",\"usedSuggestion\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046489.453796,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LieReceived\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046489.5262508,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_LyingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046489.530849,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LyingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046492.097024,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046492.097153,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046494.425655,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":false,\"choices\":[{\"isCensored\":false,\"text\":\"going to bed early\"},{\"isCensored\":false,\"text\":\"i’m walking here!\"},{\"isCensored\":false,\"text\":\"asdff\"},{\"isCensored\":false,\"text\":\"asdf\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046494.499184,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"asdf\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046495.95626,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"choice\":\"going to bed early\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046496.114146,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"asdf\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"going to bed early\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046497.0530329,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":true,\"choices\":[{\"isCensored\":false,\"text\":\"going to bed early\"},{\"isCensored\":false,\"text\":\"i’m walking here!\"},{\"isCensored\":false,\"text\":\"asdff\"},{\"isCensored\":false,\"text\":\"asdf\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046497.060138,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"asdf\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"going to bed early\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046499.8761039,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"like\":\"going to bed early\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046500.0232818,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"asdf\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[\"going to bed early\"],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"going to bed early\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046507.148486,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046507.221993,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046516.996974,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_DrawingTime\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046517.06997,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"prompt\":\"pants instructions\",\"state\":\"Gameplay_DrawingTime\",\"playerName\":\"primary\",\"hasPicture\":true,\"receivedDrawing\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046522.096627,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046522.0980458,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046552.0965319,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046552.0979629,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046582.096053,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046582.097494,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "send",
+      "time": 1589046592.074148,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"drawingLines\":[{\"thickness\":6,\"color\":\"#FB405A\",\"points\":[{\"x\":100.26923076923077,\"y\":97.3159509202454},{\"x\":100,\"y\":97},{\"x\":100,\"y\":99},{\"x\":100,\"y\":100},{\"x\":100,\"y\":102},{\"x\":100,\"y\":104},{\"x\":102,\"y\":104},{\"x\":102,\"y\":106},{\"x\":105,\"y\":115},{\"x\":105,\"y\":117},{\"x\":105,\"y\":119},{\"x\":105,\"y\":121},{\"x\":109,\"y\":132},{\"x\":109,\"y\":134},{\"x\":109,\"y\":135},{\"x\":109,\"y\":137},{\"x\":111,\"y\":152},{\"x\":111,\"y\":154},{\"x\":111,\"y\":156},{\"x\":111,\"y\":158},{\"x\":111,\"y\":176},{\"x\":111,\"y\":178},{\"x\":111,\"y\":180},{\"x\":111,\"y\":181},{\"x\":111,\"y\":193},{\"x\":111,\"y\":194},{\"x\":111,\"y\":196},{\"x\":111,\"y\":198},{\"x\":111,\"y\":200},{\"x\":111,\"y\":196},{\"x\":111,\"y\":194},{\"x\":113,\"y\":194},{\"x\":113,\"y\":193},{\"x\":113,\"y\":189},{\"x\":113,\"y\":187},{\"x\":115,\"y\":187},{\"x\":115,\"y\":185},{\"x\":115,\"y\":181},{\"x\":115,\"y\":180},{\"x\":116,\"y\":180},{\"x\":116,\"y\":178},{\"x\":116,\"y\":174},{\"x\":116,\"y\":172},{\"x\":118,\"y\":170},{\"x\":118,\"y\":167},{\"x\":118,\"y\":165},{\"x\":118,\"y\":163},{\"x\":118,\"y\":159},{\"x\":120,\"y\":158},{\"x\":120,\"y\":156},{\"x\":120,\"y\":152},{\"x\":120,\"y\":150},{\"x\":120,\"y\":148},{\"x\":120,\"y\":145},{\"x\":120,\"y\":143},{\"x\":122,\"y\":143},{\"x\":122,\"y\":141},{\"x\":122,\"y\":137},{\"x\":122,\"y\":135},{\"x\":122,\"y\":134},{\"x\":122,\"y\":135},{\"x\":122,\"y\":137},{\"x\":122,\"y\":139},{\"x\":120,\"y\":139},{\"x\":120,\"y\":141},{\"x\":118,\"y\":143},{\"x\":118,\"y\":145},{\"x\":115,\"y\":145},{\"x\":115,\"y\":147},{\"x\":115,\"y\":148},{\"x\":113,\"y\":148},{\"x\":113,\"y\":150},{\"x\":111,\"y\":150},{\"x\":111,\"y\":152},{\"x\":107,\"y\":152},{\"x\":107,\"y\":154},{\"x\":105,\"y\":154},{\"x\":103,\"y\":156},{\"x\":100,\"y\":156},{\"x\":100,\"y\":158},{\"x\":98,\"y\":159},{\"x\":96,\"y\":159},{\"x\":92,\"y\":161},{\"x\":91,\"y\":161},{\"x\":89,\"y\":161},{\"x\":89,\"y\":163},{\"x\":85,\"y\":163},{\"x\":83,\"y\":163},{\"x\":83,\"y\":165},{\"x\":81,\"y\":165},{\"x\":78,\"y\":165},{\"x\":76,\"y\":165},{\"x\":76,\"y\":167},{\"x\":74,\"y\":167}]}]}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046592.222966,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"prompt\":\"pants instructions\",\"state\":\"Gameplay_DrawingTime\",\"playerName\":\"primary\",\"hasPicture\":true,\"receivedDrawing\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046592.338219,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_DrawingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046592.345321,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_DrawingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046600.0054219,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046600.079084,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046601.6204789,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046601.6938,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046605.850988,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_EnterLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046605.9241679,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"showError\":false,\"canSkipRound\":false,\"isAuthor\":true,\"playerName\":\"primary\",\"playerIndex\":0,\"state\":\"Gameplay_EnterLie\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046610.8983169,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_LyingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046610.9050338,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LyingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046612.0957909,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046612.095948,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046614.8957288,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":false,\"choices\":[{\"isCensored\":false,\"text\":\"asdf\"},{\"isCensored\":false,\"text\":\"pants instructions\"},{\"isCensored\":false,\"text\":\"so meta\"},{\"isCensored\":false,\"text\":\"fdsa\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046614.9707348,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":null},\"playerIndex\":0,\"isAuthor\":true,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046617.3109808,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":true,\"choices\":[{\"isCensored\":false,\"text\":\"asdf\"},{\"isCensored\":false,\"text\":\"pants instructions\"},{\"isCensored\":false,\"text\":\"so meta\"},{\"isCensored\":false,\"text\":\"fdsa\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046617.316872,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":null},\"playerIndex\":0,\"isAuthor\":true,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046633.6146,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046633.6880898,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046642.095449,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046642.096978,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046646.9421039,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046647.015414,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046651.69149,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_EnterLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046651.7650669,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"showError\":false,\"canSkipRound\":false,\"isAuthor\":false,\"playerName\":\"primary\",\"playerIndex\":0,\"state\":\"Gameplay_EnterLie\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046653.8750198,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"lieEntered\":\"aaaaaaaaa\",\"usedSuggestion\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046654.021431,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LieReceived\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046656.2853098,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_LyingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046656.289291,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LyingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046659.85473,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":false,\"choices\":[{\"isCensored\":false,\"text\":\"aaaaaaaaa\"},{\"isCensored\":false,\"text\":\"subliminal\"},{\"isCensored\":false,\"text\":\"ffffffffff\"},{\"isCensored\":false,\"text\":\"mayor of party town\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046659.928562,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"aaaaaaaaa\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046660.8503509,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"choice\":\"subliminal\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046660.9995089,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"aaaaaaaaa\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"subliminal\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046661.8899539,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":true,\"choices\":[{\"isCensored\":false,\"text\":\"aaaaaaaaa\"},{\"isCensored\":false,\"text\":\"subliminal\"},{\"isCensored\":false,\"text\":\"ffffffffff\"},{\"isCensored\":false,\"text\":\"mayor of party town\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046661.8960428,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"aaaaaaaaa\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"subliminal\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046663.6141698,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"like\":\"ffffffffff\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046663.760109,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"aaaaaaaaa\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[\"ffffffffff\"],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"subliminal\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046672.094903,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046672.0962808,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046682.080581,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046682.154244,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046693.340117,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046693.4141319,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046697.9714959,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_EnterLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046698.0450199,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"showError\":false,\"canSkipRound\":false,\"isAuthor\":false,\"playerName\":\"primary\",\"playerIndex\":0,\"state\":\"Gameplay_EnterLie\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046701.6355278,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"lieEntered\":\"ffffffff\",\"usedSuggestion\":false}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046701.7840798,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LieReceived\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046702.094754,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046702.0948858,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046703.881235,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_LyingDone\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046703.885093,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"state\":\"Gameplay_LyingDone\",\"playerIndex\":0,\"hasPicture\":true,\"playerName\":\"primary\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046707.913482,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":false,\"choices\":[{\"isCensored\":false,\"text\":\"spying on a neighbor\"},{\"isCensored\":false,\"text\":\"oh the humanity!\"},{\"isCensored\":false,\"text\":\"aaaaa\"},{\"isCensored\":false,\"text\":\"ffffffff\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046707.9869668,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"ffffffff\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "send",
+      "time": 1589046708.536013,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"action\":\"SendMessageToRoomOwner\",\"type\":\"Action\",\"appId\":\"8511cbe0-dfff-4ea9-94e0-424daad072c3\",\"roomId\":\"NSTE\",\"userId\":\"631461b6-320d-4c7f-9d99-e129a06ee08c\",\"message\":{\"choice\":\"spying on a neighbor\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046708.6832678,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"ffffffff\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"spying on a neighbor\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046709.701962,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"choosingDone\":true,\"choices\":[{\"isCensored\":false,\"text\":\"spying on a neighbor\"},{\"isCensored\":false,\"text\":\"oh the humanity!\"},{\"isCensored\":false,\"text\":\"aaaaa\"},{\"isCensored\":false,\"text\":\"ffffffff\"}],\"state\":\"Gameplay_ChooseLie\",\"platformId\":\"FLASH\"}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046709.708485,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"entry\":{\"isCensored\":false,\"text\":\"ffffffff\"},\"playerIndex\":0,\"isAuthor\":false,\"likes\":[],\"canCensor\":false,\"state\":\"Gameplay_ChooseLie\",\"playerName\":\"primary\",\"chosen\":{\"isCensored\":false,\"text\":\"spying on a neighbor\"},\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046721.004619,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"state\":\"Gameplay_Logo\",\"platformId\":\"FLASH\",\"analytics\":[{\"appname\":\"Drawful2\",\"appid\":\"drawful2-flash\",\"screen\":\"drawful2-endgame\",\"appversion\":\"0.0.0\"}]}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046721.077961,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"playerIndex\":0,\"playerName\":\"primary\",\"state\":\"Gameplay_Logo\",\"hasPicture\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046732.094204,
+      "opcode": 1,
+      "data": "2:::"
+    },
+    {
+      "type": "send",
+      "time": 1589046732.0956118,
+      "opcode": 1,
+      "data": "2::"
+    },
+    {
+      "type": "receive",
+      "time": 1589046739.7794888,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"RoomBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"isLocal\":true,\"artifact\":{\"success\":true,\"categoryId\":\"DrawfulGame\",\"rootId\":\"jbg-blobcast-artifacts\",\"artifactId\":\"17b2da9e8352383e303c08ebc34f55e0\"},\"lobbyState\":\"PostGame\",\"activeContentId\":null,\"formattedActiveContentId\":null,\"state\":\"Lobby\",\"platformId\":\"FLASH\",\"allPlayersHavePortraits\":true}}]}"
+    },
+    {
+      "type": "receive",
+      "time": 1589046739.852726,
+      "opcode": 1,
+      "data": "5:::{\"name\":\"msg\",\"args\":[{\"type\":\"Event\",\"event\":\"CustomerBlobChanged\",\"roomId\":\"NSTE\",\"blob\":{\"canDoUGC\":false,\"isAllowedToStartGame\":true,\"playerIndex\":0,\"playerColors\":[\"#FB405A\",\"#7A2259\"],\"canCensor\":false,\"state\":\"Lobby\",\"playerName\":\"primary\",\"hasPicture\":true}}]}"
+    }
+  ]
+}
