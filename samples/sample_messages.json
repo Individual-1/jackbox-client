@@ -1,0 +1,88 @@
+{
+    "name": "msg",
+    "args": [
+        {
+            "type": "Event",
+            "event": "CustomerBlobChanged",
+            "roomId": "KHAS",
+            "blob": {
+                "state": "Lobby",
+                "hasPicture": false,
+                "playerColors": [
+                    "#FB405A",
+                    "#7A2259"
+                ],
+                "isAllowedToStartGame": true,
+                "playerIndex": 0,
+                "canViewAuthor": false,
+                "canCensor": false,
+                "playerName": "test",
+                "canReport": true,
+                "lastUGCResult": null,
+                "canDoUGC": true,
+                "history": []
+            }
+        }
+    ]
+}
+
+{
+    "name": "msg",
+    "args": [
+        {
+            "type": "Event",
+            "event": "RoomBlobChanged",
+            "roomId": "KHAS",
+            "blob": {
+                "analytics": [
+                    {
+                        "appname": "Drawful2",
+                        "screen": "drawful2-lobby",
+                        "appid": "drawful2-flash",
+                        "appversion": "0.0.0"
+                    }
+                ],
+                "isLocal": true,
+                "activeContentId": null,
+                "platformId": "FLASH",
+                "formattedActiveContentId": null,
+                "allPlayersHavePortraits": false,
+                "state": "Lobby",
+                "lobbyState": "WaitingForMore"
+            }
+        }
+    ]
+}
+
+{
+    "name": "msg",
+    "args": [
+        {
+            "type": "Event",
+            "event": "CustomerBlobChanged",
+            "roomId": "KHAS",
+            "blob": {}
+        }
+    ]
+}
+
+{
+    "name": "msg",
+    "args": [
+        {
+            "type": "Result",
+            "action": "JoinRoom",
+            "success": true,
+            "initial": false,
+            "roomId": "KHAS",
+            "joinType": "player",
+            "userId": "364d4a2d-f2a6-409f-b5fb-6a717d709d01",
+            "options": {
+                "roomcode": "",
+                "name": "test",
+                "email": "",
+                "phone": ""
+            }
+        }
+    ]
+}
