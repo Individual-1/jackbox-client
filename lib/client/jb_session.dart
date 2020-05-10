@@ -37,15 +37,15 @@ void main() {
   talking standard websockets and parsing their message format
 */
 class JackboxSession {
-  static final String _roomBase = "ecast.jackboxgames.com";
-  static final String _roomPath = "/room";
+  static final String _roomBase = 'ecast.jackboxgames.com';
+  static final String _roomPath = '/room';
 
-  static final String _wsBase = "ecast.jackboxgames.com";
+  static final String _wsBase = 'ecast.jackboxgames.com';
   static final int _wsBasePort = 38203;
-  static final String _wsInfoPath = "/socket.io/1/";
-  static final String _wsSocketPath = "/socket.io/1/websocket/";
+  static final String _wsInfoPath = '/socket.io/1/';
+  static final String _wsSocketPath = '/socket.io/1/websocket/';
   static final String _wsInfoRegex =
-      r"([a-z0-9]{28}):60:60:websocket,flashsocket";
+      r'([a-z0-9]{28}):60:60:websocket,flashsocket';
 
   SessionData meta;
 
@@ -99,10 +99,8 @@ class JackboxSession {
     meta.userName = name;
 
     Outer msg = Outer(
-      name: 'msg',
       args: [
         ArgActionJoinRoom(
-          action: 'JoinRoom',
           appId: meta.roomInfo.appId,
           roomId: meta.roomInfo.roomId,
           userId: meta.userId,
@@ -130,12 +128,12 @@ class JackboxSession {
 
   Future<RoomInfo> _getRoomInfo(String roomId) async {
     var uri = new Uri.https(
-        _roomBase, p.join(_roomPath, roomId), {"userId": meta.userId});
+        _roomBase, p.join(_roomPath, roomId), {'userId': meta.userId});
 
     var resp = await http.get(uri);
 
     if (resp.statusCode == 404) {
-      return throw ("Failed to retrieve room information for code: " + roomId);
+      return throw ('Failed to retrieve room information for code: ' + roomId);
     }
 
     Map rmMap = jsonDecode(resp.body);
@@ -163,7 +161,7 @@ class JackboxSession {
 
     if (_gameHandler == null) {
       throw Exception(
-          "No game handler found, game may not be implemented, refusing to connect");
+          'No game handler found, game may not be implemented, refusing to connect');
     }
 
     var uri = new Uri(
@@ -172,14 +170,14 @@ class JackboxSession {
     var resp = await http.get(uri);
 
     if (resp.statusCode == 404) {
-      throw Exception("Failed to retrieve websocket information");
+      throw Exception('Failed to retrieve websocket information');
     }
 
     RegExp exp = new RegExp(_wsInfoRegex);
     Match match = exp.firstMatch(resp.body);
 
     if (match == null || match.groupCount != 1) {
-      throw Exception("Invalid response body");
+      throw Exception('Invalid response body');
     }
 
     String sessionName = match.group(1);
@@ -258,7 +256,7 @@ class JackboxSession {
 
       for (ArgMsg argm in msgp.args) {
         if (argm is ArgResult) {
-          if (argm.action == "JoinRoom" && argm.success) {
+          if (argm.action == 'JoinRoom' && argm.success) {
             // Successfully joined room
             currentState = SessionLobbyState(allowedToStart: false, enoughPlayers: false);
 
@@ -323,7 +321,7 @@ class JackboxSession {
   void _handleSessionLoginMessage(SessionState state) {
     if (state is SessionLoginState) {
       // Malformed LoginState, just send it back as is
-      if (state.roomCode == "" || state.name == "") {
+      if (state.roomCode == '' || state.name == '') {
         _sendUIMessage(state);
         return;
       }

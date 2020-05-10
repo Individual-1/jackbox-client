@@ -6,7 +6,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'jackbox.g.dart';
 
-abstract class JackboxState {}
+abstract class JackboxState {
+  static const String LOBBY = 'Lobby';
+}
 
 abstract class SessionState extends JackboxState {}
 
@@ -17,13 +19,24 @@ abstract class SessionState extends JackboxState {}
 class SessionLoginState extends SessionState {
   String roomCode;
   String name;
+
   SessionLoginState({this.roomCode, this.name});
 }
 
 class SessionLobbyState extends SessionState {
   bool allowedToStart;
   bool enoughPlayers;
-  SessionLobbyState({this.allowedToStart, this.enoughPlayers});
+  bool startGame;
+  bool postGame;
+
+  SessionLobbyState({this.allowedToStart, this.enoughPlayers, this.startGame, this.postGame});
+
+  factory SessionLobbyState.From(SessionLobbyState state) {
+    return SessionLobbyState(
+      allowedToStart: state.allowedToStart,
+      enoughPlayers: state.enoughPlayers
+      );
+  }
 }
 
 const Map<String, Type> StateMap = {
@@ -63,10 +76,10 @@ class RoomInfo {
 }
 
 class Outer {
-  String name;
+  final String name = 'msg';
   List<ArgMsg> args;
 
-  Outer({this.name, this.args});
+  Outer({this.args});
 
   @override
   String toString() {
@@ -98,7 +111,6 @@ class Outer {
     }
 
     return Outer(
-      name: json['name'],
       args: args,
     );
   }
@@ -130,7 +142,7 @@ abstract class ArgMsg {
 
 @JsonSerializable()
 class ArgResult extends ArgMsg {
-  final String type = "Result";
+  final String type = 'Result';
   String roomId;
   String action;
   bool success;
@@ -157,7 +169,7 @@ class ArgResult extends ArgMsg {
 
 @JsonSerializable()
 class ArgEvent extends ArgMsg {
-  final String type = "Event";
+  final String type = 'Event';
   String roomId;
   String event;
   Map<String, dynamic> blob;
@@ -171,27 +183,27 @@ class ArgEvent extends ArgMsg {
 }
 
 @JsonSerializable()
-class ArgAction extends ArgMsg {
-  final String type = "Action";
-  String action;
+class ArgActionSendMsg extends ArgMsg {
+  final String type = 'Action';
+  final String action = 'SendMessageToRoomOwner';
   String roomId;
   String appId;
   String userId;
   Map<String, dynamic> message;
 
-  ArgAction({this.action, this.roomId, this.appId, this.userId, this.message});
+  ArgActionSendMsg({this.roomId, this.appId, this.userId, this.message});
 
-  factory ArgAction.fromJson(Map<String, dynamic> json) => _$ArgActionFromJson(json);
+  factory ArgActionSendMsg.fromJson(Map<String, dynamic> json) => _$ArgActionSendMsgFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$ArgActionToJson(this);
+  Map<String, dynamic> toJson() => _$ArgActionSendMsgToJson(this);
 }
 
 // The JoinRoom action doesn't follow the format of any of the other Action messages
 @JsonSerializable()
 class ArgActionJoinRoom extends ArgMsg {
-  final String type = "Action";
-  String action;
+  final String type = 'Action';
+  final String action = 'JoinRoom';
   String roomId;
   String appId;
   String userId;
@@ -200,8 +212,7 @@ class ArgActionJoinRoom extends ArgMsg {
   Map<String, dynamic> options;
 
   ArgActionJoinRoom(
-      {this.action,
-      this.roomId,
+      {this.roomId,
       this.appId,
       this.userId,
       this.joinType,
