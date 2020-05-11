@@ -1,7 +1,6 @@
 library drawful;
 
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 
@@ -59,17 +58,37 @@ abstract class DrawfulState extends JackboxState {
   };
 }
 
+class DrawfulLobbyState extends DrawfulState {
+  final String route = '/drawful/lobby';
+  bool allowedToStart;
+  bool enoughPlayers;
+  bool startGame;
+  bool postGame;
+
+  DrawfulLobbyState(
+      {this.allowedToStart, this.enoughPlayers, this.startGame, this.postGame});
+
+  factory DrawfulLobbyState.From(DrawfulLobbyState state) {
+    return DrawfulLobbyState(
+        allowedToStart: state.allowedToStart,
+        enoughPlayers: state.enoughPlayers);
+  }
+}
+
 // Embed a lobbystate class so we can populate it if we need to go back to lobby after drawing
 class DrawfulDrawingState extends DrawfulState {
+  final String route = '/drawful/draw';
   String prompt;
-  SessionLobbyState lobbyState;
+  DrawfulLobbyState lobbyState;
 
   DrawfulDrawingState({this.prompt, this.lobbyState});
 
   factory DrawfulDrawingState.From(DrawfulDrawingState state) {
     return DrawfulDrawingState(
       prompt: state.prompt,
-      lobbyState: state.lobbyState != null ? SessionLobbyState.From(state.lobbyState) : null,
+      lobbyState: state.lobbyState != null
+          ? DrawfulLobbyState.From(state.lobbyState)
+          : null,
     );
   }
 }
@@ -79,6 +98,7 @@ class DrawfulDrawingDoneState extends DrawfulState {}
 class DrawfulDoneState extends DrawfulState {}
 
 class DrawfulEnterLieState extends DrawfulState {
+  final String route = '/drawful/enterlie';
   String lie;
   bool useSuggestion;
   bool isAuthor;
@@ -97,13 +117,15 @@ class DrawfulEnterLieState extends DrawfulState {
 class DrawfulLyingDoneState extends DrawfulState {}
 
 class DrawfulChooseLieState extends DrawfulState {
+  final String route = '/drawful/chooselie';
   HashSet<String> choices;
   String myEntry;
   HashSet<String> likes;
   String chosen;
   bool isAuthor;
 
-  DrawfulChooseLieState({this.choices, this.myEntry, this.likes, this.chosen, this.isAuthor});
+  DrawfulChooseLieState(
+      {this.choices, this.myEntry, this.likes, this.chosen, this.isAuthor});
 
   factory DrawfulChooseLieState.From(DrawfulChooseLieState state) {
     HashSet<String> choices = new HashSet<String>();
@@ -128,7 +150,9 @@ class DrawfulChooseLieState extends DrawfulState {
 }
 
 // This isn't explicity a valid state, but a generic for when we are waiting for something to happen
-class DrawfulWaitState extends DrawfulState {}
+class DrawfulWaitState extends DrawfulState {
+  final String route = '/drawful/wait';
+}
 
 ArgEventBlob getSpecificBlobType(ArgEvent msg) {
   switch (msg.event) {

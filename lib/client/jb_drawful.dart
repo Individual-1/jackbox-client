@@ -1,6 +1,5 @@
 library jb_drawful;
 
-import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
@@ -28,7 +27,8 @@ class DrawfulHandler extends GameHandler {
     };
 
     _handledStates = {
-      SessionLobbyState: (m, s) => _handleSessionLobbyState(m, s),
+      SessionLoginState: (m, s) => _handleSessionLoginState(m, s),
+      DrawfulLobbyState: (m, s) => _handleDrawfulLobbyState(m, s),
       DrawfulDrawingState: (m, s) => _handleDrawfulDrawingState(m, s),
       DrawfulWaitState: (m, s) => _handleDrawfulWaitState(m, s),
       DrawfulEnterLieState: (m, s) => _handleDrawfulEnterLieState(m, s),
@@ -116,6 +116,18 @@ class DrawfulHandler extends GameHandler {
     return null;
   }
 
+  JackboxState _handleSessionLoginState(ArgMsg msg, JackboxState state) {
+    JackboxState nextState;
+
+    if (state is SessionLoginState && msg is ArgResult) {
+      if (msg.action == 'JoinRoom' && msg.success) {
+        nextState = DrawfulLobbyState(allowedToStart: false, enoughPlayers: false);
+      }
+    }
+
+    return nextState;
+  }
+
   /*
     Processor for Jackbox messages while in a Lobby state
     There are 4 directions we can go from this state
@@ -124,14 +136,14 @@ class DrawfulHandler extends GameHandler {
     3. Start the game
     4. Game ends
   */
-  JackboxState _handleSessionLobbyState(ArgMsg msg, JackboxState state) {
+  JackboxState _handleDrawfulLobbyState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is SessionLobbyState && msg is ArgEvent) {
+    if (state is DrawfulLobbyState && msg is ArgEvent) {
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
 
-      SessionLobbyState lobbyState = SessionLobbyState.From(state);
+      DrawfulLobbyState lobbyState = DrawfulLobbyState.From(state);
       JackboxState defaultState = lobbyState;
 
       if (!lobbyState.postGame) {

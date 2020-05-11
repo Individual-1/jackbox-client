@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:jackbox_client/model/drawful.dart';
 import 'package:provider/provider.dart';
 
+import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Draw implements DrawfulDrawingState
@@ -74,13 +76,24 @@ class _DrawState extends State<Draw> {
   Widget drawInstructions;
   GlobalKey instrKey;
   Widget itemBar;
+  Widget imexBar;
+
+  DrawfulDrawingState state;
 
   StreamSubscription _streamSub;
   Stream _prevStream;
 
   void _listen(Stream<BlocRouteTransition> stream) {
-    _streamSub = stream.listen((event) { 
-      Navigator.pushNamed(context, event.route, arguments: event.params);
+    _streamSub = stream.listen((event) {
+      if (event.update) {
+        if (event.state is DrawfulDrawingState) {
+          setState(() {
+            state = event.state;
+          });
+        }
+      } else {
+        Navigator.pushNamed(context, event.route, arguments: event.state);
+      }
     });
   }
 
@@ -103,8 +116,6 @@ class _DrawState extends State<Draw> {
     drawPaint = new DrawingPainter(ln);
     instrKey = new GlobalKey();
   }
-
-
 
   void panStart(DragStartDetails details) {
     if (ln.checkInBounds(details.localPosition)) {
@@ -145,7 +156,14 @@ class _DrawState extends State<Draw> {
   @override
   Widget build(BuildContext context) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-    Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
+    JackboxState tmp = ModalRoute.of(context).settings.arguments;
+
+    if (!(tmp is DrawfulDrawingState)) {
+      // Error out
+      return null;
+    }
+
+    state = tmp;
 
     gd = new GestureDetector(
       onPanStart: panStart,
@@ -202,6 +220,7 @@ class _DrawState extends State<Draw> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    // Set stroke width
                     IconButton(
                         icon: Icon(Icons.album),
                         onPressed: () {
@@ -211,6 +230,7 @@ class _DrawState extends State<Draw> {
                             selectedMode = SelectedMode.StrokeWidth;
                           });
                         }),
+                    // Select color
                     IconButton(
                         icon: Icon(Icons.color_lens),
                         onPressed: () {
@@ -220,6 +240,7 @@ class _DrawState extends State<Draw> {
                             selectedMode = SelectedMode.Color;
                           });
                         }),
+                    // Undo
                     IconButton(
                         icon: Icon(Icons.undo),
                         onPressed: () {
@@ -227,6 +248,22 @@ class _DrawState extends State<Draw> {
                             ln.removeLast();
                           });
                         }),
+                    // Export Drawing json
+                    IconButton(
+                        icon: Icon(Icons.save),
+                        onPressed: () {
+                          String js = ln.exportLines(Size(240.0, 300.0));
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(40)),
+                                    child: _copyTextDialog(js));
+                              });
+                        }),
+                    // Import Drawing json
                     IconButton(
                         icon: Icon(Icons.save),
                         onPressed: () {

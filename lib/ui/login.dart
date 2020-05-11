@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:ui';
-import 'dart:math';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:jackbox_client/model/jackbox.dart';
 
 import 'package:provider/provider.dart';
@@ -27,6 +23,8 @@ class _LoginState extends State<Login> {
   final RegExp _roomRegex = new RegExp(r'[^A-Z]');
   final RegExp _nameRegex = new RegExp(r'[^A-Z0-9]');
 
+  SessionLoginState state;
+
   String _roomCode = "";
   String _name = "";
 
@@ -34,8 +32,16 @@ class _LoginState extends State<Login> {
   Stream _prevStream;
 
   void _listen(Stream<BlocRouteTransition> stream) {
-    _streamSub = stream.listen((event) { 
-      Navigator.pushNamed(context, event.route, arguments: event.params);
+    _streamSub = stream.listen((event) {
+      if (event.update) {
+        if (event.state is SessionLoginState) {
+          setState(() {
+            state = event.state;
+          });
+        }
+      } else {
+        Navigator.pushNamed(context, event.route, arguments: event.state);
+      }
     });
   }
 
@@ -139,7 +145,7 @@ class _LoginState extends State<Login> {
             RaisedButton(
               child: Text('Join'),
               onPressed: _allowJoin ? () {
-                bloc.pushState(SessionLoginState(name: _name, roomCode: _roomCode));
+                bloc.sendEvent(JackboxLoginEvent(name: _name, roomCode: _roomCode));
               } : null,
             )
           ],

@@ -1,7 +1,5 @@
 library jackbox;
 
-import 'dart:collection';
-
 import 'package:jackbox_client/model/internal.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -24,6 +22,7 @@ class JackboxLoginEvent extends JackboxEvent {
 typedef JackboxState JackboxStateHandler(ArgMsg msg, JackboxState state);
 
 abstract class JackboxState {
+  final String route = '';
   static const String LOBBY = 'Lobby';
 }
 
@@ -34,28 +33,9 @@ abstract class SessionState extends JackboxState {}
 // 2. When both are filled and we recieve it then we attempt a login and invalidate any unusable fields
 // 3. If we attempt a login and it is successful, we change state entirely
 class SessionLoginState extends SessionState {
+  final String route = '/login';
   SessionLoginState();
 }
-
-class SessionLobbyState extends SessionState {
-  bool allowedToStart;
-  bool enoughPlayers;
-  bool startGame;
-  bool postGame;
-
-  SessionLobbyState({this.allowedToStart, this.enoughPlayers, this.startGame, this.postGame});
-
-  factory SessionLobbyState.From(SessionLobbyState state) {
-    return SessionLobbyState(
-      allowedToStart: state.allowedToStart,
-      enoughPlayers: state.enoughPlayers
-      );
-  }
-}
-
-const Map<String, Type> StateMap = {
-  'Lobby': SessionLobbyState,
-};
 
 @JsonSerializable()
 class RoomInfo {

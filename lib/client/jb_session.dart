@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
@@ -46,7 +45,7 @@ class JackboxSession {
   StreamSubscription<JackboxEvent> _eventStreamSub;
 
   // StreamController used to send state information to listeners
-  StreamController<JackboxState> _stateStream;
+  StreamController<BlocMsg> _stateStream;
 
   GameHandler _gameHandler;
 
@@ -74,10 +73,10 @@ class JackboxSession {
       resetState();
     });
 
-    _stateStream = StreamController<JackboxState>();
+    _stateStream = StreamController<BlocMsg>();
 
     // Buffer first event
-    _sendState(currentState);
+    _sendState(BlocMsg(update: false, state: currentState));
   }
 
   void _initHandlerMaps() {
@@ -85,9 +84,7 @@ class JackboxSession {
       JackboxLoginEvent: (e, m) => _handleLogin(e),
     };
 
-    _handledStates = {
-      SessionLoginState: (m, s) => _handleSessionLoginState(m, s),
-    };
+    _handledStates = {};
   }
 
   void sendEvent(JackboxEvent event) {
@@ -98,8 +95,8 @@ class JackboxSession {
     return _stateStream.stream;
   }
 
-  void _sendState(JackboxState state) {
-    _stateStream?.sink?.add(state);
+  void _sendState(BlocMsg msg) {
+    _stateStream?.sink?.add(msg);
   }
 
   bool canHandleEvent(JackboxEvent event) {
@@ -111,7 +108,19 @@ class JackboxSession {
   }
 
   void _handleEvent(JackboxEvent event) {
+    String output;
+    
+    if (canHandleEvent(event)) {
+      _handledEvents[event.runtimeType](event, meta);
+    } else if (_gameHandler.canHandleEvent(event)) {
+      output = _gameHandler.handleEvent(event, meta);
+    } else {
+      // ?
+    }
 
+    if (output != '') {
+      _sendWSMessage(output);
+    }
   }
 
   String _handleLogin(JackboxEvent event) {
@@ -130,17 +139,8 @@ class JackboxSession {
     }
   }
 
-  JackboxState _handleSessionLoginState(ArgMsg msg, JackboxState state) {
-    if (state is SessionLoginState) {
-      if (msg is ArgResult) {
-        if (msg.action == 'JoinRoom' && msg.success) {
-          // Successfully joined room
-          return SessionLobbyState(allowedToStart: false, enoughPlayers: false);
-        }
-      }
-    }
-
-    return null;
+  String getAppId() {
+    return meta.roomInfo.appId;
   }
 
   String _genUserId() {
@@ -300,6 +300,7 @@ class JackboxSession {
     Map<String, dynamic> jmsg = jsonDecode(msg);
     Outer msgp = Outer.fromJson(jmsg);
     JackboxState finalState = currentState;
+    BlocMsg bmsg;
 
     for (ArgMsg argm in msgp.args) {
       JackboxState nextState;
@@ -316,6 +317,18 @@ class JackboxSession {
       }
     }
 
+    if (finalState != currentState) {
+      if (finalState.runtimeType == currentState.runtimeType) {
+        bmsg = BlocMsg(update: true, state: finalState);
+      } else {
+        bmsg = BlocMsg(update: false, state: finalState);
+      }
+    }
+
+    if (bmsg != null) {
+      _sendState(bmsg);
+    }
+
     return;
   }
 
@@ -324,6 +337,9 @@ class JackboxSession {
     _wsSub = null;
 
     _disconnectWS();
+
+    _eventStreamSub?.cancel();
+    _eventStreamSub = null;
 
     _eventStream?.sink?.close();
     _eventStream?.close();
