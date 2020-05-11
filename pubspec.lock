@@ -416,7 +416,7 @@ packages:
     source: hosted
     version: "1.9.3"
   stream_channel:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: stream_channel
       url: "https://pub.dartlang.org"

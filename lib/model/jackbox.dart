@@ -2,9 +2,26 @@ library jackbox;
 
 import 'dart:collection';
 
+import 'package:jackbox_client/model/internal.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'jackbox.g.dart';
+
+// Events will usually be handled by some message being generated and sent
+// String return will be the message to send, empty if taken care of already
+typedef String JackboxEventHandler(JackboxEvent event, SessionData meta);
+
+abstract class JackboxEvent {}
+
+// Join room given a roomcode and name
+class JackboxLoginEvent extends JackboxEvent {
+  String roomCode;
+  String name;
+
+  JackboxLoginEvent({this.roomCode, this.name});
+}
+
+typedef JackboxState JackboxStateHandler(ArgMsg msg, JackboxState state);
 
 abstract class JackboxState {
   static const String LOBBY = 'Lobby';
@@ -17,10 +34,7 @@ abstract class SessionState extends JackboxState {}
 // 2. When both are filled and we recieve it then we attempt a login and invalidate any unusable fields
 // 3. If we attempt a login and it is successful, we change state entirely
 class SessionLoginState extends SessionState {
-  String roomCode;
-  String name;
-
-  SessionLoginState({this.roomCode, this.name});
+  SessionLoginState();
 }
 
 class SessionLobbyState extends SessionState {

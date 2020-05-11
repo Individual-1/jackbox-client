@@ -9,6 +9,35 @@ import 'package:jackbox_client/model/jackbox.dart';
 
 part 'drawful.g.dart';
 
+abstract class DrawfulEvent extends JackboxEvent {}
+
+class DrawfulStartGameEvent extends DrawfulEvent {}
+
+class DrawfulSubmitDrawingEvent extends DrawfulEvent {
+  Map<String, dynamic> lines;
+
+  DrawfulSubmitDrawingEvent({this.lines});
+}
+
+class DrawfulSubmitLieEvent extends DrawfulEvent {
+  String lie;
+  bool usedSuggestion;
+
+  DrawfulSubmitLieEvent({this.lie, this.usedSuggestion});
+}
+
+class DrawfulChooseLieEvent extends DrawfulEvent {
+  String choice;
+
+  DrawfulChooseLieEvent({this.choice});
+}
+
+class DrawfulLikeChoiceEvent extends DrawfulEvent {
+  String choice;
+
+  DrawfulLikeChoiceEvent({this.choice});
+}
+
 // Drawful specific session states to send
 abstract class DrawfulState extends JackboxState {
   static const String GAMEPLAY_LOGO = 'Gameplay_Logo';
@@ -33,24 +62,13 @@ abstract class DrawfulState extends JackboxState {
 // Embed a lobbystate class so we can populate it if we need to go back to lobby after drawing
 class DrawfulDrawingState extends DrawfulState {
   String prompt;
-  Map<String, dynamic> lines;
   SessionLobbyState lobbyState;
 
-  DrawfulDrawingState({this.prompt, this.lines, this.lobbyState});
+  DrawfulDrawingState({this.prompt, this.lobbyState});
 
   factory DrawfulDrawingState.From(DrawfulDrawingState state) {
-    // It is incredibly terrible that we have to do this, but dart doesn't have a deep copy mechanism
-    Map<String, dynamic> lines = null;
-
-    if (state.lines != null) {
-      String tmp = jsonEncode(state.lines);
-      lines = jsonDecode(tmp);
-    }
-
-
     return DrawfulDrawingState(
       prompt: state.prompt,
-      lines: lines,
       lobbyState: state.lobbyState != null ? SessionLobbyState.From(state.lobbyState) : null,
     );
   }
@@ -83,10 +101,9 @@ class DrawfulChooseLieState extends DrawfulState {
   String myEntry;
   HashSet<String> likes;
   String chosen;
-  bool usedSuggestion;
   bool isAuthor;
 
-  DrawfulChooseLieState({this.choices, this.myEntry, this.likes, this.chosen, this.usedSuggestion, this.isAuthor});
+  DrawfulChooseLieState({this.choices, this.myEntry, this.likes, this.chosen, this.isAuthor});
 
   factory DrawfulChooseLieState.From(DrawfulChooseLieState state) {
     HashSet<String> choices = new HashSet<String>();
@@ -105,7 +122,6 @@ class DrawfulChooseLieState extends DrawfulState {
       myEntry: state.myEntry,
       likes: likes,
       chosen: state.chosen,
-      usedSuggestion: state.usedSuggestion,
       isAuthor: state.isAuthor,
     );
   }
@@ -162,7 +178,7 @@ ArgEventBlob getSpecificBlobType(ArgEvent msg) {
 }
 
 @JsonSerializable()
-abstract class ArgEventBlob {
+class ArgEventBlob {
   @JsonKey(name: 'state', required: true)
   String state;
 
