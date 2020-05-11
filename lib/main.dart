@@ -12,7 +12,7 @@ void main() {
 
 class JBApp extends StatelessWidget {
   @override
-
+/*
   Widget build(BuildContext context) {
       return new MaterialApp(
       title: 'Test',
@@ -23,8 +23,8 @@ class JBApp extends StatelessWidget {
       },
     );
   }
+  */
 
-  /*
   Widget build(BuildContext context) {
     return Provider(
     create: (context) => JackboxBloc(),
@@ -32,14 +32,12 @@ class JBApp extends StatelessWidget {
     child: MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => NullInit(),
+        '/': (context) => WebInit(),
         '/login': (context) => Login(),
-        '/lobby': (context) => Lobby(),
+        //'/lobby': (context) => Lobby(),
         '/draw': (context) => Draw(),
       }
     )
     );
   }
-  */
-
 }

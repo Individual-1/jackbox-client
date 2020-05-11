@@ -91,7 +91,7 @@ class JackboxSession {
     _eventStream?.sink?.add(event);
   }
 
-  Stream stateStream() {
+  Stream<BlocMsg> stateStream() {
     return _stateStream.stream;
   }
 
@@ -140,7 +140,11 @@ class JackboxSession {
   }
 
   String getAppId() {
-    return meta.roomInfo.appId;
+    if (meta.roomInfo != null) {
+      return meta.roomInfo.appId;
+    } else {
+      return '';
+    }
   }
 
   String _genUserId() {

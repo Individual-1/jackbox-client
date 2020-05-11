@@ -30,14 +30,20 @@ class JackboxBloc {
   };
 
   StreamSubscription<BlocMsg> _stateSub;
-  BehaviorSubject<BlocRouteTransition> _routeStream;
+  StreamController<BlocRouteTransition> _routeStream;
+  int _routeListenerCount = 0;
 
   JackboxBloc() {
     _jbs = JackboxSession();
 
     _initHandlerMaps();
 
-    _routeStream = BehaviorSubject<BlocRouteTransition>();
+    _routeStream =
+        StreamController<BlocRouteTransition>.broadcast(onCancel: () {
+      _routeListenerCount -= 1;
+    }, onListen: () {
+      _routeListenerCount += 1;
+    });
 
     _stateSub = _jbs.stateStream().listen(_handleState, onDone: () {
       dispose();
@@ -59,15 +65,15 @@ class JackboxBloc {
   }
 
   // _handleState is the handler for State changes from the session manager
-  void _handleState(BlocMsg msg) {
+  void _handleState(BlocMsg msg) async {
     BlocRouteTransition nextRoute;
-    
+
     if (_gh == null) {
       String appId = _jbs.getAppId();
 
       if (appId != '' && _handledGames.containsKey(appId)) {
         _gh = _handledGames[appId]();
-      } 
+      }
     }
 
     if (canHandleState(msg.state)) {
@@ -77,6 +83,7 @@ class JackboxBloc {
     }
 
     // ?
+    await _waitUntilListeners();
     _routeStream.sink.add(nextRoute);
   }
 
@@ -94,11 +101,28 @@ class JackboxBloc {
     return nextRoute;
   }
 
+  Future _waitUntilListeners() {
+    Duration pollInterval = Duration(milliseconds: 250);
+    Completer completer = new Completer();
+
+    check() {
+      if (_routeListenerCount > 0) {
+        completer.complete();
+      } else {
+        new Timer(pollInterval, check);
+      }
+    }
+
+    check();
+
+    return completer.future;
+  }
+
   void sendEvent(JackboxEvent event) {
     _jbs.sendEvent(event);
   }
 
-  Stream<BlocRouteTransition> get jackboxRoute => _routeStream.stream;  
+  Stream<BlocRouteTransition> get jackboxRoute => _routeStream.stream;
 
   void dispose() {
     _routeStream.close();

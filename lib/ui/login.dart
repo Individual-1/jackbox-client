@@ -34,7 +34,7 @@ class _LoginState extends State<Login> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is SessionLoginState) {
+        if (event.state is SessionLoginState && event.state != state) {
           setState(() {
             state = event.state;
           });
@@ -72,8 +72,7 @@ class _LoginState extends State<Login> {
     } else if (_roomRegex.hasMatch(_roomFilter.text)) {
       _error.text = "Room name must be alphabetical characters only";
       _allowJoin = false;
-    }
-    else {
+    } else {
       _roomCode = _roomFilter.text;
       _allowJoin = true;
     }
@@ -94,63 +93,52 @@ class _LoginState extends State<Login> {
 
   Widget _buildTextFields() {
     return Container(
-      child: Column(
-        children: [
-          Container(
+        child: Column(
+      children: [
+        Container(
             child: TextField(
-              controller: _nameFilter,
-              decoration: InputDecoration(
-                labelText: 'Name'
-              )
-            )
-          ),
-          Container(
+                controller: _nameFilter,
+                decoration: InputDecoration(labelText: 'Name'))),
+        Container(
             child: TextField(
-              controller: _roomFilter,
-              decoration: InputDecoration(
-                labelText: 'Room Code'
-              ),
-            )
-            ),
-            Container(
-              child: TextField(
-                controller: _error
-              )
-            )
-        ],
-      )
-    );
+          controller: _roomFilter,
+          decoration: InputDecoration(labelText: 'Room Code'),
+        )),
+        Container(child: TextField(controller: _error))
+      ],
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
+    
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-    Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
+    JackboxState tmp = ModalRoute.of(context).settings.arguments;
 
-    if (args.containsKey('name')) {
-      _nameFilter.text = args['name'];
+    if (!(tmp is SessionLoginState)) {
+      // Error out
+      return null;
     }
 
-    if (args.containsKey('roomCode')) {
-      _roomFilter.text = args['roomCode'];
-    }
+    state = tmp;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: Container(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            _buildTextFields(),
-            RaisedButton(
-              child: Text('Join'),
-              onPressed: _allowJoin ? () {
-                bloc.sendEvent(JackboxLoginEvent(name: _name, roomCode: _roomCode));
-              } : null,
-            )
-          ],
-        )
-      )
-    );
+        backgroundColor: Colors.grey[100],
+        body: Container(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _buildTextFields(),
+                RaisedButton(
+                  child: Text('Join'),
+                  onPressed: _allowJoin
+                      ? () {
+                          bloc.sendEvent(JackboxLoginEvent(
+                              name: _name, roomCode: _roomCode));
+                        }
+                      : null,
+                )
+              ],
+            )));
   }
 }
