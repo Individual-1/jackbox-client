@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:jackbox_client/bloc/bloc_drawful.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'package:jackbox_client/client/jb_session.dart';
 import 'package:jackbox_client/model/jackbox.dart';
