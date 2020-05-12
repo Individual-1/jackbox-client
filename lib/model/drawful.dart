@@ -13,7 +13,7 @@ abstract class DrawfulEvent extends JackboxEvent {}
 class DrawfulStartGameEvent extends DrawfulEvent {}
 
 class DrawfulSubmitDrawingEvent extends DrawfulEvent {
-  Map<String, dynamic> lines;
+  List<Map<String, dynamic>> lines;
 
   DrawfulSubmitDrawingEvent({this.lines});
 }

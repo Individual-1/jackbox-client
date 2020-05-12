@@ -36,6 +36,7 @@ class JBApp extends StatelessWidget {
         '/login': (context) => Login(),
         //'/lobby': (context) => Lobby(),
         '/draw': (context) => Draw(),
+        '/draw-standalone': (context) => Draw(standalone: true),
       }
     )
     );

@@ -15,8 +15,12 @@ import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Draw implements DrawfulDrawingState
 class Draw extends StatefulWidget {
+  bool standalone = false;
+
+  Draw({this.standalone});
+
   @override
-  _DrawState createState() => _DrawState();
+  _DrawState createState() => _DrawState(standalone: standalone);
 }
 
 class PictureLine {
@@ -27,6 +31,75 @@ class PictureLine {
 
   PictureLine({this.thickness, this.points, this.paint}) {
     open = true;
+  }
+
+  factory PictureLine.fromJson(Map<String, dynamic> json) {
+    List<Offset> points = List<Offset>();
+
+    if (json.containsKey('points')) {
+      for (Map<String, dynamic> point in json['points']) {
+        if (point.containsKey('x') && point.containsKey('y')) {
+          dynamic xd = point['x'];
+          dynamic yd = point['y'];
+
+          double x;
+          double y;
+
+          if (xd is int) {
+            x = xd.roundToDouble();
+          } else if (xd is double) {
+            x = xd;
+          } else {
+            throw FormatException('Failed to parse');
+          }
+
+          if (yd is int) {
+            y = yd.roundToDouble();
+          } else if (yd is double) {
+            y = yd;
+          } else {
+            throw FormatException();
+          }
+
+          points.add(Offset(x, y));
+        }
+      }
+    }
+
+    Paint paint = Paint();
+
+    if (json.containsKey('color')) {
+      String color = json['color'];
+
+      if (color.startsWith('#')) {
+        color = color.substring(1);
+      }
+
+      paint.color = Color(int.parse(color, radix: 16));
+    }
+
+    double thickness = 3.0;
+    if (json.containsKey('thickness')) {
+      dynamic thick = json['thickness'];
+
+      if (thick is int) {
+        thickness = thick.roundToDouble();
+      } else if (thick is double) {
+        thickness = thick;
+      }
+    }
+
+    paint.strokeWidth = thickness;
+
+    PictureLine result = PictureLine(
+      thickness: thickness,
+      points: points,
+      paint: paint,
+    );
+
+    result.open = false;
+
+    return result;
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +140,8 @@ class _DrawState extends State<Draw> {
 
   PaintingStyle paintStyle = PaintingStyle.stroke;
 
+  final TextEditingController importController = TextEditingController();
+
   LineNotifier ln;
   DrawingPainter drawPaint;
   GestureDetector gd;
@@ -76,12 +151,18 @@ class _DrawState extends State<Draw> {
   Widget drawInstructions;
   GlobalKey instrKey;
   Widget itemBar;
-  Widget imexBar;
+  Widget submitButton;
 
   DrawfulDrawingState state;
 
   StreamSubscription _streamSub;
   Stream _prevStream;
+
+  bool standalone;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _DrawState({this.standalone});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -101,11 +182,13 @@ class _DrawState extends State<Draw> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-    if (bloc.jackboxRoute != _prevStream) {
-      _streamSub?.cancel();
-      _prevStream = bloc.jackboxRoute;
-      _listen(bloc.jackboxRoute);
+    if (!standalone) {
+      final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
+      if (bloc.jackboxRoute != _prevStream) {
+        _streamSub?.cancel();
+        _prevStream = bloc.jackboxRoute;
+        _listen(bloc.jackboxRoute);
+      }
     }
   }
 
@@ -117,7 +200,7 @@ class _DrawState extends State<Draw> {
     instrKey = new GlobalKey();
   }
 
-  void panStart(DragStartDetails details) {
+  void _panStart(DragStartDetails details) {
     if (ln.checkInBounds(details.localPosition)) {
       ln.startStroke(
           details.localPosition,
@@ -133,7 +216,7 @@ class _DrawState extends State<Draw> {
     }
   }
 
-  void panUpdate(DragUpdateDetails details) {
+  void _panUpdate(DragUpdateDetails details) {
     if (ln.checkInBounds(details.localPosition)) {
       ln.appendStroke(
           details.localPosition,
@@ -149,26 +232,39 @@ class _DrawState extends State<Draw> {
     }
   }
 
-  void panEnd(DragEndDetails details) {
+  void _panEnd(DragEndDetails details) {
     ln.endStroke();
+  }
+
+  void _showToast(BuildContext context, String toastContents) {
+    scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+          content: Text(toastContents),
+          action: SnackBarAction(
+              label: 'DISMISS',
+              onPressed: scaffoldKey.currentState.hideCurrentSnackBar)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-    JackboxState tmp = ModalRoute.of(context).settings.arguments;
+    JackboxBloc bloc;
+    if (!standalone) {
+      bloc = Provider.of<JackboxBloc>(context);
+      JackboxState tmp = ModalRoute.of(context).settings.arguments;
 
-    if (!(tmp is DrawfulDrawingState)) {
-      // Error out
-      return null;
+      if (!(tmp is DrawfulDrawingState)) {
+        // Error out
+        return null;
+      }
+
+      state = tmp;
     }
 
-    state = tmp;
-
     gd = new GestureDetector(
-      onPanStart: panStart,
-      onPanUpdate: panUpdate,
-      onPanEnd: panEnd,
+      onPanStart: _panStart,
+      onPanUpdate: _panUpdate,
+      onPanEnd: _panEnd,
     );
 
     canvas = Container(
@@ -185,7 +281,7 @@ class _DrawState extends State<Draw> {
 
     drawInstructions = Container(
         child: Text(
-      "Draw",
+      state != null ? state.prompt : 'Draw',
       key: instrKey,
       style: TextStyle(fontSize: 30),
     ));
@@ -260,14 +356,13 @@ class _DrawState extends State<Draw> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(40)),
-                                    child: _copyTextDialog(js));
+                                    child: _exportDialog(js));
                               });
                         }),
                     // Import Drawing json
                     IconButton(
-                        icon: Icon(Icons.save),
+                        icon: Icon(Icons.file_upload),
                         onPressed: () {
-                          String js = ln.exportLines(Size(240.0, 300.0));
                           showDialog(
                               context: context,
                               builder: (context) {
@@ -275,7 +370,7 @@ class _DrawState extends State<Draw> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(40)),
-                                    child: _copyTextDialog(js));
+                                    child: _importDialog());
                               });
                         }),
                   ],
@@ -302,9 +397,25 @@ class _DrawState extends State<Draw> {
           )),
     );
 
+    submitButton = FloatingActionButton(
+      onPressed: () {
+        if (ln.lines.length <= 0) {
+          _showToast(context, 'Canvas must not be empty');
+        } else if (bloc != null) {
+          bloc.sendEvent(DrawfulSubmitDrawingEvent(
+              lines: ln.linesToListMap(Size(240.0, 300.0))));
+        } else {
+          _showToast(context, 'No endpoint to submit to');
+        }
+      },
+      child: Icon(Icons.arrow_forward_ios),
+    );
+
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.grey[100],
       bottomNavigationBar: itemBar,
+      floatingActionButton: submitButton,
       body: canvasContainer,
     );
   }
@@ -375,29 +486,66 @@ class _DrawState extends State<Draw> {
       ),
     );
   }
-}
 
-Widget _copyTextDialog(String text) {
-  return Container(
-      padding: const EdgeInsets.all(20),
-      child: AspectRatio(
-        aspectRatio: 0.8,
-        child: Column(children: [
-          FlatButton(
-              child: Text("Copy to clipboard"),
-              color: Colors.grey[100],
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: text));
-              }),
-          Flexible(
-              child: SingleChildScrollView(
-                  child: SelectableText(
-            text,
-            showCursor: true,
-            textAlign: TextAlign.center,
-          ))),
-        ]),
-      ));
+  Widget _exportDialog(String text) {
+    return Container(
+        padding: const EdgeInsets.all(20),
+        child: AspectRatio(
+          aspectRatio: 0.8,
+          child: Column(children: [
+            FlatButton(
+                child: Text("Copy to clipboard"),
+                color: Colors.grey[100],
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: text));
+                  _showToast(context, 'Copied data to clipboard');
+                }),
+            Flexible(
+                child: SingleChildScrollView(
+                    child: SelectableText(
+              text,
+              showCursor: true,
+              textAlign: TextAlign.center,
+            ))),
+          ]),
+        ));
+  }
+
+  Widget _importDialog() {
+    return Container(
+        padding: const EdgeInsets.all(20),
+        child: AspectRatio(
+          aspectRatio: 0.8,
+          child: Column(children: [
+            FlatButton(
+                child: Text("Import"),
+                color: Colors.grey[100],
+                onPressed: () {
+                  if (importController.text == '') {
+                    _showToast(context, 'Nothing to import');
+                  } else {
+                    String result = ln.importLines(importController.text);
+
+                    if (result != '') {
+                      _showToast(context, result);
+                    }
+                  }
+                }),
+            Flexible(
+                child: SingleChildScrollView(
+                    child: TextField(
+              controller: importController,
+            ))),
+          ]),
+        ));
+  }
+
+  @override
+  void dispose() {
+    _streamSub?.cancel();
+    importController.dispose();
+    super.dispose();
+  }
 }
 
 class LineNotifier extends ChangeNotifier {
@@ -445,6 +593,10 @@ class LineNotifier extends ChangeNotifier {
       lines.removeLast();
       notifyListeners();
     }
+  }
+
+  void forceSync() {
+    notifyListeners();
   }
 
   bool checkInBounds(Offset localPos) {
@@ -505,6 +657,85 @@ class LineNotifier extends ChangeNotifier {
     }
 
     return jsonEncode(lineCopy);
+  }
+
+  List<Map<String, dynamic>> linesToListMap(Size scaleTo) {
+    List<PictureLine> lineCopy = new List();
+
+    for (PictureLine line in this.lines) {
+      lineCopy.add(PictureLine());
+      lineCopy.last.thickness = line.thickness;
+      lineCopy.last.paint = Paint()
+        ..strokeCap = line.paint.strokeCap
+        ..isAntiAlias = line.paint.isAntiAlias
+        ..color = line.paint.color
+        ..strokeWidth = line.paint.strokeWidth
+        ..style = line.paint.style;
+
+      lineCopy.last.points = new List();
+      for (Offset off in line.points) {
+        lineCopy.last.points.add(Offset(off.dx, off.dy));
+      }
+    }
+
+    if (this.canvasSize != scaleTo) {
+      _resizeLines(this.canvasSize, scaleTo, lineCopy);
+    }
+
+    List<Map<String, dynamic>> result = List<Map<String, dynamic>>();
+
+    for (PictureLine line in lineCopy) {
+      result.add(line.toJson());
+    }
+
+    return result;
+  }
+
+  String importLines(String json) {
+    dynamic parsed;
+
+    StrokeCap strokeCap;
+    PaintingStyle paintStyle;
+
+    if (this.lines.length > 0) {
+      strokeCap = lines[0].paint.strokeCap;
+      paintStyle = lines[0].paint.style;
+    } else {
+      strokeCap = StrokeCap.round;
+      paintStyle = PaintingStyle.stroke;
+    }
+
+    try {
+      parsed = jsonDecode(json);
+    } catch (e) {
+      return e.toString();
+    }
+
+    if (!(parsed is List<dynamic>)) {
+      return 'Malformed input';
+    } else {
+      lines.clear();
+      for (dynamic entry in parsed) {
+        if (entry is Map<String, dynamic>) {
+          PictureLine tmp;
+
+          try {
+            tmp = PictureLine.fromJson(entry);
+          } catch (e) {
+            return e.toString();
+          }
+
+          tmp.paint.strokeCap = strokeCap;
+          tmp.paint.style = paintStyle;
+
+          lines.add(tmp);
+          notifyListeners();
+        }
+      }
+
+    }
+
+    return '';
   }
 }
 
