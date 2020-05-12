@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:jackbox_client/model/jackbox.dart';
 
 import 'package:provider/provider.dart';
@@ -14,22 +15,30 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text?.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
+
 class _LoginState extends State<Login> {
   final TextEditingController _roomFilter = new TextEditingController();
   final TextEditingController _nameFilter = new TextEditingController();
-  final TextEditingController _error = new TextEditingController();
-  bool _allowJoin = false;
 
-  final RegExp _roomRegex = new RegExp(r'[^A-Z]');
-  final RegExp _nameRegex = new RegExp(r'[^A-Z0-9]');
+  final RegExp _roomRegex = new RegExp(r'[A-Za-z]');
+  final RegExp _nameRegex = new RegExp(r'[A-Za-z0-9]');
 
   SessionLoginState state;
 
-  String _roomCode = "";
-  String _name = "";
-
   StreamSubscription _streamSub;
   Stream _prevStream;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -57,61 +66,66 @@ class _LoginState extends State<Login> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    _roomFilter.addListener(_roomListener);
-    _nameFilter.addListener(_nameListener);
+  void _showToast(BuildContext context, String toastContents) {
+    scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+          content: Text(toastContents),
+          action: SnackBarAction(
+              label: 'DISMISS',
+              onPressed: scaffoldKey.currentState.hideCurrentSnackBar)),
+    );
   }
 
-  void _roomListener() {
-    if (_roomFilter.text.isEmpty) {
-      _roomCode = "";
-      _allowJoin = false;
-    } else if (_roomRegex.hasMatch(_roomFilter.text)) {
-      _error.text = "Room name must be alphabetical characters only";
-      _allowJoin = false;
-    } else {
-      _roomCode = _roomFilter.text;
-      _allowJoin = true;
-    }
+  Widget _buildNameField() {
+    return TextFormField(
+          controller: _nameFilter,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
+            hintText: 'Name',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
+          ),
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(10),
+            WhitelistingTextInputFormatter(_nameRegex),
+            UpperCaseTextFormatter()
+          ],
+        );
   }
 
-  void _nameListener() {
-    if (_nameFilter.text.isEmpty) {
-      _name = "";
-      _allowJoin = false;
-    } else if (_nameRegex.hasMatch(_nameFilter.text)) {
-      _error.text = "Name can only be composed of alphanumeric characters";
-      _allowJoin = false;
-    } else {
-      _name = _nameFilter.text;
-      _allowJoin = true;
-    }
-  }
-
-  Widget _buildTextFields() {
-    return Container(
-        child: Column(
-      children: [
-        Container(
-            child: TextField(
-                controller: _nameFilter,
-                decoration: InputDecoration(labelText: 'Name'))),
-        Container(
-            child: TextField(
+  Widget _buildRoomField() {
+    return TextFormField(
           controller: _roomFilter,
-          decoration: InputDecoration(labelText: 'Room Code'),
-        )),
-        Container(child: TextField(controller: _error))
-      ],
-    ));
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
+            hintText: 'Room Code',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
+          ),
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(4),
+            WhitelistingTextInputFormatter(_roomRegex),
+            UpperCaseTextFormatter()
+          ],
+        );
+  }
+
+  Future _joinRoom(JackboxBloc bloc) async {
+    if (_roomFilter.text == '' || _nameFilter.text == '') {
+      _showToast(context, 'Missing room or name fields');
+    }
+
+    String roomCode = _roomFilter.text;
+    String name = _nameFilter.text;
+    bool valid = await bloc.isValidRoom(roomCode);
+
+    if (valid) {
+      bloc.sendEvent(JackboxLoginEvent(name: name, roomCode: roomCode));
+    } else {
+      _showToast(context, 'Invalid Room Code');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
     JackboxState tmp = ModalRoute.of(context).settings.arguments;
 
@@ -123,21 +137,31 @@ class _LoginState extends State<Login> {
     state = tmp;
 
     return Scaffold(
+        key: scaffoldKey,
         backgroundColor: Colors.grey[100],
         body: Container(
             padding: EdgeInsets.all(8.0),
             child: Column(
               children: [
-                _buildTextFields(),
+                SizedBox(
+                  height: 150.0,
+                  child: Image.asset(
+                    "images/login.jpg",
+                    fit: BoxFit.contain,
+                  )
+                ),
+                SizedBox(height: 50.0),
+                _buildNameField(),
+                SizedBox(height: 25.0),
+                _buildRoomField(),
+                SizedBox(height: 25.0),
                 RaisedButton(
                   child: Text('Join'),
-                  onPressed: _allowJoin
-                      ? () {
-                          bloc.sendEvent(JackboxLoginEvent(
-                              name: _name, roomCode: _roomCode));
-                        }
-                      : null,
-                )
+                  onPressed: () async {
+                    await _joinRoom(bloc);
+                  },
+                ),
+                SizedBox(height: 15.0)
               ],
             )));
   }

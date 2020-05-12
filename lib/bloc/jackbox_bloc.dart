@@ -121,6 +121,12 @@ class JackboxBloc {
     _jbs.sendEvent(event);
   }
 
+  Future<bool> isValidRoom(String roomCode) async {
+    bool valid = await _jbs.isValidRoom(roomCode);
+
+    return valid;
+  }
+
   Stream<BlocRouteTransition> get jackboxRoute => _routeStream.stream;
 
   void dispose() {

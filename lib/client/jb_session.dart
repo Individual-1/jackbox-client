@@ -190,6 +190,19 @@ class JackboxSession {
     _sendWSMessage(smsg);
   }
 
+  Future<bool> isValidRoom(String roomId) async {
+    var uri = new Uri.https(
+        _roomBase, p.join(_roomPath, roomId));
+
+    var resp = await http.get(uri);
+
+    if (resp.statusCode != 200) {
+      return false;
+    }
+
+    return true;
+  }
+
   Future<RoomInfo> _getRoomInfo(String roomId) async {
     var uri = new Uri.https(
         _roomBase, p.join(_roomPath, roomId), {'userId': meta.userId});
@@ -197,11 +210,18 @@ class JackboxSession {
     var resp = await http.get(uri);
 
     if (resp.statusCode == 404) {
-      return throw ('Failed to retrieve room information for code: ' + roomId);
+      throw FormatException('Failed to retrieve room information for code: ' + roomId);
     }
 
-    Map rmMap = jsonDecode(resp.body);
-    RoomInfo rmInfo = RoomInfo.fromJson(rmMap);
+    Map rmMap;
+    RoomInfo rmInfo;
+
+    try {
+      rmMap = jsonDecode(resp.body);
+      rmInfo = RoomInfo.fromJson(rmMap);
+    } catch (e) {
+      throw FormatException('Failed to parse Room Info');
+    }
 
     return Future.value(rmInfo);
   }
