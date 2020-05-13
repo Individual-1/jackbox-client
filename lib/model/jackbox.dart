@@ -22,16 +22,13 @@ class JackboxLoginEvent extends JackboxEvent {
 typedef JackboxState JackboxStateHandler(ArgMsg msg, JackboxState state);
 
 abstract class JackboxState {
-  static final String route = '';
+  static const String route = '';
+  final String iroute = route;
   final Set<Type> allowedEvents = {};
   static const String LOBBY = 'Lobby';
 
   bool isAllowedEvent(JackboxEvent event) {
     return allowedEvents.contains(event.runtimeType);
-  }
-
-  String getRoute() {
-    return route;
   }
 }
 
@@ -42,7 +39,8 @@ abstract class SessionState extends JackboxState {}
 // 2. When both are filled and we recieve it then we attempt a login and invalidate any unusable fields
 // 3. If we attempt a login and it is successful, we change state entirely
 class SessionLoginState extends SessionState {
-  static final String route = '/login';
+  static const String route = '/login';
+  final String iroute = route;
   final Set<Type> allowedEvents = {JackboxLoginEvent};
 
   SessionLoginState();
@@ -166,7 +164,8 @@ class ArgResult extends ArgMsg {
       this.userId,
       this.options});
 
-  factory ArgResult.fromJson(Map<String, dynamic> json) => _$ArgResultFromJson(json);
+  factory ArgResult.fromJson(Map<String, dynamic> json) =>
+      _$ArgResultFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ArgResultToJson(this);
@@ -182,7 +181,8 @@ class ArgEvent extends ArgMsg {
 
   ArgEvent({this.roomId, this.event, this.blob});
 
-  factory ArgEvent.fromJson(Map<String, dynamic> json) => _$ArgEventFromJson(json);
+  factory ArgEvent.fromJson(Map<String, dynamic> json) =>
+      _$ArgEventFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ArgEventToJson(this);
@@ -199,7 +199,8 @@ class ArgActionSendMsg extends ArgMsg {
 
   ArgActionSendMsg({this.roomId, this.appId, this.userId, this.message});
 
-  factory ArgActionSendMsg.fromJson(Map<String, dynamic> json) => _$ArgActionSendMsgFromJson(json);
+  factory ArgActionSendMsg.fromJson(Map<String, dynamic> json) =>
+      _$ArgActionSendMsgFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ArgActionSendMsgToJson(this);
@@ -225,7 +226,8 @@ class ArgActionJoinRoom extends ArgMsg {
       this.name,
       this.options});
 
-  factory ArgActionJoinRoom.fromJson(Map<String, dynamic> json) => _$ArgActionJoinRoomFromJson(json);
+  factory ArgActionJoinRoom.fromJson(Map<String, dynamic> json) =>
+      _$ArgActionJoinRoomFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ArgActionJoinRoomToJson(this);

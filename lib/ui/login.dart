@@ -9,10 +9,14 @@ import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
-// Login implements SessionLobbyState
+// Login implements SessionLoginState
 class Login extends StatefulWidget {
+  SessionLoginState state;
+
+  Login({this.state});
+
   @override
-  _LoginState createState() => _LoginState();
+  _LoginState createState() => _LoginState(state: state);
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -39,6 +43,8 @@ class _LoginState extends State<Login> {
   Stream _prevStream;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _LoginState({this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -127,14 +133,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-    JackboxState tmp = ModalRoute.of(context).settings.arguments;
-
-    if (!(tmp is SessionLoginState)) {
-      // Error out
-      return Container(child: Text('Invalid arguments passed to view'));
-    }
-
-    state = tmp;
 
     return Scaffold(
         key: scaffoldKey,

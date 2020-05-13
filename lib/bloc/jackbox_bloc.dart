@@ -56,11 +56,7 @@ class JackboxBloc {
   }
 
   bool canHandleState(JackboxState state) {
-    if (_handledStates.containsKey(state.runtimeType)) {
-      return true;
-    } else {
-      return false;
-    }
+    return _handledStates.containsKey(state.runtimeType);
   }
 
   // _handleState is the handler for State changes from the session manager
@@ -81,7 +77,7 @@ class JackboxBloc {
       nextRoute = _gh.handleState(msg);
     }
 
-    // ?
+    print('Next route: ' + nextRoute.route);
     await _waitUntilListeners();
     _routeStream.sink.add(nextRoute);
   }
@@ -91,7 +87,7 @@ class JackboxBloc {
 
     if (msg.state is SessionState) {
       nextRoute = BlocRouteTransition(
-        route: msg.state.getRoute(),
+        route: msg.state.iroute,
         update: msg.update,
         state: msg.state,
       );

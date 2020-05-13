@@ -48,7 +48,7 @@ abstract class DrawfulState extends JackboxState {
   static const String GAMEPLAY_LYINGDONE = 'Gameplay_LyingDone';
   static const String GAMEPLAY_CHOOSELIE = 'Gameplay_ChooseLie';
 
-  static final Map<String, Type> StateMap = {
+  static const Map<String, Type> StateMap = {
     GAMEPLAY_LOGO: DrawfulDoneState,
     GAMEPLAY_DRAWINGTIME: DrawfulDrawingState,
     GAMEPLAY_DRAWINGDONE: DrawfulDrawingDoneState,
@@ -60,27 +60,28 @@ abstract class DrawfulState extends JackboxState {
 }
 
 class DrawfulLobbyState extends DrawfulState {
-  static final String route = '/drawful/lobby';
+  static const String route = '/drawful/lobby';
+  final String iroute = route;
   final Set<Type> allowedEvents = {DrawfulStartGameEvent};
   bool allowedToStart;
   bool enoughPlayers;
   bool postGame;
 
-  DrawfulLobbyState(
-      {this.allowedToStart, this.enoughPlayers, this.postGame});
+  DrawfulLobbyState({this.allowedToStart, this.enoughPlayers, this.postGame});
 
   factory DrawfulLobbyState.From(DrawfulLobbyState state) {
     return DrawfulLobbyState(
-        allowedToStart: state.allowedToStart,
-        enoughPlayers: state.enoughPlayers,
-        postGame: state.postGame,
-        );
+      allowedToStart: state.allowedToStart,
+      enoughPlayers: state.enoughPlayers,
+      postGame: state.postGame,
+    );
   }
 }
 
 // Embed a lobbystate class so we can populate it if we need to go back to lobby after drawing
 class DrawfulDrawingState extends DrawfulState {
-  static final String route = '/drawful/draw';
+  static const String route = '/drawful/draw';
+  final String iroute = route;
   final Set<Type> allowedEvents = {DrawfulSubmitDrawingEvent};
   String prompt;
   DrawfulLobbyState lobbyState;
@@ -102,7 +103,8 @@ class DrawfulDrawingDoneState extends DrawfulState {}
 class DrawfulDoneState extends DrawfulState {}
 
 class DrawfulEnterLieState extends DrawfulState {
-  static final String route = '/drawful/enterlie';
+  static const String route = '/drawful/enterlie';
+  final String iroute = route;
   final Set<Type> allowedEvents = {DrawfulSubmitLieEvent};
   String lie;
   bool useSuggestion;
@@ -122,8 +124,12 @@ class DrawfulEnterLieState extends DrawfulState {
 class DrawfulLyingDoneState extends DrawfulState {}
 
 class DrawfulChooseLieState extends DrawfulState {
-  static final String route = '/drawful/chooselie';
-  final Set<Type> allowedEvents = {DrawfulChooseLieEvent, DrawfulLikeChoiceEvent};
+  static const String route = '/drawful/chooselie';
+  final String iroute = route;
+  final Set<Type> allowedEvents = {
+    DrawfulChooseLieEvent,
+    DrawfulLikeChoiceEvent
+  };
   HashSet<String> choices;
   String myEntry;
   HashSet<String> likes;
@@ -157,7 +163,8 @@ class DrawfulChooseLieState extends DrawfulState {
 
 // This isn't explicity a valid state, but a generic for when we are waiting for something to happen
 class DrawfulWaitState extends DrawfulState {
-  static final String route = '/drawful/wait';
+  static const String route = '/drawful/wait';
+  final String iroute = route;
 }
 
 ArgEventBlob getSpecificBlobType(ArgEvent msg) {

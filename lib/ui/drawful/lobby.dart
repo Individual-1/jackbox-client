@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/model/drawful.dart';
 
 import 'package:provider/provider.dart';
@@ -10,20 +9,23 @@ import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Lobby implements DrawfulLobbyState
 class DrawfulLobby extends StatefulWidget {
+  DrawfulLobbyState state;
+
+  DrawfulLobby({this.state});
+
   @override
-  _DrawfulLobbyState createState() => _DrawfulLobbyState();
+  _DrawfulLobbyState createState() => _DrawfulLobbyState(state: state);
 }
 
 class _DrawfulLobbyState extends State<DrawfulLobby> {
-  final TextEditingController _roomFilter = new TextEditingController();
-  final TextEditingController _nameFilter = new TextEditingController();
-
   DrawfulLobbyState state;
 
   StreamSubscription _streamSub;
   Stream _prevStream;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _DrawfulLobbyState({this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -64,14 +66,6 @@ class _DrawfulLobbyState extends State<DrawfulLobby> {
   @override
   Widget build(BuildContext context) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
-    JackboxState tmp = ModalRoute.of(context).settings.arguments;
-
-    if (!(tmp is DrawfulLobbyState)) {
-      // Error out
-      return Container(child: Text('Invalid arguments passed to view'));
-    }
-
-    state = tmp;
 
     return Scaffold(
         key: scaffoldKey,

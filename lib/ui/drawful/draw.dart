@@ -10,17 +10,17 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:jackbox_client/model/drawful.dart';
 import 'package:provider/provider.dart';
 
-import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Draw implements DrawfulDrawingState
 class DrawfulDraw extends StatefulWidget {
   bool standalone = false;
+  DrawfulDrawingState state;
 
-  DrawfulDraw({this.standalone});
+  DrawfulDraw({this.standalone, this.state});
 
   @override
-  _DrawfulDrawState createState() => _DrawfulDrawState(standalone: standalone);
+  _DrawfulDrawState createState() => _DrawfulDrawState(standalone: standalone, state: state);
 }
 
 class PictureLine {
@@ -162,7 +162,7 @@ class _DrawfulDrawState extends State<DrawfulDraw> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _DrawfulDrawState({this.standalone});
+  _DrawfulDrawState({this.standalone, this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -251,14 +251,6 @@ class _DrawfulDrawState extends State<DrawfulDraw> {
     JackboxBloc bloc;
     if (!standalone) {
       bloc = Provider.of<JackboxBloc>(context);
-      JackboxState tmp = ModalRoute.of(context).settings.arguments;
-
-      if (!(tmp is DrawfulDrawingState)) {
-        // Error out
-        return Container(child: Text('Invalid arguments passed to view'));
-      }
-
-      state = tmp;
     }
 
     gd = new GestureDetector(

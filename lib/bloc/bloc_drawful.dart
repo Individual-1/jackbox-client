@@ -24,11 +24,7 @@ class BlocDrawful extends BlocGameHandler {
   }
 
   bool canHandleState(JackboxState state) {
-    if (_handledStates.containsKey(state.runtimeType)) {
-      return true;
-    } else {
-      return false;
-    }
+    return _handledStates.containsKey(state.runtimeType);
   }
 
   BlocRouteTransition handleState(BlocMsg msg) {
@@ -48,7 +44,7 @@ class BlocDrawful extends BlocGameHandler {
 
     if (msg.state is DrawfulState) {
       nextRoute = BlocRouteTransition(
-        route: msg.state.getRoute(),
+        route: msg.state.iroute,
         update: msg.update,
         state: msg.state,
       );

@@ -15,19 +15,19 @@ import 'package:jackbox_client/ui/drawful/lobby.dart';
 
 class JackboxRouter {
   static Map <String, Function> routeMap = {
-    '/': () => { WebInit() },
-    '/draw-standalone': () => { DrawfulDraw(standalone: true) },
-    SessionLoginState.route: () => { Login() },
+    '/': (c, s) => WebInit(),
+    '/draw-standalone':  (c, s) => DrawfulDraw(standalone: true, state: s),
+    SessionLoginState.route: (c, s) => Login(state: s),
 
-    DrawfulLobbyState.route: () => { DrawfulLobby() },
-    DrawfulDrawingState.route: () => { DrawfulDraw(standalone: false) },
-    DrawfulEnterLieState.route: () => { },
-    DrawfulChooseLieState.route: () => { },
+    DrawfulLobbyState.route: (c, s) => DrawfulLobby(state: s),
+    DrawfulDrawingState.route: (c, s) => DrawfulDraw(standalone: false, state: s),
+    DrawfulEnterLieState.route: null,
+    DrawfulChooseLieState.route: null,
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     if (routeMap.containsKey(settings.name)) {
-      return MaterialPageRoute(builder: routeMap[settings.name]);
+      return MaterialPageRoute(builder: (c) => routeMap[settings.name](c, settings.arguments));
     } else {
       return MaterialPageRoute(builder: (_) => Scaffold(
         body: Center(

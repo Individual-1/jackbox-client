@@ -21,14 +21,14 @@ import 'package:jackbox_client/client/jb_drawful.dart';
   talking standard websockets and parsing their message format
 */
 class JackboxSession {
-  static final String _roomBase = 'ecast.jackboxgames.com';
-  static final String _roomPath = '/room';
+  static const String _roomBase = 'ecast.jackboxgames.com';
+  static const String _roomPath = '/room';
 
-  static final String _wsBase = 'ecast.jackboxgames.com';
-  static final int _wsBasePort = 38203;
-  static final String _wsInfoPath = '/socket.io/1/';
-  static final String _wsSocketPath = '/socket.io/1/websocket/';
-  static final String _wsInfoRegex =
+  static const String _wsBase = 'ecast.jackboxgames.com';
+  static const int _wsBasePort = 38203;
+  static const String _wsInfoPath = '/socket.io/1/';
+  static const String _wsSocketPath = '/socket.io/1/websocket/';
+  static const String _wsInfoRegex =
       r'([a-z0-9]{28}):60:60:websocket,flashsocket';
 
   SessionData _meta;
