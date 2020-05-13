@@ -14,13 +14,13 @@ import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Draw implements DrawfulDrawingState
-class Draw extends StatefulWidget {
+class DrawfulDraw extends StatefulWidget {
   bool standalone = false;
 
-  Draw({this.standalone});
+  DrawfulDraw({this.standalone});
 
   @override
-  _DrawState createState() => _DrawState(standalone: standalone);
+  _DrawfulDrawState createState() => _DrawfulDrawState(standalone: standalone);
 }
 
 class PictureLine {
@@ -123,7 +123,7 @@ class PictureLine {
 
 enum SelectedMode { StrokeWidth, Color }
 
-class _DrawState extends State<Draw> {
+class _DrawfulDrawState extends State<DrawfulDraw> {
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
   double strokeWidth = 3.0;
@@ -162,7 +162,7 @@ class _DrawState extends State<Draw> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _DrawState({this.standalone});
+  _DrawfulDrawState({this.standalone});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -255,7 +255,7 @@ class _DrawState extends State<Draw> {
 
       if (!(tmp is DrawfulDrawingState)) {
         // Error out
-        return null;
+        return Container(child: Text('Invalid arguments passed to view'));
       }
 
       state = tmp;
@@ -403,6 +403,7 @@ class _DrawState extends State<Draw> {
           _showToast(context, 'Canvas must not be empty');
         } else if (bloc != null) {
           bloc.sendEvent(DrawfulSubmitDrawingEvent(
+              isPlayerPicture: state != null ? (state.lobbyState != null) : false,
               lines: ln.linesToListMap(Size(240.0, 300.0))));
         } else {
           _showToast(context, 'No endpoint to submit to');

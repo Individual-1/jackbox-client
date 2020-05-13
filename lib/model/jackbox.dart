@@ -22,8 +22,17 @@ class JackboxLoginEvent extends JackboxEvent {
 typedef JackboxState JackboxStateHandler(ArgMsg msg, JackboxState state);
 
 abstract class JackboxState {
-  final String route = '';
+  static final String route = '';
+  final Set<Type> allowedEvents = {};
   static const String LOBBY = 'Lobby';
+
+  bool isAllowedEvent(JackboxEvent event) {
+    return allowedEvents.contains(event.runtimeType);
+  }
+
+  String getRoute() {
+    return route;
+  }
 }
 
 abstract class SessionState extends JackboxState {}
@@ -33,7 +42,9 @@ abstract class SessionState extends JackboxState {}
 // 2. When both are filled and we recieve it then we attempt a login and invalidate any unusable fields
 // 3. If we attempt a login and it is successful, we change state entirely
 class SessionLoginState extends SessionState {
-  final String route = '/login';
+  static final String route = '/login';
+  final Set<Type> allowedEvents = {JackboxLoginEvent};
+
   SessionLoginState();
 }
 
@@ -136,7 +147,7 @@ abstract class ArgMsg {
 
 @JsonSerializable()
 class ArgResult extends ArgMsg {
-  final String type = 'Result';
+  String type = 'Result';
   String roomId;
   String action;
   bool success;
@@ -163,9 +174,10 @@ class ArgResult extends ArgMsg {
 
 @JsonSerializable()
 class ArgEvent extends ArgMsg {
-  final String type = 'Event';
+  String type = 'Event';
   String roomId;
   String event;
+  @JsonKey(nullable: true)
   Map<String, dynamic> blob;
 
   ArgEvent({this.roomId, this.event, this.blob});
@@ -178,8 +190,8 @@ class ArgEvent extends ArgMsg {
 
 @JsonSerializable()
 class ArgActionSendMsg extends ArgMsg {
-  final String type = 'Action';
-  final String action = 'SendMessageToRoomOwner';
+  String type = 'Action';
+  String action = 'SendMessageToRoomOwner';
   String roomId;
   String appId;
   String userId;
@@ -196,8 +208,8 @@ class ArgActionSendMsg extends ArgMsg {
 // The JoinRoom action doesn't follow the format of any of the other Action messages
 @JsonSerializable()
 class ArgActionJoinRoom extends ArgMsg {
-  final String type = 'Action';
-  final String action = 'JoinRoom';
+  String type = "Action";
+  String action = 'JoinRoom';
   String roomId;
   String appId;
   String userId;

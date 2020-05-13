@@ -38,11 +38,7 @@ class DrawfulHandler extends GameHandler {
 
   @override
   bool canHandleEvent(JackboxEvent event) {
-    if (_handledEvents.containsKey(event.runtimeType)) {
-      return true;
-    } else {
-      return false;
-    }
+    return _handledEvents.containsKey(event.runtimeType);
   }
 
   @override
@@ -64,10 +60,16 @@ class DrawfulHandler extends GameHandler {
 
   String _handleDrawfulSubmitDrawingEvent(JackboxEvent event, SessionData meta) {
     if (event is DrawfulSubmitDrawingEvent) {
-      return _formatActionMessage({
-        'setPlayerPicture': true,
-        'pictureLines': event.lines,
-      }, meta);
+      Map<String, dynamic> args = Map<String, dynamic>();
+
+      if (event.isPlayerPicture) {
+        args['setPlayerPicture'] = true;
+        args['pictureLines'] = event.lines;
+      } else {
+        args['drawingLines'] = event.lines;
+      }
+
+      return _formatActionMessage(args, meta);
     }
 
     return '';
@@ -100,11 +102,7 @@ class DrawfulHandler extends GameHandler {
 
   @override
   bool canHandleState(JackboxState state) {
-    if (_handledStates.containsKey(state.runtimeType)) {
-      return true;
-    } else {
-      return false;
-    }
+    return _handledStates.containsKey(state.runtimeType);
   }
 
   @override
@@ -121,7 +119,7 @@ class DrawfulHandler extends GameHandler {
 
     if (state is SessionLoginState && msg is ArgResult) {
       if (msg.action == 'JoinRoom' && msg.success) {
-        nextState = DrawfulLobbyState(allowedToStart: false, enoughPlayers: false);
+        nextState = DrawfulLobbyState(allowedToStart: false, enoughPlayers: false, postGame: false);
       }
     }
 
@@ -139,7 +137,7 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulLobbyState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulLobbyState && msg is ArgEvent) {
+    if (state is DrawfulLobbyState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
 
@@ -214,7 +212,7 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulDrawingState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulDrawingState && msg is ArgEvent) {
+    if (state is DrawfulDrawingState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
       JackboxState defaultState;
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
@@ -302,7 +300,7 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulWaitState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulWaitState && msg is ArgEvent) {
+    if (state is DrawfulWaitState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
       ArgEventBlob blob = getSpecificBlobType(msg);
 
       if (msg.event == 'RoomBlobChanged') {
@@ -361,7 +359,7 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulEnterLieState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulEnterLieState && msg is ArgEvent) {
+    if (state is DrawfulEnterLieState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
       ArgEventBlob blob = getSpecificBlobType(msg);
 
       if (msg.event == 'RoomBlobChanged') {
@@ -394,7 +392,7 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulChooseLieState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulChooseLieState && msg is ArgEvent) {
+    if (state is DrawfulChooseLieState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
       JackboxState defaultState;
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;

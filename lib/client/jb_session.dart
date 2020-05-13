@@ -4,7 +4,7 @@ import 'dart:core';
 
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/html.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:path/path.dart' as p;
 
@@ -14,8 +14,6 @@ import 'package:jackbox_client/model/socketio.dart' as mt;
 
 import 'package:jackbox_client/client/jb_game_handler.dart';
 import 'package:jackbox_client/client/jb_drawful.dart';
-
-void main() {}
 
 /*
   Jackbox uses a version of socket.io from 2014 (0.9.17) so rather than try to
@@ -33,11 +31,11 @@ class JackboxSession {
   static final String _wsInfoRegex =
       r'([a-z0-9]{28}):60:60:websocket,flashsocket';
 
-  SessionData meta;
+  SessionData _meta;
 
-  JackboxState currentState;
+  JackboxState _currentState;
 
-  IOWebSocketChannel _ws;
+  HtmlWebSocketChannel _ws;
   StreamSubscription<dynamic> _wsSub;
 
   // StreamController used to receive events from acting parties
@@ -63,9 +61,9 @@ class JackboxSession {
   }
 
   void _init() {
-    currentState = SessionLoginState();
-    meta = SessionData();
-    meta.userId = _genUserId();
+    _currentState = SessionLoginState();
+    _meta = SessionData();
+    _meta.userId = _genUserId();
 
     _eventStream = StreamController<JackboxEvent>();
 
@@ -76,7 +74,7 @@ class JackboxSession {
     _stateStream = StreamController<BlocMsg>();
 
     // Buffer first event
-    _sendState(BlocMsg(update: false, state: currentState));
+    _sendState(BlocMsg(update: false, state: _currentState));
   }
 
   void _initHandlerMaps() {
@@ -100,25 +98,23 @@ class JackboxSession {
   }
 
   bool canHandleEvent(JackboxEvent event) {
-    if (_handledEvents.containsKey(event.runtimeType)) {
-      return true;
-    } else {
-      return false;
-    }
+    return _handledEvents.containsKey(event.runtimeType);
   }
 
   void _handleEvent(JackboxEvent event) {
     String output;
     
-    if (canHandleEvent(event)) {
-      _handledEvents[event.runtimeType](event, meta);
-    } else if (_gameHandler.canHandleEvent(event)) {
-      output = _gameHandler.handleEvent(event, meta);
-    } else {
-      // ?
+    if (_currentState.isAllowedEvent(event)) {
+      if (canHandleEvent(event)) {
+        _handledEvents[event.runtimeType](event, _meta);
+      } else if (_gameHandler.canHandleEvent(event)) {
+        output = _gameHandler.handleEvent(event, _meta);
+      } else {
+        // ?
+      }
     }
 
-    if (output != '') {
+    if (output != null && output != '') {
       _sendWSMessage(output);
     }
   }
@@ -132,16 +128,12 @@ class JackboxSession {
   }
 
   bool canHandleState(JackboxState state) {
-    if (_handledStates.containsKey(state.runtimeType)) {
-      return true;
-    } else {
-      return false;
-    }
+    return _handledStates.containsKey(state.runtimeType);
   }
 
   String getAppId() {
-    if (meta.roomInfo != null) {
-      return meta.roomInfo.appId;
+    if (_meta.roomInfo != null) {
+      return _meta.roomInfo.appId;
     } else {
       return '';
     }
@@ -155,26 +147,26 @@ class JackboxSession {
 
   Future<void> joinRoom(String roomId, String name) async {
     try {
-      meta.roomInfo = await _getRoomInfo(roomId);
+      _meta.roomInfo = await _getRoomInfo(roomId);
     } catch (e) {
       // Failed to retrieve room information
       throw e;
     }
 
-    _setGameHandler(meta.roomInfo.appId);
+    _setGameHandler(_meta.roomInfo.appId);
 
-    meta.userName = name;
+    _meta.userName = name;
 
     Outer msg = Outer(args: [
       ArgActionJoinRoom(
-          appId: meta.roomInfo.appId,
-          roomId: meta.roomInfo.roomId,
-          userId: meta.userId,
-          joinType: meta.roomInfo.joinAs,
-          name: meta.userName,
+          appId: _meta.roomInfo.appId,
+          roomId: _meta.roomInfo.roomId,
+          userId: _meta.userId,
+          joinType: _meta.roomInfo.joinAs,
+          name: _meta.userName,
           options: {
-            'roomcode': meta.roomInfo.roomId,
-            'name': meta.userName,
+            'roomcode': _meta.roomInfo.roomId,
+            'name': _meta.userName,
           })
     ]);
 
@@ -205,7 +197,7 @@ class JackboxSession {
 
   Future<RoomInfo> _getRoomInfo(String roomId) async {
     var uri = new Uri.https(
-        _roomBase, p.join(_roomPath, roomId), {'userId': meta.userId});
+        _roomBase, p.join(_roomPath, roomId), {'userId': _meta.userId});
 
     var resp = await http.get(uri);
 
@@ -241,7 +233,6 @@ class JackboxSession {
       throw Exception(
           'No game handler found, game may not be implemented, refusing to connect');
     }
-
     var uri = new Uri(
         scheme: 'https', host: _wsBase, port: _wsBasePort, path: _wsInfoPath);
 
@@ -267,7 +258,7 @@ class JackboxSession {
         path: p.join(_wsSocketPath, sessionName));
 
     try {
-      _ws = IOWebSocketChannel.connect(wssURI);
+      _ws = HtmlWebSocketChannel.connect(wssURI);
     } catch (e) {
       throw e;
     }
@@ -291,7 +282,10 @@ class JackboxSession {
       return;
     }
 
-    _ws.sink.add(mt.PrepareMessageOfType(mt.MSG, msg));
+    String mtmsg = mt.PrepareMessageOfType(mt.MSG, msg);
+    print(mtmsg);
+
+    _ws.sink.add(mtmsg);
   }
 
   void _handlePing() {
@@ -304,6 +298,7 @@ class JackboxSession {
 
   // handleWSMessage handles different kinds of Socket.io messages and forward relevant ones
   void _handleWSMessage(dynamic msg) {
+    print(msg);
     switch (mt.GetMessageType(msg)) {
       case mt.OPEN:
         break;
@@ -316,6 +311,10 @@ class JackboxSession {
         _handleWSJbMessage(mt.GetMSGBody(msg));
         //sc.add(mt.GetMSGBody(msg));
         break;
+      case mt.UNKNOWN:
+        break;
+      default:
+        break;
     }
   }
 
@@ -323,7 +322,7 @@ class JackboxSession {
     // Here we need to handle messages relating to the lobby or joining a room
     Map<String, dynamic> jmsg = jsonDecode(msg);
     Outer msgp = Outer.fromJson(jmsg);
-    JackboxState finalState = currentState;
+    JackboxState finalState = _currentState;
     BlocMsg bmsg;
 
     for (ArgMsg argm in msgp.args) {
@@ -331,7 +330,7 @@ class JackboxSession {
       if (canHandleState(finalState)) {
         nextState = _handledStates[finalState.runtimeType](argm, finalState);
       } else if (_gameHandler.canHandleState(finalState)) {
-        nextState = _gameHandler.handleState(msg, finalState);
+        nextState = _gameHandler.handleState(argm, finalState);
       } else {
         // ?
       }
@@ -341,12 +340,13 @@ class JackboxSession {
       }
     }
 
-    if (finalState != currentState) {
-      if (finalState.runtimeType == currentState.runtimeType) {
+    if (finalState != _currentState) {
+      if (finalState.runtimeType == _currentState.runtimeType) {
         bmsg = BlocMsg(update: true, state: finalState);
       } else {
         bmsg = BlocMsg(update: false, state: finalState);
       }
+      _currentState = finalState;
     }
 
     if (bmsg != null) {

@@ -91,7 +91,7 @@ class JackboxBloc {
 
     if (msg.state is SessionState) {
       nextRoute = BlocRouteTransition(
-        route: msg.state.route,
+        route: msg.state.getRoute(),
         update: msg.update,
         state: msg.state,
       );

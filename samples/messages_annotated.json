@@ -414,6 +414,8 @@
         ]
       }
     },
+
+    // Start Game
     {
       "type": "send",
       "time": 1589046326.268669,
@@ -557,6 +559,8 @@
         ]
       }
     },
+
+    // Receive prompt #1
     {
       "type": "receive",
       "time": 1589046346.392891,
@@ -584,6 +588,8 @@
         ]
       }
     },
+
+    // Send drawing
     {
       "type": "send",
       "time": 1589046360.069857,
@@ -637,6 +643,8 @@
         ]
       }
     },
+
+    // Drawing done
     {
       "type": "receive",
       "time": 1589046367.423172,
@@ -781,6 +789,8 @@
         ]
       }
     },
+
+    // Enter Lie
     {
       "type": "receive",
       "time": 1589046379.011922,
@@ -828,6 +838,8 @@
         ]
       }
     },
+
+    // Send Lie
     {
       "type": "send",
       "time": 1589046384.222693,
@@ -849,6 +861,8 @@
         ]
       }
     },
+
+    // Lie Received
     {
       "type": "receive",
       "time": 1589046384.3702078,
@@ -874,6 +888,8 @@
         ]
       }
     },
+
+    // Lying Done
     {
       "type": "receive",
       "time": 1589046387.312399,
@@ -918,6 +934,8 @@
         ]
       }
     },
+
+    // Choose Lie
     {
       "type": "receive",
       "time": 1589046392.912226,
@@ -988,6 +1006,8 @@
         ]
       }
     },
+
+    // Send Lie chosen
     {
       "type": "send",
       "time": 1589046395.660352,
@@ -1118,6 +1138,8 @@
         ]
       }
     },
+
+    // Like an item
     {
       "type": "send",
       "time": 1589046401.003732,
@@ -1188,6 +1210,8 @@
       "opcode": 1,
       "data": "2::"
     },
+
+    // Like a second item
     {
       "type": "send",
       "time": 1589046402.523835,
@@ -2204,6 +2228,8 @@
         ]
       }
     },
+
+    // Round 2 drawing
     {
       "type": "receive",
       "time": 1589046517.06997,

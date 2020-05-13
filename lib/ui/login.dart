@@ -131,7 +131,7 @@ class _LoginState extends State<Login> {
 
     if (!(tmp is SessionLoginState)) {
       // Error out
-      return null;
+      return Container(child: Text('Invalid arguments passed to view'));
     }
 
     state = tmp;
