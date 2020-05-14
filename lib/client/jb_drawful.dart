@@ -141,7 +141,7 @@ class DrawfulHandler extends GameHandler {
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
 
-      DrawfulLobbyState lobbyState = DrawfulLobbyState.From(state);
+      DrawfulLobbyState lobbyState = DrawfulLobbyState.from(state);
       JackboxState defaultState = lobbyState;
 
       if (!lobbyState.postGame) {
@@ -217,7 +217,7 @@ class DrawfulHandler extends GameHandler {
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
 
-      DrawfulDrawingState drawState = DrawfulDrawingState.From(state);
+      DrawfulDrawingState drawState = DrawfulDrawingState.from(state);
       defaultState = drawState;
 
       if (msg.event == 'RoomBlobChanged') {
@@ -397,7 +397,7 @@ class DrawfulHandler extends GameHandler {
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
 
-      DrawfulChooseLieState lieState = DrawfulChooseLieState.From(state);
+      DrawfulChooseLieState lieState = DrawfulChooseLieState.from(state);
       defaultState = lieState;
 
       if (msg.event == 'RoomBlobChanged') {

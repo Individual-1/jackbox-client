@@ -8,16 +8,16 @@ import 'package:provider/provider.dart';
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Lobby implements DrawfulLobbyState
-class DrawfulLobby extends StatefulWidget {
-  DrawfulLobbyState state;
+class DrawfulLobbyWidget extends StatefulWidget {
+  final DrawfulLobbyState state;
 
-  DrawfulLobby({this.state});
+  DrawfulLobbyWidget({this.state});
 
   @override
-  _DrawfulLobbyState createState() => _DrawfulLobbyState(state: state);
+  _DrawfulLobbyWidgetState createState() => _DrawfulLobbyWidgetState(state: state);
 }
 
-class _DrawfulLobbyState extends State<DrawfulLobby> {
+class _DrawfulLobbyWidgetState extends State<DrawfulLobbyWidget> {
   DrawfulLobbyState state;
 
   StreamSubscription _streamSub;
@@ -25,7 +25,7 @@ class _DrawfulLobbyState extends State<DrawfulLobby> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _DrawfulLobbyState({this.state});
+  _DrawfulLobbyWidgetState({this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -71,6 +71,7 @@ class _DrawfulLobbyState extends State<DrawfulLobby> {
         key: scaffoldKey,
         backgroundColor: Colors.grey[100],
         body: Container(
+                child: Center(
                 child: Visibility(
                   visible: state != null ? state.allowedToStart : false,
                   child: RaisedButton(
@@ -83,6 +84,6 @@ class _DrawfulLobbyState extends State<DrawfulLobby> {
                         _showToast(context, 'Waiting for additional players')
                       }) : null,
                 ),
-    )));
+    ))));
   }
 }

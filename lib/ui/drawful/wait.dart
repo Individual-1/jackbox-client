@@ -1,23 +1,35 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:jackbox_client/model/drawful.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
-class WebInitWidget extends StatefulWidget {
+// Lobby implements DrawfulLobbyState
+class DrawfulWaitWidget extends StatefulWidget {
+  final DrawfulWaitState state;
+
+  DrawfulWaitWidget({this.state});
+
   @override
-  _WebInitWidgetState createState() => _WebInitWidgetState();
+  _DrawfulWaitWidgetState createState() => _DrawfulWaitWidgetState(state: state);
 }
 
-class _WebInitWidgetState extends State<WebInitWidget> {
+class _DrawfulWaitWidgetState extends State<DrawfulWaitWidget> {
+  DrawfulWaitState state;
+
   StreamSubscription _streamSub;
   Stream _prevStream;
+
+
+  _DrawfulWaitWidgetState({this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
+
       } else {
         Navigator.pushNamed(context, event.route, arguments: event.state);
       }
@@ -38,6 +50,13 @@ class _WebInitWidgetState extends State<WebInitWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
+
+    return Scaffold(
+        backgroundColor: Colors.grey[100],
+        body: Container(
+                child: Center(
+                child: Text('Please Stand By')
+                )));
   }
 }

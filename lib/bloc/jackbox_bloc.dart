@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:jackbox_client/bloc/bloc_drawful.dart';
+import 'package:jackbox_client/bloc/drawful_bloc.dart';
 
 import 'package:jackbox_client/client/jb_session.dart';
 import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/model/internal.dart';
-import 'package:jackbox_client/bloc/bloc_game_handler.dart';
+import 'package:jackbox_client/bloc/game_handler_bloc.dart';
 
 class BlocRouteTransition {
   String route;
@@ -19,13 +19,13 @@ typedef BlocRouteTransition BlocStateHandler(BlocMsg msg);
 
 class JackboxBloc {
   JackboxSession _jbs;
-  BlocGameHandler _gh;
+  GameHandlerBloc _gh;
 
   Map<Type, BlocStateHandler> _handledStates;
   Map<Type, String> _handledStateRoutes;
-  static final Map<String, BlocGameHandlerDef> _handledGames = {
+  static final Map<String, GameHandlerBlocDef> _handledGames = {
     // Drawful 2
-    '8511cbe0-dfff-4ea9-94e0-424daad072c3': () => BlocDrawful(),
+    '8511cbe0-dfff-4ea9-94e0-424daad072c3': () => DrawfulBloc(),
   };
 
   StreamSubscription<BlocMsg> _stateSub;

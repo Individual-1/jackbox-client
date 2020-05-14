@@ -3,20 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:jackbox_client/model/jackbox.dart';
+import 'package:jackbox_client/model/drawful.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
-// Login implements SessionLoginState
-class LoginWidget extends StatefulWidget {
-  final SessionLoginState state;
+// DrawfulEnterLie implements DrawfulEnterLieState
+class DrawfulEnterLieWidget extends StatefulWidget {
+  final DrawfulEnterLieState state;
 
-  LoginWidget({this.state});
+  DrawfulEnterLieWidget({this.state});
 
   @override
-  _LoginWidgetState createState() => _LoginWidgetState(state: state);
+  _DrawfulEnterLieWidgetState createState() => _DrawfulEnterLieWidgetState(state: state);
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -30,26 +30,25 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
-  final TextEditingController _roomFilter = new TextEditingController();
-  final TextEditingController _nameFilter = new TextEditingController();
+class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
+  final TextEditingController _entryFilter = new TextEditingController();
+  final RegExp _entryRegex = new RegExp(r'[A-Za-z0-9]');
 
-  final RegExp _roomRegex = new RegExp(r'[A-Za-z]');
-  final RegExp _nameRegex = new RegExp(r'[A-Za-z0-9]');
-
-  SessionLoginState state;
+  DrawfulEnterLieState state;
 
   StreamSubscription _streamSub;
   Stream _prevStream;
 
+  bool enabled = true;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _LoginWidgetState({this.state});
+  _DrawfulEnterLieWidgetState({this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is SessionLoginState && event.state != state) {
+        if (event.state is DrawfulEnterLieState && event.state != state) {
           setState(() {
             state = event.state;
           });
@@ -82,58 +81,33 @@ class _LoginWidgetState extends State<LoginWidget> {
     );
   }
 
-  Widget _buildNameField() {
+  Widget _buildEntryField() {
     return TextFormField(
-          controller: _nameFilter,
+          controller: _entryFilter,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
-            hintText: 'Name',
+            hintText: 'Enter Lie',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
           ),
           inputFormatters: [
-            LengthLimitingTextInputFormatter(10),
-            WhitelistingTextInputFormatter(_nameRegex),
-            UpperCaseTextFormatter()
+            //LengthLimitingTextInputFormatter(10),
+            //WhitelistingTextInputFormatter(_entryRegex),
+            //UpperCaseTextFormatter()
           ],
         );
-  }
-
-  Widget _buildRoomField() {
-    return TextFormField(
-          controller: _roomFilter,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
-            hintText: 'Room Code',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
-          ),
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(4),
-            WhitelistingTextInputFormatter(_roomRegex),
-            UpperCaseTextFormatter()
-          ],
-        );
-  }
-
-  Future _joinRoom(JackboxBloc bloc) async {
-    if (_roomFilter.text == '' || _nameFilter.text == '') {
-      _showToast(context, 'Missing room or name fields');
-    }
-
-    String roomCode = _roomFilter.text;
-    String name = _nameFilter.text;
-    bool valid = await bloc.isValidRoom(roomCode);
-
-    if (valid) {
-      bloc.sendEvent(JackboxLoginEvent(name: name, roomCode: roomCode));
-    } else {
-      _showToast(context, 'Invalid Room Code');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
 
+    if (state.isAuthor) {
+      return Container(
+        child: Center(
+          child: Text('This is your drawing'),
+        ),
+        );
+    } else {
     return Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.grey[100],
@@ -141,26 +115,27 @@ class _LoginWidgetState extends State<LoginWidget> {
             padding: EdgeInsets.all(8.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: 150.0,
-                  child: Image.asset(
-                    "images/login.jpg",
-                    fit: BoxFit.contain,
-                  )
-                ),
-                SizedBox(height: 50.0),
-                _buildNameField(),
-                SizedBox(height: 25.0),
-                _buildRoomField(),
+                _buildEntryField(),
                 SizedBox(height: 25.0),
                 RaisedButton(
                   child: Text('Join'),
-                  onPressed: () async {
-                    await _joinRoom(bloc);
+                  onPressed: () {
+                    // TODO: We don't handle duplicate entries
+                    if (enabled) {
+                      if (_entryFilter.text != '') {
+                        bloc.sendEvent(DrawfulSubmitLieEvent(lie: _entryFilter.text, usedSuggestion: false));
+                        enabled = false;
+                      } else {
+                        _showToast(context, 'Lie cannot be empty');
+                      }
+                    } else {
+                      _showToast(context, 'Already submitted lie');
+                    }
                   },
                 ),
                 SizedBox(height: 15.0)
               ],
             )));
+    }
   }
 }

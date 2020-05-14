@@ -1,15 +1,15 @@
 library bloc_drawful;
 
-import 'package:jackbox_client/bloc/bloc_game_handler.dart';
+import 'package:jackbox_client/bloc/game_handler_bloc.dart';
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 import 'package:jackbox_client/model/internal.dart';
 import 'package:jackbox_client/model/jackbox.dart';
 import 'package:jackbox_client/model/drawful.dart';
 
-class BlocDrawful extends BlocGameHandler {
+class DrawfulBloc extends GameHandlerBloc {
   Map<Type, BlocStateHandler> _handledStates;
 
-  BlocDrawful() {
+  DrawfulBloc() {
     _initHandlerMaps();
   }
 

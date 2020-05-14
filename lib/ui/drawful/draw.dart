@@ -13,14 +13,14 @@ import 'package:provider/provider.dart';
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
 
 // Draw implements DrawfulDrawingState
-class DrawfulDraw extends StatefulWidget {
-  bool standalone = false;
-  DrawfulDrawingState state;
+class DrawfulDrawWidget extends StatefulWidget {
+  final bool standalone;
+  final DrawfulDrawingState state;
 
-  DrawfulDraw({this.standalone, this.state});
+  DrawfulDrawWidget({this.standalone, this.state});
 
   @override
-  _DrawfulDrawState createState() => _DrawfulDrawState(standalone: standalone, state: state);
+  _DrawfulDrawWidgetState createState() => _DrawfulDrawWidgetState(standalone: standalone, state: state);
 }
 
 class PictureLine {
@@ -123,7 +123,7 @@ class PictureLine {
 
 enum SelectedMode { StrokeWidth, Color }
 
-class _DrawfulDrawState extends State<DrawfulDraw> {
+class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
   double strokeWidth = 3.0;
@@ -162,7 +162,7 @@ class _DrawfulDrawState extends State<DrawfulDraw> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _DrawfulDrawState({this.standalone, this.state});
+  _DrawfulDrawWidgetState({this.standalone, this.state});
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {

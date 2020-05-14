@@ -6,7 +6,7 @@ const int PING = 2;
 const int PONG = 3;
 const int MSG = 5;
 
-int GetMessageType(String message) {
+int getMessageType(String message) {
   if (message == '1::') {
     return OPEN;
   } else if (message == '2:::') {
@@ -20,7 +20,7 @@ int GetMessageType(String message) {
   return UNKNOWN;
 }
 
-String PrepareMessageOfType(int type, String msg) {
+String prepareMessageOfType(int type, String msg) {
   switch (type) {
     case OPEN:
       return '1::';
@@ -35,6 +35,6 @@ String PrepareMessageOfType(int type, String msg) {
   return msg;
 }
 
-String GetMSGBody(String message) {
+String getMsgBody(String message) {
   return message.substring(4);
 }

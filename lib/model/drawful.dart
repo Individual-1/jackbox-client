@@ -48,7 +48,7 @@ abstract class DrawfulState extends JackboxState {
   static const String GAMEPLAY_LYINGDONE = 'Gameplay_LyingDone';
   static const String GAMEPLAY_CHOOSELIE = 'Gameplay_ChooseLie';
 
-  static const Map<String, Type> StateMap = {
+  static final Map<String, Type> stateMap = {
     GAMEPLAY_LOGO: DrawfulDoneState,
     GAMEPLAY_DRAWINGTIME: DrawfulDrawingState,
     GAMEPLAY_DRAWINGDONE: DrawfulDrawingDoneState,
@@ -69,7 +69,7 @@ class DrawfulLobbyState extends DrawfulState {
 
   DrawfulLobbyState({this.allowedToStart, this.enoughPlayers, this.postGame});
 
-  factory DrawfulLobbyState.From(DrawfulLobbyState state) {
+  factory DrawfulLobbyState.from(DrawfulLobbyState state) {
     return DrawfulLobbyState(
       allowedToStart: state.allowedToStart,
       enoughPlayers: state.enoughPlayers,
@@ -88,11 +88,11 @@ class DrawfulDrawingState extends DrawfulState {
 
   DrawfulDrawingState({this.prompt, this.lobbyState});
 
-  factory DrawfulDrawingState.From(DrawfulDrawingState state) {
+  factory DrawfulDrawingState.from(DrawfulDrawingState state) {
     return DrawfulDrawingState(
       prompt: state.prompt,
       lobbyState: state.lobbyState != null
-          ? DrawfulLobbyState.From(state.lobbyState)
+          ? DrawfulLobbyState.from(state.lobbyState)
           : null,
     );
   }
@@ -112,7 +112,7 @@ class DrawfulEnterLieState extends DrawfulState {
 
   DrawfulEnterLieState({this.lie, this.useSuggestion, this.isAuthor});
 
-  factory DrawfulEnterLieState.From(DrawfulEnterLieState state) {
+  factory DrawfulEnterLieState.from(DrawfulEnterLieState state) {
     return DrawfulEnterLieState(
       lie: state.lie,
       useSuggestion: state.useSuggestion,
@@ -139,7 +139,7 @@ class DrawfulChooseLieState extends DrawfulState {
   DrawfulChooseLieState(
       {this.choices, this.myEntry, this.likes, this.chosen, this.isAuthor});
 
-  factory DrawfulChooseLieState.From(DrawfulChooseLieState state) {
+  factory DrawfulChooseLieState.from(DrawfulChooseLieState state) {
     HashSet<String> choices = new HashSet<String>();
     HashSet<String> likes = new HashSet<String>();
 

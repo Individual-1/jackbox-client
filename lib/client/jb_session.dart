@@ -282,7 +282,7 @@ class JackboxSession {
       return;
     }
 
-    String mtmsg = mt.PrepareMessageOfType(mt.MSG, msg);
+    String mtmsg = mt.prepareMessageOfType(mt.MSG, msg);
     print(mtmsg);
 
     _ws.sink.add(mtmsg);
@@ -293,13 +293,13 @@ class JackboxSession {
       return;
     }
 
-    _ws.sink.add(mt.PrepareMessageOfType(mt.PONG, ''));
+    _ws.sink.add(mt.prepareMessageOfType(mt.PONG, ''));
   }
 
   // handleWSMessage handles different kinds of Socket.io messages and forward relevant ones
   void _handleWSMessage(dynamic msg) {
     print(msg);
-    switch (mt.GetMessageType(msg)) {
+    switch (mt.getMessageType(msg)) {
       case mt.OPEN:
         break;
       case mt.PING:
@@ -308,7 +308,7 @@ class JackboxSession {
       case mt.PONG:
         break;
       case mt.MSG:
-        _handleWSJbMessage(mt.GetMSGBody(msg));
+        _handleWSJbMessage(mt.getMsgBody(msg));
         //sc.add(mt.GetMSGBody(msg));
         break;
       case mt.UNKNOWN:
