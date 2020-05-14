@@ -20,7 +20,8 @@ class DrawfulHandler extends GameHandler {
   void _initHandlerMaps() {
     _handledEvents = {
       DrawfulStartGameEvent: (e, m) => _handleDrawfulStartGameEvent(e, m),
-      DrawfulSubmitDrawingEvent: (e, m) => _handleDrawfulSubmitDrawingEvent(e, m),
+      DrawfulSubmitDrawingEvent: (e, m) =>
+          _handleDrawfulSubmitDrawingEvent(e, m),
       DrawfulSubmitLieEvent: (e, m) => _handleDrawfulSubmitLieEvent(e, m),
       DrawfulChooseLieEvent: (e, m) => _handleDrawfulChooseLieEvent(e, m),
       DrawfulLikeChoiceEvent: (e, m) => _handleDrawfulLikeChoiceEvent(e, m),
@@ -58,7 +59,8 @@ class DrawfulHandler extends GameHandler {
     return '';
   }
 
-  String _handleDrawfulSubmitDrawingEvent(JackboxEvent event, SessionData meta) {
+  String _handleDrawfulSubmitDrawingEvent(
+      JackboxEvent event, SessionData meta) {
     if (event is DrawfulSubmitDrawingEvent) {
       Map<String, dynamic> args = Map<String, dynamic>();
 
@@ -77,8 +79,9 @@ class DrawfulHandler extends GameHandler {
 
   String _handleDrawfulSubmitLieEvent(JackboxEvent event, SessionData meta) {
     if (event is DrawfulSubmitLieEvent) {
-          return _formatActionMessage(
-        {'lieEntered': event.lie, 'usedSuggestion': event.usedSuggestion}, meta);
+      return _formatActionMessage(
+          {'lieEntered': event.lie, 'usedSuggestion': event.usedSuggestion},
+          meta);
     }
 
     return '';
@@ -119,7 +122,8 @@ class DrawfulHandler extends GameHandler {
 
     if (state is SessionLoginState && msg is ArgResult) {
       if (msg.action == 'JoinRoom' && msg.success) {
-        nextState = DrawfulLobbyState(allowedToStart: false, enoughPlayers: false, postGame: false);
+        nextState = DrawfulLobbyState(
+            allowedToStart: false, enoughPlayers: false, postGame: false);
       }
     }
 
@@ -137,7 +141,10 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulLobbyState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulLobbyState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
+    if (state is DrawfulLobbyState &&
+        msg is ArgEvent &&
+        msg.blob != null &&
+        msg.blob.isNotEmpty) {
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
 
@@ -212,7 +219,10 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulDrawingState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulDrawingState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
+    if (state is DrawfulDrawingState &&
+        msg is ArgEvent &&
+        msg.blob != null &&
+        msg.blob.isNotEmpty) {
       JackboxState defaultState;
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;
@@ -222,7 +232,7 @@ class DrawfulHandler extends GameHandler {
 
       if (msg.event == 'RoomBlobChanged') {
         // Case 1a
-        if (blob is AEBRLobby) {
+        if (blob is AEBRLobby && drawState.lobbyState != null) {
           // We have enough people to start now
           if (blob.lobbyState == 'CanStart' &&
               !drawState.lobbyState.enoughPlayers) {
@@ -236,14 +246,14 @@ class DrawfulHandler extends GameHandler {
             changed = true;
           }
         } else if (blob is ArgEventBlobRoom) {
-          // Case 1c
+          // Case 1c and 2c
           if (blob.state == DrawfulState.GAMEPLAY_LOGO) {
             nextState = DrawfulWaitState();
             changed = true;
           }
         }
       } else if (msg.event == 'CustomerBlobChanged') {
-        if (blob is AEBCLobby) {
+        if (blob is AEBCLobby && drawState.lobbyState != null) {
           // Case 1a
           // We are the host
           if (blob.isAllowedToStartGame !=
@@ -258,8 +268,21 @@ class DrawfulHandler extends GameHandler {
             nextState = drawState.lobbyState;
             changed = true;
           }
+        } else if (blob is AEBCDrawingTime) {
+          // Case 1b and 2b
+          if (blob.receivedDrawing) {
+            // Case 1b
+            if (drawState.lobbyState != null) {
+              nextState = drawState.lobbyState;
+            // Case 2b
+            } else {
+              nextState = DrawfulWaitState();
+            }
+
+            changed = true;
+          }
         } else if (blob is ArgEventBlobRoom) {
-          // case 1c
+          // case 1c and 2c
           if (blob.state == DrawfulState.GAMEPLAY_LOGO) {
             nextState = DrawfulWaitState();
             changed = true;
@@ -300,7 +323,10 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulWaitState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulWaitState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
+    if (state is DrawfulWaitState &&
+        msg is ArgEvent &&
+        msg.blob != null &&
+        msg.blob.isNotEmpty) {
       ArgEventBlob blob = getSpecificBlobType(msg);
 
       if (msg.event == 'RoomBlobChanged') {
@@ -313,15 +339,16 @@ class DrawfulHandler extends GameHandler {
 
         // Case 3, need to keep an eye out for the correspondning customerblob message as it has additional context
         if (blob is AEBRChooseLie) {
-          HashSet<String> choices = new HashSet<String>();
+          List<String> choices = List<String>();
 
           for (AEBLieChoice choice in blob.choices) {
             choices.add(choice.text);
           }
+
           nextState = DrawfulChooseLieState(
               choices: choices,
               myEntry: '',
-              likes: HashSet<String>(),
+              likes: List<String>(),
               chosen: '',
               isAuthor: false);
         }
@@ -338,9 +365,9 @@ class DrawfulHandler extends GameHandler {
           // Case 3a/b
         } else if (blob is AEBCChooseLie) {
           nextState = DrawfulChooseLieState(
-              choices: HashSet<String>(),
+              choices: List<String>(),
               myEntry: blob.entry.text,
-              likes: HashSet<String>(),
+              likes: List<String>(),
               chosen: '',
               isAuthor: blob.isAuthor);
         }
@@ -359,7 +386,10 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulEnterLieState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulEnterLieState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
+    if (state is DrawfulEnterLieState &&
+        msg is ArgEvent &&
+        msg.blob != null &&
+        msg.blob.isNotEmpty) {
       ArgEventBlob blob = getSpecificBlobType(msg);
 
       if (msg.event == 'RoomBlobChanged') {
@@ -392,7 +422,10 @@ class DrawfulHandler extends GameHandler {
   JackboxState _handleDrawfulChooseLieState(ArgMsg msg, JackboxState state) {
     JackboxState nextState;
 
-    if (state is DrawfulChooseLieState && msg is ArgEvent && msg.blob != null && msg.blob.isNotEmpty) {
+    if (state is DrawfulChooseLieState &&
+        msg is ArgEvent &&
+        msg.blob != null &&
+        msg.blob.isNotEmpty) {
       JackboxState defaultState;
       ArgEventBlob blob = getSpecificBlobType(msg);
       bool changed = false;

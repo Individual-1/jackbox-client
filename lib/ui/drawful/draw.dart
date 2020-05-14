@@ -104,7 +104,7 @@ class PictureLine {
 
   Map<String, dynamic> toJson() {
     int base = paint.color.value & 0xFFFFFF;
-    List<Map> pointsJson = new List<Map>();
+    List<Map> pointsJson = List<Map>();
 
     for (Offset point in this.points) {
       pointsJson.add({
@@ -195,9 +195,9 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   @override
   void initState() {
     super.initState();
-    ln = new LineNotifier();
-    drawPaint = new DrawingPainter(ln);
-    instrKey = new GlobalKey();
+    ln = LineNotifier();
+    drawPaint = DrawingPainter(ln);
+    instrKey = GlobalKey();
   }
 
   void _panStart(DragStartDetails details) {
@@ -253,7 +253,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
       bloc = Provider.of<JackboxBloc>(context);
     }
 
-    gd = new GestureDetector(
+    gd = GestureDetector(
       onPanStart: _panStart,
       onPanUpdate: _panUpdate,
       onPanEnd: _panEnd,
@@ -266,7 +266,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
               width: 5,
             ),
             borderRadius: BorderRadius.circular(8)),
-        child: new CustomPaint(
+        child: CustomPaint(
           painter: drawPaint,
           child: gd,
         ));
@@ -278,7 +278,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
       style: TextStyle(fontSize: 30),
     ));
 
-    canvasContainer = new Container(
+    canvasContainer = Container(
         child: Center(
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -293,7 +293,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
           ]),
     ));
 
-    itemBar = new Padding(
+    itemBar = Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -546,14 +546,14 @@ class LineNotifier extends ChangeNotifier {
   Size canvasSize;
 
   LineNotifier() {
-    this.lines = new List();
+    this.lines = List();
     this.canvasSize = Size.zero;
   }
 
   void startStroke(Offset pos, double strokeWidth, Paint paint) {
     lines.add(PictureLine(
       thickness: strokeWidth,
-      points: new List<Offset>.filled(1, pos, growable: true),
+      points: List<Offset>.filled(1, pos, growable: true),
       paint: paint,
     ));
 
@@ -566,7 +566,7 @@ class LineNotifier extends ChangeNotifier {
     } else {
       lines.add(PictureLine(
         thickness: strokeWidth,
-        points: new List<Offset>.filled(1, pos, growable: true),
+        points: List<Offset>.filled(1, pos, growable: true),
         paint: paint,
       ));
     }
@@ -627,7 +627,7 @@ class LineNotifier extends ChangeNotifier {
   }
 
   String exportLines(Size scaleTo) {
-    List<PictureLine> lineCopy = new List();
+    List<PictureLine> lineCopy = List();
 
     for (PictureLine line in this.lines) {
       lineCopy.add(PictureLine());
@@ -639,7 +639,7 @@ class LineNotifier extends ChangeNotifier {
         ..strokeWidth = line.paint.strokeWidth
         ..style = line.paint.style;
 
-      lineCopy.last.points = new List();
+      lineCopy.last.points = List();
       for (Offset off in line.points) {
         lineCopy.last.points.add(Offset(off.dx, off.dy));
       }
@@ -653,7 +653,7 @@ class LineNotifier extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>> linesToListMap(Size scaleTo) {
-    List<PictureLine> lineCopy = new List();
+    List<PictureLine> lineCopy = List();
 
     for (PictureLine line in this.lines) {
       lineCopy.add(PictureLine());
@@ -665,7 +665,7 @@ class LineNotifier extends ChangeNotifier {
         ..strokeWidth = line.paint.strokeWidth
         ..style = line.paint.style;
 
-      lineCopy.last.points = new List();
+      lineCopy.last.points = List();
       for (Offset off in line.points) {
         lineCopy.last.points.add(Offset(off.dx, off.dy));
       }
@@ -752,13 +752,13 @@ class DrawingPainter extends CustomPainter {
     var rect = Offset.zero & size;
     canvas.clipRect(rect);
 
-    Paint canvasFill = new Paint();
+    Paint canvasFill = Paint();
     canvasFill.color = Colors.white;
     canvasFill.style = PaintingStyle.fill;
     canvas.drawRect(rect, canvasFill);
 
     for (var line in ln.lines) {
-      Path linePath = new Path();
+      Path linePath = Path();
 
       linePath.addPolygon(line.points, false);
       canvas.drawPath(linePath, line.paint);

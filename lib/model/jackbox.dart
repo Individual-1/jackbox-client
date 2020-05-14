@@ -34,16 +34,17 @@ abstract class JackboxState {
 
 abstract class SessionState extends JackboxState {}
 
-// SessionLoginState is somewhat overloaded
-// 1. When neither or only one of the fields is filled, the empty one is invalid
-// 2. When both are filled and we recieve it then we attempt a login and invalidate any unusable fields
-// 3. If we attempt a login and it is successful, we change state entirely
 class SessionLoginState extends SessionState {
   static const String route = '/login';
   final String iroute = route;
   final Set<Type> allowedEvents = {JackboxLoginEvent};
 
   SessionLoginState();
+
+  @override
+  String toString() {
+    return '${this.runtimeType}{route: $route}';
+  }
 }
 
 @JsonSerializable()
@@ -90,7 +91,7 @@ class Outer {
   }
 
   factory Outer.fromJson(Map<String, dynamic> json) {
-    List<ArgMsg> args = new List();
+    List<ArgMsg> args = List();
 
     if (json.containsKey('args') && json['args'] is List) {
       for (dynamic arg in json['args']) {

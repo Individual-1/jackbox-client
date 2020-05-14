@@ -77,7 +77,11 @@ class JackboxBloc {
       nextRoute = _gh.handleState(msg);
     }
 
-    print('Next route: ' + nextRoute.route);
+    print('{route: ${nextRoute.route}' +
+    ', update: ${nextRoute.update}' +
+    ', state: ${nextRoute.state}' +
+    '}');
+    
     await _waitUntilListeners();
     _routeStream.sink.add(nextRoute);
   }
@@ -98,13 +102,13 @@ class JackboxBloc {
 
   Future _waitUntilListeners() {
     Duration pollInterval = Duration(milliseconds: 250);
-    Completer completer = new Completer();
+    Completer completer = Completer();
 
     check() {
       if (_routeListenerCount > 0) {
         completer.complete();
       } else {
-        new Timer(pollInterval, check);
+        Timer(pollInterval, check);
       }
     }
 

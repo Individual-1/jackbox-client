@@ -16,7 +16,8 @@ class DrawfulChooseLieWidget extends StatefulWidget {
   DrawfulChooseLieWidget({this.state});
 
   @override
-  _DrawfulChooseLieWidgetState createState() => _DrawfulChooseLieWidgetState(state: state);
+  _DrawfulChooseLieWidgetState createState() =>
+      _DrawfulChooseLieWidgetState(state: state);
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -45,12 +46,14 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
   StreamSubscription _streamSub;
   Stream _prevStream;
 
-  bool enabled = true;
-  List<Item> items = List<Item>();
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   _DrawfulChooseLieWidgetState({this.state});
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -88,7 +91,7 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
     );
   }
 
-  Widget _buildChoiceList(BuildContext context) {
+  Widget _buildChoiceList(BuildContext context, List<Item> items) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
 
     return ListView.separated(
@@ -102,13 +105,9 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
               padding: const EdgeInsets.all(4.0),
               child: ListTile(
                 title: Text(items[index].choice),
-                enabled: !enabled,
                 onTap: () {
-                  setState(() {
-                    enabled = true;
-                    bloc.sendEvent(
-                        DrawfulChooseLieEvent(choice: items[index].choice));
-                  });
+                  bloc.sendEvent(
+                      DrawfulChooseLieEvent(choice: items[index].choice));
                 },
               )),
         );
@@ -119,7 +118,7 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
     );
   }
 
-  Widget _buildLikeList(BuildContext context) {
+  Widget _buildLikeList(BuildContext context, List<Item> items) {
     return ListView.separated(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -132,50 +131,46 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
   }
 
   Widget _buildInstructions(BuildContext context) {
-    if (enabled) {
+    if (state.chosen == '' && !state.isAuthor) {
       return Text('Select a choice');
     } else {
       return Text('Select items to like');
     }
   }
 
-  Widget _buildList(BuildContext context) {
-    if (enabled) {
-      return _buildChoiceList(context);
+  Widget _buildList(BuildContext context, List<Item> items) {
+    if (state.chosen == '' && !state.isAuthor) {
+      return _buildChoiceList(context, items);
     } else {
-      return _buildLikeList(context);
+      return _buildLikeList(context, items);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> choices = state.choices.toList();
-    choices.remove(state.myEntry);
+    List<String> choices = List<String>.from(state?.choices);
+    choices.remove(state?.myEntry);
+
+    List<Item> items = List<Item>();
 
     for (String choice in choices) {
       items.add(Item(choice: choice));
     }
 
-    if (state.isAuthor) {
-      return Container(
-        child: Center(
-          child: Text('This is your drawing'),
-        ),
-      );
-    } else {
-      return Scaffold(
-          key: scaffoldKey,
-          backgroundColor: Colors.grey[100],
-          body: Container(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  _buildInstructions(context),
-                  SizedBox(height: 25.0),
-                  _buildList(context),
-                ],
-              )));
-    }
+    return Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.grey[100],
+        body: Container(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _buildInstructions(context),
+                SizedBox(height: 25.0),
+                Expanded(
+                  child: _buildList(context, items),
+                ),
+              ],
+            )));
   }
 }
 
@@ -195,7 +190,7 @@ class _LikeChoiceWidgetState extends State<LikeChoiceWidget> {
   Widget build(BuildContext context) {
     final JackboxBloc bloc = Provider.of<JackboxBloc>(context);
 
-    return new Card(
+    return Card(
       shape: selected
           ? RoundedRectangleBorder(
               side: BorderSide(color: Colors.blue[100], width: 2.0),
@@ -204,7 +199,7 @@ class _LikeChoiceWidgetState extends State<LikeChoiceWidget> {
               side: BorderSide(color: Colors.grey[100], width: 2.0),
               borderRadius: BorderRadius.circular(4.0)),
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(10.0),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(widget.choice),
@@ -213,9 +208,11 @@ class _LikeChoiceWidgetState extends State<LikeChoiceWidget> {
               onChanged: selected
                   ? null
                   : (value) {
-                      selected = value;
+                    setState(() {
+                      selected = true;
                       bloc.sendEvent(
                           DrawfulLikeChoiceEvent(choice: widget.choice));
+                    });
                     }),
         ]),
       ),

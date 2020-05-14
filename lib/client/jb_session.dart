@@ -131,6 +131,14 @@ class JackboxSession {
     return _handledStates.containsKey(state.runtimeType);
   }
 
+  JackboxState _handleRoomDestroyed(ArgMsg msg) {
+    if (msg is ArgEvent && msg.event == 'RoomDestroyed') {
+      return SessionLoginState();
+    }
+
+    return null;
+  }
+
   String getAppId() {
     if (_meta.roomInfo != null) {
       return _meta.roomInfo.appId;
@@ -183,7 +191,7 @@ class JackboxSession {
   }
 
   Future<bool> isValidRoom(String roomId) async {
-    var uri = new Uri.https(
+    var uri = Uri.https(
         _roomBase, p.join(_roomPath, roomId));
 
     var resp = await http.get(uri);
@@ -196,7 +204,7 @@ class JackboxSession {
   }
 
   Future<RoomInfo> _getRoomInfo(String roomId) async {
-    var uri = new Uri.https(
+    var uri = Uri.https(
         _roomBase, p.join(_roomPath, roomId), {'userId': _meta.userId});
 
     var resp = await http.get(uri);
@@ -233,7 +241,7 @@ class JackboxSession {
       throw Exception(
           'No game handler found, game may not be implemented, refusing to connect');
     }
-    var uri = new Uri(
+    var uri = Uri(
         scheme: 'https', host: _wsBase, port: _wsBasePort, path: _wsInfoPath);
 
     var resp = await http.get(uri);
@@ -242,7 +250,7 @@ class JackboxSession {
       throw Exception('Failed to retrieve websocket information');
     }
 
-    RegExp exp = new RegExp(_wsInfoRegex);
+    RegExp exp = RegExp(_wsInfoRegex);
     Match match = exp.firstMatch(resp.body);
 
     if (match == null || match.groupCount != 1) {
@@ -251,7 +259,7 @@ class JackboxSession {
 
     String sessionName = match.group(1);
 
-    var wssURI = new Uri(
+    var wssURI = Uri(
         scheme: 'wss',
         host: _wsBase,
         port: _wsBasePort,
@@ -283,7 +291,6 @@ class JackboxSession {
     }
 
     String mtmsg = mt.prepareMessageOfType(mt.MSG, msg);
-    print(mtmsg);
 
     _ws.sink.add(mtmsg);
   }
@@ -298,7 +305,6 @@ class JackboxSession {
 
   // handleWSMessage handles different kinds of Socket.io messages and forward relevant ones
   void _handleWSMessage(dynamic msg) {
-    print(msg);
     switch (mt.getMessageType(msg)) {
       case mt.OPEN:
         break;
@@ -308,6 +314,7 @@ class JackboxSession {
       case mt.PONG:
         break;
       case mt.MSG:
+        print(msg);
         _handleWSJbMessage(mt.getMsgBody(msg));
         //sc.add(mt.GetMSGBody(msg));
         break;
@@ -326,7 +333,13 @@ class JackboxSession {
     BlocMsg bmsg;
 
     for (ArgMsg argm in msgp.args) {
-      JackboxState nextState;
+      JackboxState nextState = _handleRoomDestroyed(argm);
+
+      if (nextState != null) {
+        finalState = nextState;
+        break;
+      }
+
       if (canHandleState(finalState)) {
         nextState = _handledStates[finalState.runtimeType](argm, finalState);
       } else if (_gameHandler.canHandleState(finalState)) {

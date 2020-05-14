@@ -16,7 +16,8 @@ class DrawfulEnterLieWidget extends StatefulWidget {
   DrawfulEnterLieWidget({this.state});
 
   @override
-  _DrawfulEnterLieWidgetState createState() => _DrawfulEnterLieWidgetState(state: state);
+  _DrawfulEnterLieWidgetState createState() =>
+      _DrawfulEnterLieWidgetState(state: state);
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
@@ -31,19 +32,26 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 }
 
 class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
-  final TextEditingController _entryFilter = new TextEditingController();
-  final RegExp _entryRegex = new RegExp(r'[A-Za-z0-9]');
+  final TextEditingController _entryFilter = TextEditingController();
+  final RegExp _entryRegex = RegExp(r'[A-Za-z0-9]');
 
   DrawfulEnterLieState state;
 
   StreamSubscription _streamSub;
   Stream _prevStream;
 
-  bool enabled = true;
+  bool enabled;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   _DrawfulEnterLieWidgetState({this.state});
+
+  @override
+  void initState() {
+    super.initState();
+
+    enabled = true;
+  }
 
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
@@ -83,18 +91,19 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
 
   Widget _buildEntryField() {
     return TextFormField(
-          controller: _entryFilter,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
-            hintText: 'Enter Lie',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
-          ),
-          inputFormatters: [
-            //LengthLimitingTextInputFormatter(10),
-            //WhitelistingTextInputFormatter(_entryRegex),
-            //UpperCaseTextFormatter()
-          ],
-        );
+      controller: _entryFilter,
+      enabled: enabled,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
+          hintText: 'Enter Lie',
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))),
+      inputFormatters: [
+        //LengthLimitingTextInputFormatter(10),
+        //WhitelistingTextInputFormatter(_entryRegex),
+        //UpperCaseTextFormatter()
+      ],
+    );
   }
 
   @override
@@ -106,36 +115,40 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
         child: Center(
           child: Text('This is your drawing'),
         ),
-        );
+      );
     } else {
-    return Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Colors.grey[100],
-        body: Container(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                _buildEntryField(),
-                SizedBox(height: 25.0),
-                RaisedButton(
-                  child: Text('Join'),
-                  onPressed: () {
-                    // TODO: We don't handle duplicate entries
-                    if (enabled) {
-                      if (_entryFilter.text != '') {
-                        bloc.sendEvent(DrawfulSubmitLieEvent(lie: _entryFilter.text, usedSuggestion: false));
-                        enabled = false;
+      return Scaffold(
+          key: scaffoldKey,
+          backgroundColor: Colors.grey[100],
+          body: Container(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  _buildEntryField(),
+                  SizedBox(height: 25.0),
+                  RaisedButton(
+                    child: Text('Submit'),
+                    onPressed: () {
+                      // TODO: We don't handle duplicate entries
+                      if (state.lie == '' && enabled) {
+                        if (_entryFilter.text != '') {
+                          setState(() {
+                          bloc.sendEvent(DrawfulSubmitLieEvent(
+                              lie: _entryFilter.text, usedSuggestion: false));
+                              state.lie = _entryFilter.text;
+                          enabled = false;
+                          });
+                        } else {
+                          _showToast(context, 'Lie cannot be empty');
+                        }
                       } else {
-                        _showToast(context, 'Lie cannot be empty');
+                        _showToast(context, 'Already submitted lie');
                       }
-                    } else {
-                      _showToast(context, 'Already submitted lie');
-                    }
-                  },
-                ),
-                SizedBox(height: 15.0)
-              ],
-            )));
+                    },
+                  ),
+                  SizedBox(height: 15.0)
+                ],
+              )));
     }
   }
 }

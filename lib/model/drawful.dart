@@ -76,6 +76,15 @@ class DrawfulLobbyState extends DrawfulState {
       postGame: state.postGame,
     );
   }
+
+  @override
+  String toString() {
+    return '${this.runtimeType}{route: $route' + 
+    ', allowedToStart: $allowedToStart' + 
+    ', enoughPlayers: $enoughPlayers' +
+    ', postGame: $postGame' +
+    '}';
+  }
 }
 
 // Embed a lobbystate class so we can populate it if we need to go back to lobby after drawing
@@ -95,6 +104,14 @@ class DrawfulDrawingState extends DrawfulState {
           ? DrawfulLobbyState.from(state.lobbyState)
           : null,
     );
+  }
+
+    @override
+  String toString() {
+    return '${this.runtimeType}{route: $route' + 
+    ', prompt: $prompt' + 
+    ', lobbyState: $lobbyState' +
+    '}';
   }
 }
 
@@ -119,6 +136,15 @@ class DrawfulEnterLieState extends DrawfulState {
       isAuthor: state.isAuthor,
     );
   }
+
+    @override
+  String toString() {
+    return '${this.runtimeType}{route: $route' + 
+    ', lie: $lie' + 
+    ', useSuggestion: $useSuggestion' +
+    ', isAuthor: $isAuthor' +
+    '}';
+  }
 }
 
 class DrawfulLyingDoneState extends DrawfulState {}
@@ -130,9 +156,9 @@ class DrawfulChooseLieState extends DrawfulState {
     DrawfulChooseLieEvent,
     DrawfulLikeChoiceEvent
   };
-  HashSet<String> choices;
+  List<String> choices;
   String myEntry;
-  HashSet<String> likes;
+  List<String> likes;
   String chosen;
   bool isAuthor;
 
@@ -140,8 +166,8 @@ class DrawfulChooseLieState extends DrawfulState {
       {this.choices, this.myEntry, this.likes, this.chosen, this.isAuthor});
 
   factory DrawfulChooseLieState.from(DrawfulChooseLieState state) {
-    HashSet<String> choices = new HashSet<String>();
-    HashSet<String> likes = new HashSet<String>();
+    List<String> choices = List<String>();
+    List<String> likes = List<String>();
 
     if (state.choices != null) {
       choices.addAll(state.choices);
@@ -159,12 +185,29 @@ class DrawfulChooseLieState extends DrawfulState {
       isAuthor: state.isAuthor,
     );
   }
+
+    @override
+  String toString() {
+    return '${this.runtimeType}{route: $route' + 
+    ', choices: (${choices.join(', ')})' + 
+    ', myEntry: $myEntry' +
+    ', likes: (${likes.join(', ')})' +
+    ', chosen: $chosen' +
+    ', isAuthor: $isAuthor' +
+    '}';
+  }
 }
 
 // This isn't explicity a valid state, but a generic for when we are waiting for something to happen
 class DrawfulWaitState extends DrawfulState {
   static const String route = '/drawful/wait';
   final String iroute = route;
+  final Set<Type> allowedEvents = {};
+
+      @override
+  String toString() {
+    return '${this.runtimeType}{route: $route}';
+  }
 }
 
 ArgEventBlob getSpecificBlobType(ArgEvent msg) {

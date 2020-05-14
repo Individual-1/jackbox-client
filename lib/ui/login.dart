@@ -30,12 +30,23 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
-  final TextEditingController _roomFilter = new TextEditingController();
-  final TextEditingController _nameFilter = new TextEditingController();
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text?.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
+}
 
-  final RegExp _roomRegex = new RegExp(r'[A-Za-z]');
-  final RegExp _nameRegex = new RegExp(r'[A-Za-z0-9]');
+class _LoginWidgetState extends State<LoginWidget> {
+  final TextEditingController _roomFilter = TextEditingController();
+  final TextEditingController _nameFilter = TextEditingController();
+
+  final RegExp _roomRegex = RegExp(r'[A-Za-z]');
+  final RegExp _nameRegex = RegExp(r'[A-Za-z0-9]');
 
   SessionLoginState state;
 
@@ -93,7 +104,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           inputFormatters: [
             LengthLimitingTextInputFormatter(10),
             WhitelistingTextInputFormatter(_nameRegex),
-            UpperCaseTextFormatter()
+            LowerCaseTextFormatter()
           ],
         );
   }
@@ -149,9 +160,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                   )
                 ),
                 SizedBox(height: 50.0),
-                _buildNameField(),
-                SizedBox(height: 25.0),
                 _buildRoomField(),
+                SizedBox(height: 25.0),
+                _buildNameField(),
                 SizedBox(height: 25.0),
                 RaisedButton(
                   child: Text('Join'),
