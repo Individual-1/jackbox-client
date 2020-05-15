@@ -61,7 +61,7 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is DrawfulEnterLieState && event.state != state) {
+        if (event.state is DrawfulEnterLieState && event.state.shouldUpdate(state)) {
           setState(() {
             state = event.state;
           });

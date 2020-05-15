@@ -66,7 +66,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is SessionLoginState && event.state != state) {
+        if (event.state is SessionLoginState && event.state.shouldUpdate(state)) {
           setState(() {
             state = event.state;
           });

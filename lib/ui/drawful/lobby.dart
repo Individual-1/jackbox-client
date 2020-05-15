@@ -31,7 +31,7 @@ class _DrawfulLobbyWidgetState extends State<DrawfulLobbyWidget> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is DrawfulLobbyState && event.state != state) {
+        if (event.state is DrawfulLobbyState && event.state.shouldUpdate(state)) {
           setState(() {
             state = event.state;
           });

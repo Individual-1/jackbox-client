@@ -30,6 +30,10 @@ abstract class JackboxState {
   bool isAllowedEvent(JackboxEvent event) {
     return allowedEvents.contains(event.runtimeType);
   }
+
+  bool shouldUpdate(JackboxState event) {
+    return false;
+  }
 }
 
 abstract class SessionState extends JackboxState {}

@@ -168,7 +168,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is DrawfulDrawingState) {
+        if (event.state is DrawfulDrawingState && event.state.shouldUpdate(state)) {
           setState(() {
             state = event.state;
           });

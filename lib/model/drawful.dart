@@ -1,7 +1,6 @@
 library drawful;
 
-import 'dart:collection';
-
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:jackbox_client/model/jackbox.dart';
@@ -78,12 +77,25 @@ class DrawfulLobbyState extends DrawfulState {
   }
 
   @override
+  bool shouldUpdate(JackboxState state) {
+    if (state is DrawfulLobbyState) {
+      if (allowedToStart != state.allowedToStart ||
+          enoughPlayers != state.enoughPlayers ||
+          postGame != state.postGame) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @override
   String toString() {
-    return '${this.runtimeType}{route: $route' + 
-    ', allowedToStart: $allowedToStart' + 
-    ', enoughPlayers: $enoughPlayers' +
-    ', postGame: $postGame' +
-    '}';
+    return '${this.runtimeType}{route: $route' +
+        ', allowedToStart: $allowedToStart' +
+        ', enoughPlayers: $enoughPlayers' +
+        ', postGame: $postGame' +
+        '}';
   }
 }
 
@@ -106,12 +118,23 @@ class DrawfulDrawingState extends DrawfulState {
     );
   }
 
-    @override
+  @override
+  bool shouldUpdate(JackboxState state) {
+    if (state is DrawfulDrawingState) {
+      if (prompt != state.prompt || lobbyState.shouldUpdate(state.lobbyState)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @override
   String toString() {
-    return '${this.runtimeType}{route: $route' + 
-    ', prompt: $prompt' + 
-    ', lobbyState: $lobbyState' +
-    '}';
+    return '${this.runtimeType}{route: $route' +
+        ', prompt: $prompt' +
+        ', lobbyState: $lobbyState' +
+        '}';
   }
 }
 
@@ -137,13 +160,26 @@ class DrawfulEnterLieState extends DrawfulState {
     );
   }
 
-    @override
+  @override
+  bool shouldUpdate(JackboxState state) {
+    if (state is DrawfulEnterLieState) {
+      if (lie != state.lie ||
+          useSuggestion != state.useSuggestion ||
+          isAuthor != state.isAuthor) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @override
   String toString() {
-    return '${this.runtimeType}{route: $route' + 
-    ', lie: $lie' + 
-    ', useSuggestion: $useSuggestion' +
-    ', isAuthor: $isAuthor' +
-    '}';
+    return '${this.runtimeType}{route: $route' +
+        ', lie: $lie' +
+        ', useSuggestion: $useSuggestion' +
+        ', isAuthor: $isAuthor' +
+        '}';
   }
 }
 
@@ -186,15 +222,30 @@ class DrawfulChooseLieState extends DrawfulState {
     );
   }
 
-    @override
+  @override
+  bool shouldUpdate(JackboxState state) {
+    if (state is DrawfulChooseLieState) {
+      const ListEquality eq = ListEquality();
+      if (!eq.equals(choices, state.choices) ||
+          myEntry != state.myEntry ||
+          chosen != state.chosen ||
+          isAuthor != state.isAuthor) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @override
   String toString() {
-    return '${this.runtimeType}{route: $route' + 
-    ', choices: (${choices.join(', ')})' + 
-    ', myEntry: $myEntry' +
-    ', likes: (${likes.join(', ')})' +
-    ', chosen: $chosen' +
-    ', isAuthor: $isAuthor' +
-    '}';
+    return '${this.runtimeType}{route: $route' +
+        ', choices: (${choices.join(', ')})' +
+        ', myEntry: $myEntry' +
+        ', likes: (${likes.join(', ')})' +
+        ', chosen: $chosen' +
+        ', isAuthor: $isAuthor' +
+        '}';
   }
 }
 
@@ -204,7 +255,7 @@ class DrawfulWaitState extends DrawfulState {
   final String iroute = route;
   final Set<Type> allowedEvents = {};
 
-      @override
+  @override
   String toString() {
     return '${this.runtimeType}{route: $route}';
   }

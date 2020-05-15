@@ -68,7 +68,7 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is DrawfulChooseLieState && event.state != state) {
+        if (event.state is DrawfulChooseLieState && event.state.shouldUpdate(state)) {
           setState(() {
             state = event.state;
 
