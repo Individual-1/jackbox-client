@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:jackbox_client/bloc/drawful_bloc.dart';
 
 import 'package:jackbox_client/client/jb_session.dart';
@@ -32,7 +33,9 @@ class JackboxBloc {
   StreamController<BlocRouteTransition> _routeStream;
   int _routeListenerCount = 0;
 
-  JackboxBloc() {
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  JackboxBloc({this.navigatorKey}) {
     _jbs = JackboxSession();
 
     _initHandlerMaps();
@@ -78,12 +81,17 @@ class JackboxBloc {
     }
 
     print('{route: ${nextRoute.route}' +
-    ', update: ${nextRoute.update}' +
-    ', state: ${nextRoute.state}' +
-    '}');
-    
-    await _waitUntilListeners();
-    _routeStream.sink.add(nextRoute);
+        ', update: ${nextRoute.update}' +
+        ', state: ${nextRoute.state}' +
+        '}');
+
+    // Check if we need to navigate to a new page
+    if (!nextRoute.update) {
+      navigatorKey.currentState.pushNamed(nextRoute.route, arguments: nextRoute.state);
+    } else {
+      await _waitUntilListeners();
+      _routeStream.sink.add(nextRoute);
+    }
   }
 
   BlocRouteTransition _handleSessionState(BlocMsg msg) {

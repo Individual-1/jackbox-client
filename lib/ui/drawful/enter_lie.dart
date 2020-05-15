@@ -20,12 +20,12 @@ class DrawfulEnterLieWidget extends StatefulWidget {
       _DrawfulEnterLieWidgetState(state: state);
 }
 
-class UpperCaseTextFormatter extends TextInputFormatter {
+class LowerCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
-      text: newValue.text?.toUpperCase(),
+      text: newValue.text?.toLowerCase(),
       selection: newValue.selection,
     );
   }
@@ -33,7 +33,6 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 
 class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
   final TextEditingController _entryFilter = TextEditingController();
-  final RegExp _entryRegex = RegExp(r'[A-Za-z0-9]');
 
   DrawfulEnterLieState state;
 
@@ -53,6 +52,12 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
     enabled = true;
   }
 
+  @override
+  void dispose() {
+    _streamSub?.cancel();
+    super.dispose();
+  }
+
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
@@ -61,8 +66,6 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
             state = event.state;
           });
         }
-      } else {
-        Navigator.pushNamed(context, event.route, arguments: event.state);
       }
     });
   }
@@ -101,7 +104,7 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
       inputFormatters: [
         //LengthLimitingTextInputFormatter(10),
         //WhitelistingTextInputFormatter(_entryRegex),
-        //UpperCaseTextFormatter()
+        LowerCaseTextFormatter()
       ],
     );
   }
@@ -133,10 +136,10 @@ class _DrawfulEnterLieWidgetState extends State<DrawfulEnterLieWidget> {
                       if (state.lie == '' && enabled) {
                         if (_entryFilter.text != '') {
                           setState(() {
-                          bloc.sendEvent(DrawfulSubmitLieEvent(
-                              lie: _entryFilter.text, usedSuggestion: false));
-                              state.lie = _entryFilter.text;
-                          enabled = false;
+                            bloc.sendEvent(DrawfulSubmitLieEvent(
+                                lie: _entryFilter.text, usedSuggestion: false));
+                            state.lie = _entryFilter.text;
+                            enabled = false;
                           });
                         } else {
                           _showToast(context, 'Lie cannot be empty');

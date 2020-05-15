@@ -36,10 +36,14 @@ class _DrawfulLobbyWidgetState extends State<DrawfulLobbyWidget> {
             state = event.state;
           });
         }
-      } else {
-        Navigator.pushNamed(context, event.route, arguments: event.state);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _streamSub?.cancel();
+    super.dispose();
   }
 
   @override
@@ -73,22 +77,24 @@ class _DrawfulLobbyWidgetState extends State<DrawfulLobbyWidget> {
         backgroundColor: Colors.grey[100],
         body: Container(
             child: Center(
-                child: Column(children: [
-          Text('Stay a while and listen'),
-          Visibility(
-            visible: state != null ? state.allowedToStart : false,
-            child: RaisedButton(
-              child: Text('Start'),
-              onPressed: state != null
-                  ? (state.allowedToStart && state.enoughPlayers
-                      ? () => {bloc.sendEvent(DrawfulStartGameEvent())}
-                      : () => {
-                            _showToast(
-                                context, 'Waiting for additional players')
-                          })
-                  : null,
-            ),
-          ),
-        ]))));
+                child: Column(
+              children: [
+                Text('Stay a while and listen'),
+                Visibility(
+                  visible: state != null ? state.allowedToStart : false,
+                  child: RaisedButton(
+                    child: Text('Start'),
+                    onPressed: state != null
+                        ? (state.allowedToStart && state.enoughPlayers
+                            ? () => {bloc.sendEvent(DrawfulStartGameEvent())}
+                            : () => {
+                                  _showToast(
+                                      context, 'Waiting for additional players')
+                                })
+                        : null,
+                  ),
+                ),
+              ],
+            ))));
   }
 }

@@ -50,9 +50,19 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
 
   _DrawfulChooseLieWidgetState({this.state});
 
+  List<Item> items;
+
   @override
   void initState() {
     super.initState();
+    items = List<Item>();
+
+    List<String> choices = List<String>.from(state?.choices);
+    choices.remove(state?.myEntry);
+
+    for (String choice in choices) {
+      items.add(Item(choice: choice));
+    }
   }
 
   void _listen(Stream<BlocRouteTransition> stream) {
@@ -61,6 +71,14 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
         if (event.state is DrawfulChooseLieState && event.state != state) {
           setState(() {
             state = event.state;
+
+            List<String> choices = List<String>.from(state?.choices);
+            choices.remove(state?.myEntry);
+            items.clear();
+
+            for (String choice in choices) {
+              items.add(Item(choice: choice));
+            }
           });
         }
       } else {
@@ -148,14 +166,6 @@ class _DrawfulChooseLieWidgetState extends State<DrawfulChooseLieWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> choices = List<String>.from(state?.choices);
-    choices.remove(state?.myEntry);
-
-    List<Item> items = List<Item>();
-
-    for (String choice in choices) {
-      items.add(Item(choice: choice));
-    }
 
     return Scaffold(
         key: scaffoldKey,

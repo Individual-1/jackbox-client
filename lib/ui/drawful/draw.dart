@@ -20,7 +20,8 @@ class DrawfulDrawWidget extends StatefulWidget {
   DrawfulDrawWidget({this.standalone, this.state});
 
   @override
-  _DrawfulDrawWidgetState createState() => _DrawfulDrawWidgetState(standalone: standalone, state: state);
+  _DrawfulDrawWidgetState createState() =>
+      _DrawfulDrawWidgetState(standalone: standalone, state: state);
 }
 
 class PictureLine {
@@ -172,8 +173,6 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
             state = event.state;
           });
         }
-      } else {
-        Navigator.pushNamed(context, event.route, arguments: event.state);
       }
     });
   }
@@ -198,6 +197,13 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
     ln = LineNotifier();
     drawPaint = DrawingPainter(ln);
     instrKey = GlobalKey();
+  }
+
+  @override
+  void dispose() {
+    _streamSub?.cancel();
+    importController.dispose();
+    super.dispose();
   }
 
   void _panStart(DragStartDetails details) {
@@ -395,7 +401,8 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
           _showToast(context, 'Canvas must not be empty');
         } else if (bloc != null) {
           bloc.sendEvent(DrawfulSubmitDrawingEvent(
-              isPlayerPicture: state != null ? (state.lobbyState != null) : false,
+              isPlayerPicture:
+                  state != null ? (state.lobbyState != null) : false,
               lines: ln.linesToListMap(Size(240.0, 300.0))));
         } else {
           _showToast(context, 'No endpoint to submit to');
@@ -531,13 +538,6 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
             ))),
           ]),
         ));
-  }
-
-  @override
-  void dispose() {
-    _streamSub?.cancel();
-    importController.dispose();
-    super.dispose();
   }
 }
 
@@ -725,7 +725,6 @@ class LineNotifier extends ChangeNotifier {
           notifyListeners();
         }
       }
-
     }
 
     return '';

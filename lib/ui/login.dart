@@ -57,6 +57,12 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   _LoginWidgetState({this.state});
 
+  @override
+  void dispose() {
+    _streamSub?.cancel();
+    super.dispose();
+  }
+
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
@@ -65,8 +71,6 @@ class _LoginWidgetState extends State<LoginWidget> {
             state = event.state;
           });
         }
-      } else {
-        Navigator.pushNamed(context, event.route, arguments: event.state);
       }
     });
   }
@@ -95,34 +99,34 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   Widget _buildNameField() {
     return TextFormField(
-          controller: _nameFilter,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
-            hintText: 'Name',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
-          ),
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(10),
-            WhitelistingTextInputFormatter(_nameRegex),
-            LowerCaseTextFormatter()
-          ],
-        );
+      controller: _nameFilter,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
+          hintText: 'Name',
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))),
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(10),
+        WhitelistingTextInputFormatter(_nameRegex),
+        LowerCaseTextFormatter()
+      ],
+    );
   }
 
   Widget _buildRoomField() {
     return TextFormField(
-          controller: _roomFilter,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
-            hintText: 'Room Code',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))
-          ),
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(4),
-            WhitelistingTextInputFormatter(_roomRegex),
-            UpperCaseTextFormatter()
-          ],
-        );
+      controller: _roomFilter,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(10.0, 7.5, 10.0, 7.5),
+          hintText: 'Room Code',
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))),
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(4),
+        WhitelistingTextInputFormatter(_roomRegex),
+        UpperCaseTextFormatter()
+      ],
+    );
   }
 
   Future _joinRoom(JackboxBloc bloc) async {
@@ -153,12 +157,11 @@ class _LoginWidgetState extends State<LoginWidget> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 150.0,
-                  child: Image.asset(
-                    "images/login.jpg",
-                    fit: BoxFit.contain,
-                  )
-                ),
+                    height: 150.0,
+                    child: Image.asset(
+                      "images/login.jpg",
+                      fit: BoxFit.contain,
+                    )),
                 SizedBox(height: 50.0),
                 _buildRoomField(),
                 SizedBox(height: 25.0),
