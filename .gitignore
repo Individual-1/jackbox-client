@@ -31,7 +31,7 @@
 /build/
 
 # Ignore generated files
-*.g.dart
+#*.g.dart
 *.freezed.dart
 
 # Web related
