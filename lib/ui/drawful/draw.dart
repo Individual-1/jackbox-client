@@ -2,15 +2,18 @@ import 'dart:async';
 import 'dart:ui';
 import 'dart:math';
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:jackbox_client/model/drawful.dart';
+import 'package:file_picker_web/file_picker_web.dart';
 import 'package:provider/provider.dart';
 
 import 'package:jackbox_client/bloc/jackbox_bloc.dart';
+import 'package:jackbox_client/model/drawful.dart';
 
 // Draw implements DrawfulDrawingState
 class DrawfulDrawWidget extends StatefulWidget {
@@ -360,7 +363,8 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                     // Import Drawing json
                     IconButton(
                         icon: Icon(Icons.file_upload),
-                        onPressed: () {
+                        onPressed: () async {
+                          /*
                           showDialog(
                               context: context,
                               builder: (context) {
@@ -370,6 +374,8 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                                             BorderRadius.circular(40)),
                                     child: _importDialog());
                               });
+                          */
+                          await _importPicker(context);
                         }),
                   ],
                 ),
@@ -524,10 +530,10 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                   if (importController.text == '') {
                     _showToast(context, 'Nothing to import');
                   } else {
-                    String result = ln.importLines(importController.text);
+                    bool result = ln.importLines(importController.text);
 
-                    if (result != '') {
-                      _showToast(context, result);
+                    if (!result) {
+                      _showToast(context, 'Failed to import data');
                     }
                   }
                 }),
@@ -539,6 +545,31 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
           ]),
         ));
   }
+
+  Future _importPicker(BuildContext context) async {
+  File file = await FilePicker.getFile() ?? null;
+
+  if (file != null) {
+    FileReader reader = new FileReader();
+    reader.onLoad.listen((fileEvent) {
+      String fileContent = reader.result;
+
+      bool result = ln.importLines(fileContent);
+      if (result) {
+        setState(() {});
+      } else {
+        _showToast(context, 'Failed to import file');
+      }
+    });
+
+    reader.readAsText(file);
+  } else {
+    _showToast(context, 'Failed to import file');
+  }
+
+  return;
+}
+
 }
 
 class LineNotifier extends ChangeNotifier {
@@ -684,11 +715,12 @@ class LineNotifier extends ChangeNotifier {
     return result;
   }
 
-  String importLines(String json) {
+  bool importLines(String json) {
     dynamic parsed;
 
     StrokeCap strokeCap;
     PaintingStyle paintStyle;
+    List<PictureLine> newLines = List<PictureLine>();
 
     if (this.lines.length > 0) {
       strokeCap = lines[0].paint.strokeCap;
@@ -701,13 +733,12 @@ class LineNotifier extends ChangeNotifier {
     try {
       parsed = jsonDecode(json);
     } catch (e) {
-      return e.toString();
+      return false;
     }
 
     if (!(parsed is List<dynamic>)) {
-      return 'Malformed input';
+      return false;
     } else {
-      lines.clear();
       for (dynamic entry in parsed) {
         if (entry is Map<String, dynamic>) {
           PictureLine tmp;
@@ -715,19 +746,21 @@ class LineNotifier extends ChangeNotifier {
           try {
             tmp = PictureLine.fromJson(entry);
           } catch (e) {
-            return e.toString();
+            return false;
           }
 
           tmp.paint.strokeCap = strokeCap;
           tmp.paint.style = paintStyle;
 
-          lines.add(tmp);
-          notifyListeners();
+          newLines.add(tmp);
         }
       }
     }
 
-    return '';
+    lines = newLines;
+    notifyListeners();
+
+    return true;
   }
 }
 
