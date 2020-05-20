@@ -27,104 +27,6 @@ class DrawfulDrawWidget extends StatefulWidget {
       _DrawfulDrawWidgetState(standalone: standalone, state: state);
 }
 
-class PictureLine {
-  Paint paint;
-  List<Offset> points;
-  double thickness;
-  bool open;
-
-  PictureLine({this.thickness, this.points, this.paint}) {
-    open = true;
-  }
-
-  factory PictureLine.fromJson(Map<String, dynamic> json) {
-    List<Offset> points = List<Offset>();
-
-    if (json.containsKey('points')) {
-      for (Map<String, dynamic> point in json['points']) {
-        if (point.containsKey('x') && point.containsKey('y')) {
-          dynamic xd = point['x'];
-          dynamic yd = point['y'];
-
-          double x;
-          double y;
-
-          if (xd is int) {
-            x = xd.roundToDouble();
-          } else if (xd is double) {
-            x = xd;
-          } else {
-            throw FormatException('Failed to parse');
-          }
-
-          if (yd is int) {
-            y = yd.roundToDouble();
-          } else if (yd is double) {
-            y = yd;
-          } else {
-            throw FormatException();
-          }
-
-          points.add(Offset(x, y));
-        }
-      }
-    }
-
-    Paint paint = Paint();
-
-    if (json.containsKey('color')) {
-      String color = json['color'];
-
-      if (color.startsWith('#')) {
-        color = color.substring(1);
-      }
-
-      paint.color = Color(int.parse(color, radix: 16));
-    }
-
-    double thickness = 3.0;
-    if (json.containsKey('thickness')) {
-      dynamic thick = json['thickness'];
-
-      if (thick is int) {
-        thickness = thick.roundToDouble();
-      } else if (thick is double) {
-        thickness = thick;
-      }
-    }
-
-    paint.strokeWidth = thickness;
-
-    PictureLine result = PictureLine(
-      thickness: thickness,
-      points: points,
-      paint: paint,
-    );
-
-    result.open = false;
-
-    return result;
-  }
-
-  Map<String, dynamic> toJson() {
-    int base = paint.color.value & 0xFFFFFF;
-    List<Map> pointsJson = List<Map>();
-
-    for (Offset point in this.points) {
-      pointsJson.add({
-        'x': point.dx.round(),
-        'y': point.dy.round(),
-      });
-    }
-
-    return {
-      'thickness': thickness.round(),
-      'color': "#" + base.toRadixString(16).padLeft(6, '0'),
-      'points': pointsJson,
-    };
-  }
-}
-
 enum SelectedMode { StrokeWidth, Color }
 
 class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
@@ -388,7 +290,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                       : Slider(
                           value: strokeWidth,
                           max: 50.0,
-                          min: 0.0,
+                          min: 1.0,
                           onChanged: (val) {
                             setState(() {
                               strokeWidth = val;
@@ -438,8 +340,9 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
           child: AlertDialog(
             title: const Text('Color Selector'),
             content: SingleChildScrollView(
-              child: MaterialPicker(
+              child: ColorPicker(
                 pickerColor: pickerColor,
+                enableAlpha: false,
                 onColorChanged: (color) {
                   pickerColor = color;
                 },
@@ -554,10 +457,8 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
     reader.onLoad.listen((fileEvent) {
       String fileContent = reader.result;
 
-      bool result = ln.importLines(fileContent);
-      if (result) {
-        setState(() {});
-      } else {
+      bool result = this.ln.importLines(fileContent);
+      if (!result) {
         _showToast(context, 'Failed to import file');
       }
     });
@@ -572,13 +473,169 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
 
 }
 
+class PictureLine {
+  Paint paint;
+  List<Offset> points;
+  double thickness;
+  bool open;
+
+  PictureLine({this.thickness, this.points, this.paint}) {
+    open = true;
+  }
+
+  factory PictureLine.fromPictureLine(PictureLine line) {
+    List<Offset> points = List<Offset>();
+    Paint paint = Paint();
+    Color color = Color(line.paint.color.value);
+
+    for (Offset off in line.points) {
+      points.add(Offset(off.dx, off.dy));      
+    }
+
+    paint
+        ..strokeCap = line.paint.strokeCap
+        ..isAntiAlias = line.paint.isAntiAlias
+        ..color = color
+        ..strokeWidth = line.paint.strokeWidth
+        ..style = line.paint.style;
+
+    return PictureLine(
+      paint: paint,
+      points: points,
+      thickness: line.thickness,
+    );
+  }
+
+  factory PictureLine.fromJson(Map<String, dynamic> json) {
+    List<Offset> points = List<Offset>();
+
+    if (json.containsKey('points')) {
+      for (Map<String, dynamic> point in json['points']) {
+        if (point.containsKey('x') && point.containsKey('y')) {
+          dynamic xd = point['x'];
+          dynamic yd = point['y'];
+
+          double x;
+          double y;
+
+          if (xd is int) {
+            x = xd.roundToDouble();
+          } else if (xd is double) {
+            x = xd;
+          } else {
+            throw FormatException('Failed to parse');
+          }
+
+          if (yd is int) {
+            y = yd.roundToDouble();
+          } else if (yd is double) {
+            y = yd;
+          } else {
+            throw FormatException();
+          }
+
+          points.add(Offset(x, y));
+        }
+      }
+    }
+
+    // Recreate some defaults because we don't save this information when serializing
+    Paint paint = Paint()
+            ..strokeCap = StrokeCap.round
+            ..isAntiAlias = true
+            ..style = PaintingStyle.stroke;
+
+    if (json.containsKey('color')) {
+      String color = json['color'];
+
+      if (color.startsWith('#')) {
+        color = color.substring(1);
+      }
+
+      paint.color = Color(int.parse(color, radix: 16));
+    }
+
+    double thickness = 3.0;
+    if (json.containsKey('thickness')) {
+      dynamic thick = json['thickness'];
+
+      if (thick is int) {
+        thickness = thick.roundToDouble();
+      } else if (thick is double) {
+        thickness = thick;
+      }
+    }
+
+    paint.strokeWidth = thickness;
+
+    PictureLine result = PictureLine(
+      thickness: thickness,
+      points: points,
+      paint: paint,
+    );
+
+    result.open = false;
+
+    return result;
+  }
+
+  Map<String, dynamic> toJson() {
+    int base = paint.color.value & 0xFFFFFF;
+    List<Map> pointsJson = List<Map>();
+
+    for (Offset point in this.points) {
+      pointsJson.add({
+        'x': point.dx.round(),
+        'y': point.dy.round(),
+      });
+    }
+
+    return {
+      'thickness': thickness.round(),
+      'color': "#" + base.toRadixString(16).padLeft(6, '0'),
+      'points': pointsJson,
+    };
+  }
+}
+
+class SerializedLines {
+  Size canvasSize;
+  List<PictureLine> lines;
+
+  SerializedLines({this.canvasSize, this.lines});
+
+  factory SerializedLines.fromJson(Map<String, dynamic> json) {
+    if (!json.containsKey('lines') || 
+      !json.containsKey('canvasWidth') || !json.containsKey('canvasHeight')) {
+      throw FormatException("Missing required fields 'lines' or 'canvasWidth/Height'");
+    }
+
+    return SerializedLines(
+      canvasSize: Size(json['canvasWidth'] as double, json['canvasHeight'] as double),
+      lines: (json['lines'] as List)
+        ?.map((e) =>
+        e == null ? null : PictureLine.fromJson(e as Map<String, dynamic>))?.toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'canvasWidth': canvasSize.width,
+      'canvasHeight': canvasSize.height,
+      'lines': lines,
+    };
+  }
+}
+
 class LineNotifier extends ChangeNotifier {
   List<PictureLine> lines;
   Size canvasSize;
+  int revision;
 
   LineNotifier() {
     this.lines = List();
     this.canvasSize = Size.zero;
+    this.revision = 0;
   }
 
   void startStroke(Offset pos, double strokeWidth, Paint paint) {
@@ -588,6 +645,7 @@ class LineNotifier extends ChangeNotifier {
       paint: paint,
     ));
 
+    revision += 1;
     notifyListeners();
   }
 
@@ -602,6 +660,7 @@ class LineNotifier extends ChangeNotifier {
       ));
     }
 
+    revision += 1;
     notifyListeners();
   }
 
@@ -615,12 +674,9 @@ class LineNotifier extends ChangeNotifier {
   void removeLast() {
     if (lines.length > 0) {
       lines.removeLast();
+      revision += 1;
       notifyListeners();
     }
-  }
-
-  void forceSync() {
-    notifyListeners();
   }
 
   bool checkInBounds(Offset localPos) {
@@ -647,9 +703,7 @@ class LineNotifier extends ChangeNotifier {
     double avgScale = (scaleX + scaleY) / 2;
 
     for (PictureLine line in lineList) {
-      if (line.thickness > 1.0) {
-        line.thickness = max(line.thickness * avgScale, 1.0);
-      }
+      line.thickness = max(line.thickness * avgScale, 1.0);
 
       for (int i = 0; i < line.points.length; i++) {
         line.points[i] = line.points[i].scale(scaleX, scaleY);
@@ -680,7 +734,10 @@ class LineNotifier extends ChangeNotifier {
       _resizeLines(this.canvasSize, scaleTo, lineCopy);
     }
 
-    return jsonEncode(lineCopy);
+    return jsonEncode(SerializedLines(
+      canvasSize: scaleTo,
+      lines: lineCopy,
+      ));
   }
 
   List<Map<String, dynamic>> linesToListMap(Size scaleTo) {
@@ -717,10 +774,10 @@ class LineNotifier extends ChangeNotifier {
 
   bool importLines(String json) {
     dynamic parsed;
+    SerializedLines slines;
 
     StrokeCap strokeCap;
     PaintingStyle paintStyle;
-    List<PictureLine> newLines = List<PictureLine>();
 
     if (this.lines.length > 0) {
       strokeCap = lines[0].paint.strokeCap;
@@ -736,28 +793,23 @@ class LineNotifier extends ChangeNotifier {
       return false;
     }
 
-    if (!(parsed is List<dynamic>)) {
+    try {
+      slines = SerializedLines.fromJson(parsed);
+    } catch (e) {
       return false;
-    } else {
-      for (dynamic entry in parsed) {
-        if (entry is Map<String, dynamic>) {
-          PictureLine tmp;
-
-          try {
-            tmp = PictureLine.fromJson(entry);
-          } catch (e) {
-            return false;
-          }
-
-          tmp.paint.strokeCap = strokeCap;
-          tmp.paint.style = paintStyle;
-
-          newLines.add(tmp);
-        }
-      }
     }
 
-    lines = newLines;
+    for (PictureLine line in slines.lines) {
+        line.paint.strokeCap = strokeCap;
+        line.paint.style = paintStyle;
+    }
+
+    _resizeLines(slines.canvasSize, this.canvasSize, slines.lines);
+
+    lines.clear();
+    
+    lines.addAll(slines.lines);
+    revision += 1;
     notifyListeners();
 
     return true;
@@ -765,11 +817,9 @@ class LineNotifier extends ChangeNotifier {
 }
 
 class DrawingPainter extends CustomPainter {
-  LineNotifier ln;
+  final LineNotifier ln;
 
-  DrawingPainter(LineNotifier ln) : super(repaint: ln) {
-    this.ln = ln;
-  }
+  DrawingPainter(this.ln) : super(repaint: ln);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -789,14 +839,20 @@ class DrawingPainter extends CustomPainter {
     canvasFill.style = PaintingStyle.fill;
     canvas.drawRect(rect, canvasFill);
 
-    for (var line in ln.lines) {
+    for (var line in this.ln.lines) {
+      /*
       Path linePath = Path();
 
       linePath.addPolygon(line.points, false);
       canvas.drawPath(linePath, line.paint);
+      */
+
+      canvas.drawPoints(PointMode.polygon, line.points, line.paint);
     }
   }
 
   @override
-  bool shouldRepaint(DrawingPainter oldDelegate) => true;
+  bool shouldRepaint(DrawingPainter oldDelegate) {
+    return oldDelegate.ln.revision != this.ln.revision;
+  }
 }
