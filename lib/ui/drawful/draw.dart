@@ -29,6 +29,8 @@ class DrawfulDrawWidget extends StatefulWidget {
 
 enum SelectedMode { StrokeWidth, Color }
 
+enum EditMode { Drawing, Text }
+
 class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
@@ -36,6 +38,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   bool showBottomList = false;
   StrokeCap strokeCap = StrokeCap.round;
   SelectedMode selectedMode = SelectedMode.StrokeWidth;
+  EditMode editMode = EditMode.Drawing;
   List<Color> colors = [
     Colors.red,
     Colors.green,
@@ -73,7 +76,8 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   void _listen(Stream<BlocRouteTransition> stream) {
     _streamSub = stream.listen((event) {
       if (event.update) {
-        if (event.state is DrawfulDrawingState && event.state.shouldUpdate(state)) {
+        if (event.state is DrawfulDrawingState &&
+            event.state.shouldUpdate(state)) {
           setState(() {
             state = event.state;
           });
@@ -266,17 +270,6 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                     IconButton(
                         icon: Icon(Icons.file_upload),
                         onPressed: () async {
-                          /*
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(40)),
-                                    child: _importDialog());
-                              });
-                          */
                           await _importPicker(context);
                         }),
                   ],
@@ -450,27 +443,26 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   }
 
   Future _importPicker(BuildContext context) async {
-  File file = await FilePicker.getFile() ?? null;
+    File file = await FilePicker.getFile() ?? null;
 
-  if (file != null) {
-    FileReader reader = new FileReader();
-    reader.onLoad.listen((fileEvent) {
-      String fileContent = reader.result;
+    if (file != null) {
+      FileReader reader = new FileReader();
+      reader.onLoad.listen((fileEvent) {
+        String fileContent = reader.result;
 
-      bool result = this.ln.importLines(fileContent);
-      if (!result) {
-        _showToast(context, 'Failed to import file');
-      }
-    });
+        bool result = this.ln.importLines(fileContent);
+        if (!result) {
+          _showToast(context, 'Failed to import file');
+        }
+      });
 
-    reader.readAsText(file);
-  } else {
-    _showToast(context, 'Failed to import file');
+      reader.readAsText(file);
+    } else {
+      _showToast(context, 'Failed to import file');
+    }
+
+    return;
   }
-
-  return;
-}
-
 }
 
 class PictureLine {
@@ -489,15 +481,15 @@ class PictureLine {
     Color color = Color(line.paint.color.value);
 
     for (Offset off in line.points) {
-      points.add(Offset(off.dx, off.dy));      
+      points.add(Offset(off.dx, off.dy));
     }
 
     paint
-        ..strokeCap = line.paint.strokeCap
-        ..isAntiAlias = line.paint.isAntiAlias
-        ..color = color
-        ..strokeWidth = line.paint.strokeWidth
-        ..style = line.paint.style;
+      ..strokeCap = line.paint.strokeCap
+      ..isAntiAlias = line.paint.isAntiAlias
+      ..color = color
+      ..strokeWidth = line.paint.strokeWidth
+      ..style = line.paint.style;
 
     return PictureLine(
       paint: paint,
@@ -539,11 +531,11 @@ class PictureLine {
       }
     }
 
-    // Recreate some defaults because we don't save this information when serializing
+    // Set some defaults because this information isn't stored
     Paint paint = Paint()
-            ..strokeCap = StrokeCap.round
-            ..isAntiAlias = true
-            ..style = PaintingStyle.stroke;
+      ..strokeCap = StrokeCap.round
+      ..isAntiAlias = true
+      ..style = PaintingStyle.stroke;
 
     if (json.containsKey('color')) {
       String color = json['color'];
@@ -552,7 +544,8 @@ class PictureLine {
         color = color.substring(1);
       }
 
-      paint.color = Color(int.parse(color, radix: 16));
+      // Need to specify full opaque alpha because we don't save that channel
+      paint.color = Color(0xFF000000 | int.parse(color, radix: 16));
     }
 
     double thickness = 3.0;
@@ -605,16 +598,21 @@ class SerializedLines {
   SerializedLines({this.canvasSize, this.lines});
 
   factory SerializedLines.fromJson(Map<String, dynamic> json) {
-    if (!json.containsKey('lines') || 
-      !json.containsKey('canvasWidth') || !json.containsKey('canvasHeight')) {
-      throw FormatException("Missing required fields 'lines' or 'canvasWidth/Height'");
+    if (!json.containsKey('lines') ||
+        !json.containsKey('canvasWidth') ||
+        !json.containsKey('canvasHeight')) {
+      throw FormatException(
+          "Missing required fields 'lines' or 'canvasWidth/Height'");
     }
 
     return SerializedLines(
-      canvasSize: Size(json['canvasWidth'] as double, json['canvasHeight'] as double),
+      canvasSize:
+          Size(json['canvasWidth'] as double, json['canvasHeight'] as double),
       lines: (json['lines'] as List)
-        ?.map((e) =>
-        e == null ? null : PictureLine.fromJson(e as Map<String, dynamic>))?.toList(),
+          ?.map((e) => e == null
+              ? null
+              : PictureLine.fromJson(e as Map<String, dynamic>))
+          ?.toList(),
     );
   }
 
@@ -630,12 +628,10 @@ class SerializedLines {
 class LineNotifier extends ChangeNotifier {
   List<PictureLine> lines;
   Size canvasSize;
-  int revision;
 
   LineNotifier() {
     this.lines = List();
     this.canvasSize = Size.zero;
-    this.revision = 0;
   }
 
   void startStroke(Offset pos, double strokeWidth, Paint paint) {
@@ -645,7 +641,6 @@ class LineNotifier extends ChangeNotifier {
       paint: paint,
     ));
 
-    revision += 1;
     notifyListeners();
   }
 
@@ -660,7 +655,6 @@ class LineNotifier extends ChangeNotifier {
       ));
     }
 
-    revision += 1;
     notifyListeners();
   }
 
@@ -674,7 +668,6 @@ class LineNotifier extends ChangeNotifier {
   void removeLast() {
     if (lines.length > 0) {
       lines.removeLast();
-      revision += 1;
       notifyListeners();
     }
   }
@@ -737,7 +730,7 @@ class LineNotifier extends ChangeNotifier {
     return jsonEncode(SerializedLines(
       canvasSize: scaleTo,
       lines: lineCopy,
-      ));
+    ));
   }
 
   List<Map<String, dynamic>> linesToListMap(Size scaleTo) {
@@ -800,16 +793,15 @@ class LineNotifier extends ChangeNotifier {
     }
 
     for (PictureLine line in slines.lines) {
-        line.paint.strokeCap = strokeCap;
-        line.paint.style = paintStyle;
+      line.paint.strokeCap = strokeCap;
+      line.paint.style = paintStyle;
     }
 
     _resizeLines(slines.canvasSize, this.canvasSize, slines.lines);
 
     lines.clear();
-    
+
     lines.addAll(slines.lines);
-    revision += 1;
     notifyListeners();
 
     return true;
@@ -840,19 +832,10 @@ class DrawingPainter extends CustomPainter {
     canvas.drawRect(rect, canvasFill);
 
     for (var line in this.ln.lines) {
-      /*
-      Path linePath = Path();
-
-      linePath.addPolygon(line.points, false);
-      canvas.drawPath(linePath, line.paint);
-      */
-
       canvas.drawPoints(PointMode.polygon, line.points, line.paint);
     }
   }
 
   @override
-  bool shouldRepaint(DrawingPainter oldDelegate) {
-    return oldDelegate.ln.revision != this.ln.revision;
-  }
+  bool shouldRepaint(DrawingPainter oldDelegate) => true;
 }
