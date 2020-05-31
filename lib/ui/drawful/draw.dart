@@ -336,6 +336,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
               child: ColorPicker(
                 pickerColor: pickerColor,
                 enableAlpha: false,
+                paletteType: PaletteType.hsv,
                 onColorChanged: (color) {
                   pickerColor = color;
                 },
