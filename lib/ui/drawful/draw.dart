@@ -32,14 +32,13 @@ enum SelectedMode { StrokeWidth, Color }
 enum EditMode { Drawing, Text }
 
 class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
-  Color selectedColor = Colors.black;
-  Color pickerColor = Colors.black;
-  double strokeWidth = 3.0;
-  bool showBottomList = false;
-  StrokeCap strokeCap = StrokeCap.round;
-  SelectedMode selectedMode = SelectedMode.StrokeWidth;
-  EditMode editMode = EditMode.Drawing;
-  List<Color> colors = [
+  Color _selectedColor = Colors.black;
+  Color _pickerColor = Colors.black;
+  double _strokeWidth = 3.0;
+  bool _showBottomList = false;
+  StrokeCap _strokeCap = StrokeCap.round;
+  SelectedMode _selectedMode = SelectedMode.StrokeWidth;
+  List<Color> _colors = [
     Colors.red,
     Colors.green,
     Colors.blue,
@@ -47,20 +46,19 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
     Colors.black
   ];
 
-  PaintingStyle paintStyle = PaintingStyle.stroke;
+  PaintingStyle _paintStyle = PaintingStyle.stroke;
 
-  final TextEditingController importController = TextEditingController();
+  final TextEditingController _importController = TextEditingController();
 
-  LineNotifier ln;
-  DrawingPainter drawPaint;
-  GestureDetector gd;
-  Widget canvasContainer;
-  Widget canvas;
+  LineNotifier _ln;
+  DrawingPainter _drawPaint;
+  GestureDetector _gd;
+  Widget _canvasContainer;
+  Widget _canvas;
 
-  Widget drawInstructions;
-  GlobalKey instrKey;
-  Widget itemBar;
-  Widget submitButton;
+  Widget _drawInstructions;
+  Widget _itemBar;
+  Widget _submitButton;
 
   DrawfulDrawingState state;
 
@@ -69,7 +67,9 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
 
   bool standalone;
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _instrKey = GlobalKey();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _strokeFormKey = GlobalKey<FormState>();
 
   _DrawfulDrawWidgetState({this.standalone, this.state});
 
@@ -103,61 +103,60 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
   @override
   void initState() {
     super.initState();
-    ln = LineNotifier();
-    drawPaint = DrawingPainter(ln);
-    instrKey = GlobalKey();
+    _ln = LineNotifier();
+    _drawPaint = DrawingPainter(_ln);
   }
 
   @override
   void dispose() {
     _streamSub?.cancel();
-    importController.dispose();
+    _importController.dispose();
     super.dispose();
   }
 
   void _panStart(DragStartDetails details) {
-    if (ln.checkInBounds(details.localPosition)) {
-      ln.startStroke(
+    if (_ln.checkInBounds(details.localPosition)) {
+      _ln.startStroke(
           details.localPosition,
-          strokeWidth,
+          _strokeWidth,
           Paint()
-            ..strokeCap = strokeCap
+            ..strokeCap = _strokeCap
             ..isAntiAlias = true
-            ..color = selectedColor
-            ..strokeWidth = strokeWidth
-            ..style = paintStyle);
+            ..color = _selectedColor
+            ..strokeWidth = _strokeWidth
+            ..style = _paintStyle);
     } else {
-      ln.endStroke();
+      _ln.endStroke();
     }
   }
 
   void _panUpdate(DragUpdateDetails details) {
-    if (ln.checkInBounds(details.localPosition)) {
-      ln.appendStroke(
+    if (_ln.checkInBounds(details.localPosition)) {
+      _ln.appendStroke(
           details.localPosition,
-          strokeWidth,
+          _strokeWidth,
           Paint()
-            ..strokeCap = strokeCap
+            ..strokeCap = _strokeCap
             ..isAntiAlias = true
-            ..color = selectedColor
-            ..strokeWidth = strokeWidth
-            ..style = paintStyle);
+            ..color = _selectedColor
+            ..strokeWidth = _strokeWidth
+            ..style = _paintStyle);
     } else {
-      ln.endStroke();
+      _ln.endStroke();
     }
   }
 
   void _panEnd(DragEndDetails details) {
-    ln.endStroke();
+    _ln.endStroke();
   }
 
   void _showToast(BuildContext context, String toastContents) {
-    scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState.showSnackBar(
       SnackBar(
           content: Text(toastContents),
           action: SnackBarAction(
               label: 'DISMISS',
-              onPressed: scaffoldKey.currentState.hideCurrentSnackBar)),
+              onPressed: _scaffoldKey.currentState.hideCurrentSnackBar)),
     );
   }
 
@@ -168,13 +167,13 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
       bloc = Provider.of<JackboxBloc>(context);
     }
 
-    gd = GestureDetector(
+    _gd = GestureDetector(
       onPanStart: _panStart,
       onPanUpdate: _panUpdate,
       onPanEnd: _panEnd,
     );
 
-    canvas = Container(
+    _canvas = Container(
         decoration: BoxDecoration(
             border: Border.all(
               color: Colors.black,
@@ -182,33 +181,33 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
             ),
             borderRadius: BorderRadius.circular(8)),
         child: CustomPaint(
-          painter: drawPaint,
-          child: gd,
+          painter: _drawPaint,
+          child: _gd,
         ));
 
-    drawInstructions = Container(
+    _drawInstructions = Container(
         child: Text(
       state != null ? state.prompt : 'Draw',
-      key: instrKey,
+      key: _instrKey,
       style: TextStyle(fontSize: 30),
     ));
 
-    canvasContainer = Container(
+    _canvasContainer = Container(
         child: Center(
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            drawInstructions,
+            _drawInstructions,
             Expanded(
                 child: AspectRatio(
               aspectRatio: 0.8,
-              child: canvas,
+              child: _canvas,
             ))
           ]),
     ));
 
-    itemBar = Padding(
+    _itemBar = Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -228,9 +227,9 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                         icon: Icon(Icons.album),
                         onPressed: () {
                           setState(() {
-                            if (selectedMode == SelectedMode.StrokeWidth)
-                              showBottomList = !showBottomList;
-                            selectedMode = SelectedMode.StrokeWidth;
+                            if (_selectedMode == SelectedMode.StrokeWidth)
+                              _showBottomList = !_showBottomList;
+                            _selectedMode = SelectedMode.StrokeWidth;
                           });
                         }),
                     // Select color
@@ -238,9 +237,9 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                         icon: Icon(Icons.color_lens),
                         onPressed: () {
                           setState(() {
-                            if (selectedMode == SelectedMode.Color)
-                              showBottomList = !showBottomList;
-                            selectedMode = SelectedMode.Color;
+                            if (_selectedMode == SelectedMode.Color)
+                              _showBottomList = !_showBottomList;
+                            _selectedMode = SelectedMode.Color;
                           });
                         }),
                     // Undo
@@ -248,14 +247,14 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                         icon: Icon(Icons.undo),
                         onPressed: () {
                           setState(() {
-                            ln.removeLast();
+                            _ln.removeLast();
                           });
                         }),
                     // Export Drawing json
                     IconButton(
                         icon: Icon(Icons.save),
                         onPressed: () {
-                          String js = ln.exportLines(Size(240.0, 300.0));
+                          String js = _ln.exportLines(Size(240.0, 300.0));
                           showDialog(
                               context: context,
                               builder: (context) {
@@ -275,36 +274,30 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
                   ],
                 ),
                 Visibility(
-                  child: (selectedMode == SelectedMode.Color)
+                  child: (_selectedMode == SelectedMode.Color)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: _getColorList(),
                         )
-                      : Slider(
-                          value: strokeWidth,
-                          max: 50.0,
-                          min: 1.0,
-                          onChanged: (val) {
-                            setState(() {
-                              strokeWidth = val;
-                            });
-                          }),
-                  visible: showBottomList,
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [_getStrokeForm()]),
+                  visible: _showBottomList,
                 ),
               ],
             ),
           )),
     );
 
-    submitButton = FloatingActionButton(
+    _submitButton = FloatingActionButton(
       onPressed: () {
-        if (ln.lines.length <= 0) {
+        if (_ln.lines.length <= 0) {
           _showToast(context, 'Canvas must not be empty');
         } else if (bloc != null) {
           bloc.sendEvent(DrawfulSubmitDrawingEvent(
               isPlayerPicture:
                   state != null ? (state.lobbyState != null) : false,
-              lines: ln.linesToListMap(Size(240.0, 300.0))));
+              lines: _ln.linesToListMap(Size(240.0, 300.0))));
         } else {
           _showToast(context, 'No endpoint to submit to');
         }
@@ -313,17 +306,70 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
     );
 
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       backgroundColor: Colors.grey[100],
-      bottomNavigationBar: itemBar,
-      floatingActionButton: submitButton,
-      body: canvasContainer,
+      bottomNavigationBar: _itemBar,
+      floatingActionButton: _submitButton,
+      body: _canvasContainer,
     );
+  }
+
+  _getStrokeForm() {
+    TextEditingController controller = new TextEditingController();
+    controller.text = _strokeWidth.toString();
+
+    return Form(
+        key: _strokeFormKey,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 50.0,
+              height: 30.0,
+              child: TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter a value';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+            ),
+            SizedBox(
+                height: 30.0,
+                child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        if (_strokeFormKey.currentState.validate()) {
+                          double result = 0.0;
+
+                          try {
+                            result = double.parse(controller.text);
+                          } catch (e) {
+                            return;
+                          }
+
+                          setState(() {
+                            _strokeWidth = result;
+                          });
+                        }
+                      },
+                      child: Text('Save'),
+                    ))),
+          ],
+        ));
   }
 
   _getColorList() {
     List<Widget> listWidget = List();
-    for (Color color in colors) {
+    for (Color color in _colors) {
       listWidget.add(_colorCircle(color));
     }
     Widget colorPicker = GestureDetector(
@@ -334,11 +380,11 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
             title: const Text('Color Selector'),
             content: SingleChildScrollView(
               child: ColorPicker(
-                pickerColor: pickerColor,
+                pickerColor: _pickerColor,
                 enableAlpha: false,
                 paletteType: PaletteType.hsv,
                 onColorChanged: (color) {
-                  pickerColor = color;
+                  _pickerColor = color;
                 },
               ),
             ),
@@ -346,7 +392,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
               FlatButton(
                 child: const Text('Save'),
                 onPressed: () {
-                  setState(() => selectedColor = pickerColor);
+                  setState(() => _selectedColor = _pickerColor);
                   Navigator.of(context).pop();
                 },
               ),
@@ -376,7 +422,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedColor = color;
+          _selectedColor = color;
         });
       },
       child: ClipOval(
@@ -414,35 +460,6 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
         ));
   }
 
-  Widget _importDialog() {
-    return Container(
-        padding: const EdgeInsets.all(20),
-        child: AspectRatio(
-          aspectRatio: 0.8,
-          child: Column(children: [
-            FlatButton(
-                child: Text("Import"),
-                color: Colors.grey[100],
-                onPressed: () {
-                  if (importController.text == '') {
-                    _showToast(context, 'Nothing to import');
-                  } else {
-                    bool result = ln.importLines(importController.text);
-
-                    if (!result) {
-                      _showToast(context, 'Failed to import data');
-                    }
-                  }
-                }),
-            Flexible(
-                child: SingleChildScrollView(
-                    child: TextField(
-              controller: importController,
-            ))),
-          ]),
-        ));
-  }
-
   Future _importPicker(BuildContext context) async {
     File file = await FilePicker.getFile() ?? null;
 
@@ -451,7 +468,7 @@ class _DrawfulDrawWidgetState extends State<DrawfulDrawWidget> {
       reader.onLoad.listen((fileEvent) {
         String fileContent = reader.result;
 
-        bool result = this.ln.importLines(fileContent);
+        bool result = this._ln.importLines(fileContent);
         if (!result) {
           _showToast(context, 'Failed to import file');
         }

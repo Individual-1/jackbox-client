@@ -1,6 +1,5 @@
 library jb_drawful;
 
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:jackbox_client/model/internal.dart';
@@ -435,7 +434,7 @@ class DrawfulHandler extends GameHandler {
 
       if (msg.event == 'RoomBlobChanged') {
         if (blob is AEBRChooseLie) {
-          HashSet<String> choices = new HashSet<String>();
+          List<String> choices = new List<String>();
 
           for (AEBLieChoice choice in blob.choices) {
             choices.add(choice.text);
@@ -443,6 +442,7 @@ class DrawfulHandler extends GameHandler {
 
           // Case 1, we have new choices
           if (lieState.choices != choices) {
+            lieState.choices.clear();
             lieState.choices.addAll(choices);
             changed = true;
           }
